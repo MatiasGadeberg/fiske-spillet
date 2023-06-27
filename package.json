@@ -1,0 +1,28 @@
+{
+    "name": "fiske-spillet",
+    "version": "1.0.0",
+    "description": "Fiskespillet",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "test",
+        "ts-node": "ts-node --esm"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/MatiasGadeberg/fiske-spillet.git"
+    },
+    "author": "Matias Gadeberg",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/MatiasGadeberg/fiske-spillet/issues"
+    },
+    "homepage": "https://github.com/MatiasGadeberg/fiske-spillet#readme",
+    "dependencies": {
+        "amqplib": "^0.10.3"
+    },
+    "devDependencies": {
+        "@types/amqplib": "^0.10.1",
+        "ts-node": "^10.9.1"
+    }
+}
