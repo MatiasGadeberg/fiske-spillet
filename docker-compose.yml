@@ -1,0 +1,10 @@
+services:
+    broker:
+        image: rabbitmq:3-management
+        command: '/bin/bash -c "rabbitmq-plugins enable rabbitmq_mqtt; rabbitmq-server; rabbitmq_web_mqtt"'
+        ports:
+            - "15675:15675"
+            - "15672:15672"
+            - "1883:1883"
+        volumes:
+            - "./src/rabbitmq/etc:/etc/rabbitmq"
