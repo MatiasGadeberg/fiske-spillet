@@ -12,57 +12,55 @@
 </template>
 
 <script lang="ts">
-import { reactive, onMounted } from 'vue'
-import amqp from 'amqplib'
+import { ref, onMounted } from 'vue'
+import { Client as MQTTClient, Message } from 'paho-mqtt'
 
 export default {
   name: 'ChatComponent',
   setup() {
-    const chatMessages = reactive([])
-    const inputMessage = reactive('')
+    const chatMessages = ref([] as { id: number; content: string }[])
+    const inputMessage = ref('')
+    let client: MQTTClient | null = null
 
-    let connection: amqp.Connection | null = null
-    let channel: amqp.Channel | null = null
+    const connectToBroker = () => {
+      const host = 'localhost' // Replace with your RabbitMQ MQTT WebSocket URL
+      const port = 15675
+      const path = '/ws'
+      const clientId = `client-${Date.now()}`
 
-    const establishConnection = async () => {
-      try {
-        connection = await amqp.connect('amqp://localhost') // Replace with your RabbitMQ connection URL
-        channel = await connection.createChannel()
+      client = new MQTTClient(host, port, path, clientId)
+      client.connect({
+        onSuccess: () => {
+          client!.subscribe('chat/message')
+        },
+        useSSL: false,
+        timeout: 3,
+        onFailure: (error) => {
+          console.error('Failed to connect to MQTT broker:', error.errorMessage)
+        },
+        keepAliveInterval: 60
+      })
 
-        await channel.assertExchange('chat', 'topic') // Create or ensure the 'chat' exchange exists
-        const { queue } = await channel.assertQueue('', { exclusive: true }) // Create an exclusive queue
-        await channel.bindQueue(queue, 'chat', 'chat.message') // Bind the queue to the exchange with the specified topic
+      console.log('Connected to broker successfully')
 
-        await channel.consume(queue, (message) => {
-          const content = message.content.toString()
-          chatMessages.push({ id: Date.now(), content }) // Add the received message to the chatMessages list
-          channel.ack(message) // Acknowledge the message to remove it from the queue
-        })
-      } catch (error) {
-        console.error('Error establishing connection:', error)
+      client.onMessageArrived = (message) => {
+        const content = message.payloadString
+        chatMessages.value.push({ id: Date.now(), content })
       }
     }
 
-    const sendMessage = async () => {
-      try {
-        if (!connection) {
-          await establishConnection()
-        }
-
-        await channel.assertExchange('chat', 'topic') // Create or ensure the 'chat' exchange exists
-
-        const message = inputMessage.trim()
-        if (message) {
-          channel.publish('chat', 'chat.message', Buffer.from(message)) // Publish the message to the exchange with the specified topic
-          inputMessage = '' // Clear the input field
-        }
-      } catch (error) {
-        console.error('Error sending message:', error)
+    const sendMessage = () => {
+      const message = inputMessage.value.trim()
+      if (message && client) {
+        const mqttMessage = new Message(message)
+        mqttMessage.destinationName = 'chat/message'
+        client.send(mqttMessage)
+        inputMessage.value = ''
       }
     }
 
     onMounted(() => {
-      establishConnection()
+      connectToBroker()
     })
 
     return {
