@@ -7,8 +7,15 @@ export type GameInfo = {
     fishingAreaInfo: FishingAreaFishInfo[];
 };
 
-type FishBaseInfo = {
+type FishingAreaInfo = {
     name: string;
+    waterType: "shallow" | "semi-deep" | "deep";
+    distanceFromShore: number;
+};
+
+type FishBaseInfo = {
+    type: string;
+    foundInAreas: FishingAreaInfo[];
 };
 
 type FishMarketFishInfo = FishBaseInfo & {
@@ -18,21 +25,29 @@ type FishMarketFishInfo = FishBaseInfo & {
 };
 
 type FishingAreaFishInfo = FishBaseInfo & {
+    maxAmount: number;
     currentAmount: number;
     available: boolean;
 };
 
-export type Teaminfo = {
+export type TeamInfo = {
     currentActivePlayers: number;
     boatInventory: BoatInventoryInfo[];
     fishInventory: FishInventoryInfo[];
 };
 
-type BoatInventoryInfo = {
+type BoatBaseInfo = {
     type: string;
-    inUse: boolean;
+    shallowWaterSpeed: number;
+    semiDeepWaterSpeed: number;
+    deepWaterSpeed: number;
+    maxHealth: number;
+};
+
+type BoatInventoryInfo = BoatBaseInfo & {
     id: string;
-    health: number;
+    inUse: boolean;
+    currentHealth: number;
     timeToHarborInMs: number;
 };
 
