@@ -13,48 +13,91 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue'
-import { Client as MQTTClient, Message } from 'paho-mqtt'
+import mqtt from 'mqtt'
 
 export default {
   name: 'ChatComponent',
   setup() {
     const chatMessages = ref([] as { id: number; content: string }[])
     const inputMessage = ref('')
-    let client: MQTTClient | null = null
+    let client: mqtt.MqttClient | null = null
 
     const connectToBroker = () => {
-      const host = 'localhost' // Replace with your RabbitMQ MQTT WebSocket URL
-      const port = 15675
-      const path = '/ws'
       const clientId = `client-${Date.now()}`
 
-      client = new MQTTClient(host, port, path, clientId)
-      client.connect({
-        onSuccess: () => {
-          client!.subscribe('chat/message')
+      const host = 'ws://localhost:15675/ws'
+
+      const options: mqtt.IClientOptions = {
+        keepalive: 30,
+        clientId: clientId,
+        protocolId: 'MQTT',
+        protocolVersion: 4,
+        clean: true,
+        reconnectPeriod: 1000,
+        connectTimeout: 30 * 1000,
+        will: {
+          topic: 'WillMsg',
+          payload: 'Connection Closed abnormally..!',
+          qos: 0,
+          retain: false
         },
-        useSSL: false,
-        timeout: 3,
-        onFailure: (error) => {
-          console.error('Failed to connect to MQTT broker:', error.errorMessage)
-        },
-        keepAliveInterval: 60
+        rejectUnauthorized: false
+      }
+
+      console.log('connecting mqtt client')
+      const client = mqtt.connect(host, options)
+
+      client.on('error', (err) => {
+        console.log('Connection error: ', err)
+        client.end()
       })
 
-      console.log('Connected to broker successfully')
+      client.on('reconnect', () => {
+        console.log('Reconnecting...')
+      })
 
-      client.onMessageArrived = (message) => {
-        const content = message.payloadString
-        chatMessages.value.push({ id: Date.now(), content })
-      }
+      client.on('connect', () => {
+        console.log('Client connected:' + clientId)
+        client.subscribe('testtopic', { qos: 0 })
+        client.publish('testtopic', 'ws connection demo...!', { qos: 0, retain: false })
+      })
+
+      client.on('message', (topic, message, packet) => {
+        console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
+      })
+
+      client.on('close', () => {
+        console.log(clientId + ' disconnected')
+      })
+
+      //   const brokerUrl = 'ws://localhost:15675/ws' // Replace with your RabbitMQ MQTT WebSocket URL
+      //   const clientId = `client-${Date.now()}`
+      //   const options = {
+      //     keepalive: 60,
+      //     clientId,
+      //     protocolId: 'MQTT',
+      //     protocolVersion: 4,
+      //     clean: true,
+      //     reconnectPeriod: 1000,
+      //     connectTimeout: 30 * 1000
+      //   }
+
+      //   client = mqtt.connect(brokerUrl, options)
+
+      //   client.on('connect', () => {
+      //     console.log('Connected to mqtt broker')
+      //   })
+
+      //   client.on('message', (topic, payload) => {
+      //     const content = payload.toString()
+      //     chatMessages.value.push({ id: Date.now(), content })
+      //   })
     }
 
     const sendMessage = () => {
       const message = inputMessage.value.trim()
       if (message && client) {
-        const mqttMessage = new Message(message)
-        mqttMessage.destinationName = 'chat/message'
-        client.send(mqttMessage)
+        client.publish('chat/message', message)
         inputMessage.value = ''
       }
     }
