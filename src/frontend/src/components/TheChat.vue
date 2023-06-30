@@ -20,7 +20,7 @@ export default {
   setup() {
     const chatMessages = ref([] as { id: number; content: string }[])
     const inputMessage = ref('')
-    let client: mqtt.MqttClient | null = null
+    let client: mqtt.MqttClient
 
     const connectToBroker = () => {
       const clientId = `client-${Date.now()}`
@@ -44,8 +44,7 @@ export default {
         rejectUnauthorized: false
       }
 
-      console.log('connecting mqtt client')
-      const client = mqtt.connect(host, options)
+      client = mqtt.connect(host, options)
 
       client.on('error', (err) => {
         console.log('Connection error: ', err)
@@ -58,44 +57,21 @@ export default {
 
       client.on('connect', () => {
         console.log('Client connected:' + clientId)
-        client.subscribe('testtopic', { qos: 0 })
-        client.publish('testtopic', 'ws connection demo...!', { qos: 0, retain: false })
+        client.subscribe('chat/message', { qos: 0 })
       })
 
-      client.on('message', (topic, message, packet) => {
-        console.log('Received Message: ' + message.toString() + '\nOn topic: ' + topic)
+      client.on('message', (_0, message, _1) => {
+        chatMessages.value.push({ id: Date.now(), content: message.toString() })
       })
 
       client.on('close', () => {
         console.log(clientId + ' disconnected')
       })
-
-      //   const brokerUrl = 'ws://localhost:15675/ws' // Replace with your RabbitMQ MQTT WebSocket URL
-      //   const clientId = `client-${Date.now()}`
-      //   const options = {
-      //     keepalive: 60,
-      //     clientId,
-      //     protocolId: 'MQTT',
-      //     protocolVersion: 4,
-      //     clean: true,
-      //     reconnectPeriod: 1000,
-      //     connectTimeout: 30 * 1000
-      //   }
-
-      //   client = mqtt.connect(brokerUrl, options)
-
-      //   client.on('connect', () => {
-      //     console.log('Connected to mqtt broker')
-      //   })
-
-      //   client.on('message', (topic, payload) => {
-      //     const content = payload.toString()
-      //     chatMessages.value.push({ id: Date.now(), content })
-      //   })
     }
 
     const sendMessage = () => {
       const message = inputMessage.value.trim()
+      console.log(client?.connected)
       if (message && client) {
         client.publish('chat/message', message)
         inputMessage.value = ''
