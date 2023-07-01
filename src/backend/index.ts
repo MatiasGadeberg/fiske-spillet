@@ -1,22 +1,30 @@
 import mqtt from "mqtt";
 
-const brokerUrl = "mqtt://localhost:1883"; // Replace with your MQTT broker URL
+const brokerUrl = "mqtt://rabbitmq:1883"; // Replace with your MQTT broker URL
 const clientId = `client-${Date.now()}`;
 
-const client = mqtt.connect(brokerUrl, { clientId });
+let client: mqtt.Client;
+const connectionOption: mqtt.IClientOptions = {
+    clientId,
+    reconnectPeriod: 3000,
+};
+
+client = mqtt.connect(brokerUrl, connectionOption);
 
 client.on("connect", () => {
     console.log("Connected to MQTT broker");
     client.subscribe("chat/message"); // Replace with the topic you want to subscribe to
 });
 
-client.on("message", (topic, message) => {
-    console.log("Received message:", message.toString());
-    client.publish(topic, message.toString());
+client.on("error", err => {
+    console.log("Connection error: ", err);
 });
 
-// Example: Publish a message
-// const topic = "chat/messages"; // Replace with the topic you want to publish to
-// const messagePayload = "Hello, MQTT!";
+client.on("reconnect", () => {
+    console.log("Reconnecting...");
+});
 
-// client.publish(topic, messagePayload);
+client.on("message", (topic, message) => {
+    console.log("Message incomming on the most awesome topic: ", topic);
+    console.log("Received message:", message.toString());
+});

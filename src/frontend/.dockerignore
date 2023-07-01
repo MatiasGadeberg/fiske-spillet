@@ -1,5 +1,3 @@
-Dockerfile.dev
-.dockerignore
 .gitignore
 *.md
 .prettierrc.json
