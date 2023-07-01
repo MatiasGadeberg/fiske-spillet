@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>Write you message here!</h1>
     <ul>
       <li v-for="message in chatMessages" :key="message.id">
         {{ message.content }}
@@ -71,8 +72,7 @@ export default {
 
     const sendMessage = () => {
       const message = inputMessage.value.trim()
-      console.log(client?.connected)
-      if (message && client) {
+      if (message && client.connected) {
         client.publish('chat/message', message)
         inputMessage.value = ''
       }

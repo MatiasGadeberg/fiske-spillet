@@ -1,10 +1,20 @@
+version: "3.8"
 services:
-    broker:
+    rabbitmq:
         image: rabbitmq:3-management
-        command: '/bin/bash -c "rabbitmq-plugins enable rabbitmq_mqtt; rabbitmq_web_mqtt"'
         ports:
-            - "15675:15675"
-            - "15672:15672"
-            - "1883:1883"
+            - "15675:15675" # Web MQTT
+            - "15672:15672" # Management plugin
+            - "1883:1883" # MQTT
         volumes:
-            - "./src/middlelayer/etc:/etc/rabbitmq"
+            - "./src/middlelayer/etc/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+    frontend:
+        build:
+            context: ./src/frontend
+            dockerfile: Dockerfile.dev
+        ports:
+            - "5173:5173"
+        volumes:
+            - "./src/frontend/src:/app/src"
+        depends_on:
+            - rabbitmq
