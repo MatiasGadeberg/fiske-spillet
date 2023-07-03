@@ -46,7 +46,7 @@ export class MqttWrapper {
         this.client.on("connect", props.onConnectCallbackFunction);
     }
 
-    public subscribeToTopic(topic: string): void {
+    public subscribeToTopic(topic: string | string[] | mqtt.ISubscriptionMap): void {
         this.client.subscribe(topic);
     }
 
