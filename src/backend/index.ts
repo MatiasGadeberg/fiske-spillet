@@ -2,6 +2,7 @@ import { MqttWrapper } from "../shared/classes/MqttWrapper.js";
 
 const mqtt = new MqttWrapper({
     connectionHost: "rabbitmq",
+    connectionType: "mqtt",
     onMessageCallbackFunction: onMessageRecieved,
     onConnectCallbackFunction: onConnect,
 });

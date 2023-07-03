@@ -2,18 +2,35 @@ import mqtt from "mqtt";
 
 type ClientProps = {
     connectionHost: string;
+    connectionType: "mqtt" | "web-mqtt";
     onMessageCallbackFunction: mqtt.OnMessageCallback;
     onConnectCallbackFunction: mqtt.OnConnectCallback;
 };
 export class MqttWrapper {
     public client: mqtt.Client;
     constructor(props: ClientProps) {
-        const brokerUrl = `mqtt://${props.connectionHost}:1883`; // Replace with your MQTT broker URL
+        const brokerUrl =
+            props.connectionType === "mqtt"
+                ? `mqtt://${props.connectionHost}:1883`
+                : `ws://${props.connectionHost}:15675/ws`;
+
         const clientId = `client-${Date.now()}`;
 
         const connectionOption: mqtt.IClientOptions = {
-            clientId,
-            reconnectPeriod: 3000,
+            keepalive: 30,
+            clientId: clientId,
+            protocolId: "MQTT",
+            protocolVersion: 4,
+            clean: true,
+            reconnectPeriod: 1000,
+            connectTimeout: 30 * 1000,
+            will: {
+                topic: "WillMsg",
+                payload: "Connection Closed abnormally..!",
+                qos: 0,
+                retain: false,
+            },
+            rejectUnauthorized: false,
         };
 
         this.client = mqtt.connect(brokerUrl, connectionOption);

@@ -14,66 +14,37 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue'
-import mqtt from 'mqtt'
+import { MqttWrapper } from '../../../shared/classes/MqttWrapper.js'
 
 export default {
   name: 'ChatComponent',
   setup() {
     const chatMessages = ref([] as { id: number; content: string }[])
     const inputMessage = ref('')
-    let client: mqtt.MqttClient
+    let mqtt: MqttWrapper
+
+    const onConnet = (): void => {
+      console.log('Client connected')
+      mqtt.subscribeToTopic('chat/message')
+    }
+
+    const onMessage = (topic: string, message: any): void => {
+      chatMessages.value.push({ id: Date.now(), content: message.toString() })
+    }
 
     const connectToBroker = () => {
-      const clientId = `client-${Date.now()}`
-
-      const host = 'ws://localhost:15675/ws'
-
-      const options: mqtt.IClientOptions = {
-        keepalive: 30,
-        clientId: clientId,
-        protocolId: 'MQTT',
-        protocolVersion: 4,
-        clean: true,
-        reconnectPeriod: 1000,
-        connectTimeout: 30 * 1000,
-        will: {
-          topic: 'WillMsg',
-          payload: 'Connection Closed abnormally..!',
-          qos: 0,
-          retain: false
-        },
-        rejectUnauthorized: false
-      }
-
-      client = mqtt.connect(host, options)
-
-      client.on('error', (err) => {
-        console.log('Connection error: ', err)
-        client.end()
-      })
-
-      client.on('reconnect', () => {
-        console.log('Reconnecting...')
-      })
-
-      client.on('connect', () => {
-        console.log('Client connected:' + clientId)
-        client.subscribe('chat/message', { qos: 0 })
-      })
-
-      client.on('message', (_0, message, _1) => {
-        chatMessages.value.push({ id: Date.now(), content: message.toString() })
-      })
-
-      client.on('close', () => {
-        console.log(clientId + ' disconnected')
+      mqtt = new MqttWrapper({
+        connectionHost: 'localhost',
+        connectionType: 'web-mqtt',
+        onConnectCallbackFunction: onConnet,
+        onMessageCallbackFunction: onMessage
       })
     }
 
     const sendMessage = () => {
       const message = inputMessage.value.trim()
-      if (message && client.connected) {
-        client.publish('chat/message', message)
+      if (message) {
+        mqtt.publishToTopic('chat/message', message)
         inputMessage.value = ''
       }
     }

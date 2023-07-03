@@ -2,14 +2,21 @@ FROM node:lts
 
 WORKDIR /app
 
-COPY ./package.json .
+COPY ./shared/package.json ./shared/
+RUN cd shared && npm install
 
-RUN npm install
+COPY ./frontend/package.json ./frontend/
+RUN cd frontend && npm install
 
-COPY . .
+COPY ./shared ./shared
+
+COPY ./frontend ./frontend
 
 EXPOSE 5173
 
-VOLUME [ "/app/node_modules" ]
+VOLUME [ "/app/shared/node_modules" ]
+VOLUME [ "/app/frontend/node_modules" ]
+
+WORKDIR /app/frontend
 
 CMD [ "npm", "run", "dev" , "--", "--host"]

@@ -10,12 +10,13 @@ services:
             - "./src/middlelayer/etc/enabled_plugins:/etc/rabbitmq/enabled_plugins"
     frontend:
         build:
-            context: ./src/frontend
-            dockerfile: Dockerfile.dev
+            context: ./src
+            dockerfile: frontend/Dockerfile.dev
         ports:
             - "5173:5173"
         volumes:
-            - "./src/frontend/src:/app/src"
+            - "./src/frontend/src:/app/frontend/src"
+            - "./src/shared:/app/shared"
         depends_on:
             - rabbitmq
     gameserver:
