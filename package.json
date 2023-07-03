@@ -1,6 +1,6 @@
 {
     "name": "fiske-spillet",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Fiskespillet",
     "main": "index.js",
     "type": "module",
@@ -20,5 +20,13 @@
     "homepage": "https://github.com/MatiasGadeberg/fiske-spillet#readme",
     "devDependencies": {
         "ts-node": "^10.9.1"
-    }
+    },
+    "dependencies": {
+        "mqtt": "^4.3.7"
+    },
+    "workspaces": [
+        "src/backend",
+        "src/frontend",
+        "src/shared"
+    ]
 }

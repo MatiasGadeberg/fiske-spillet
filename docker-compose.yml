@@ -20,12 +20,12 @@ services:
             - rabbitmq
     gameserver:
         build:
-            context: ./src/backend
-            dockerfile: Dockerfile.dev
-        working_dir: /app
+            context: ./src
+            dockerfile: backend/Dockerfile.dev
         stdin_open: true
         tty: true
         volumes:
-            - "./src/backend:/app"
+            - "./src/backend:/app/backend"
+            - "./src/shared:/app/shared"
         depends_on:
             - rabbitmq

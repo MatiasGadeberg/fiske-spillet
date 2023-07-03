@@ -1,30 +1,22 @@
-import mqtt from "mqtt";
+import { MqttWrapper } from "../shared/classes/MqttWrapper.js";
 
-const brokerUrl = "mqtt://rabbitmq:1883"; // Replace with your MQTT broker URL
-const clientId = `client-${Date.now()}`;
+const mqtt = new MqttWrapper({
+    connectionHost: "rabbitmq",
+    onMessageCallbackFunction: onMessageRecieved,
+    onConnectCallbackFunction: onConnect,
+});
 
-let client: mqtt.Client;
-const connectionOption: mqtt.IClientOptions = {
-    clientId,
-    reconnectPeriod: 3000,
-};
-
-client = mqtt.connect(brokerUrl, connectionOption);
-
-client.on("connect", () => {
+function onConnect(_: any): void {
     console.log("Connected to MQTT broker");
-    client.subscribe("chat/message"); // Replace with the topic you want to subscribe to
-});
 
-client.on("error", err => {
-    console.log("Connection error: ", err);
-});
+    mqtt.subscribeToTopic("chat/message"); // Replace with the topic you want to subscribe to
 
-client.on("reconnect", () => {
-    console.log("Reconnecting...");
-});
+    setInterval(() => {
+        const message = `Time on the game server is ${new Date(Date.now()).toISOString()}`;
+        mqtt.publishToTopic("chat/message", message);
+    }, 500);
+}
 
-client.on("message", (topic, message) => {
-    console.log("Message incomming on the most awesome topic: ", topic);
+function onMessageRecieved(topic: any, message: any, packet: any) {
     console.log("Received message:", message.toString());
-});
+}
