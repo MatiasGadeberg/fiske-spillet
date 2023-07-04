@@ -1,9 +1,12 @@
-import { defineStore } from 'pinia'
-import { MqttWrapper } from '../../../shared/classes/MqttWrapper.js'
-import type { PlayerJoinInfo } from '../../../shared/types/ManagementTypes.js'
 import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import { useGameStore } from './game.js'
+import { MqttWrapper } from '../../../shared/classes/MqttWrapper.js'
+import type { PlayerJoinInfo, PlayerLeaveInfo } from '../../../shared/types/ManagementTypes.js'
+import type { GameInfo } from '../../../shared/types/GameTypes.js'
 
 export const useMqttStore = defineStore('mqtt', () => {
+  const game = useGameStore()
   let mqtt: MqttWrapper
   const clientId = `player-${Date.now()}`
   const team = ref('')
@@ -28,15 +31,15 @@ export const useMqttStore = defineStore('mqtt', () => {
   const onMessage = (topic: string, message: any): void => {
     console.log(`Recieved message on topic ${topic}:`)
     console.log(JSON.parse(message))
-    // switch (topic) {
-    //   case 'game-data':
-    //     updateGameData(JSON.parse(message) as GameInfo)
+    switch (topic) {
+      case 'game-data':
+        game.updateGameData(JSON.parse(message) as GameInfo)
 
-    //     break
+        break
 
-    //   default:
-    //     break
-    // }
+      default:
+        break
+    }
   }
 
   const publishPlayerJoined = (): void => {
@@ -47,9 +50,17 @@ export const useMqttStore = defineStore('mqtt', () => {
     mqtt.publishToTopic('player-join', JSON.stringify(joinInfo))
   }
 
+  const publishPlayerLeft = (): void => {
+    const leaveInfo: PlayerLeaveInfo = {
+      clientId,
+      teamId: team.value
+    }
+    mqtt.publishToTopic('player-leave', JSON.stringify(leaveInfo))
+  }
+
   const setTeamId = (teamId: string): void => {
     team.value = teamId
   }
 
-  return { connect, publishPlayerJoined, setTeamId }
+  return { connect, publishPlayerJoined, publishPlayerLeft, setTeamId }
 })
