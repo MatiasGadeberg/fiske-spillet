@@ -2,26 +2,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FishGame } from "./FishGame";
 import type { GameInfo } from "../../../shared/types/GameTypes";
 
-let game: FishGame;
-let gameStart: Date;
-
-beforeEach(() => {
-    vi.useFakeTimers();
-
-    gameStart = new Date("2023-01-01T13:00:00");
-
-    vi.setSystemTime(gameStart);
-    game = new FishGame({
-        startTime: Date.now(),
-    });
-});
-
-afterEach(() => {
-    vi.useRealTimers();
-});
-
 describe("Fishgame", () => {
     let gameData: GameInfo;
+    let game: FishGame;
+    let gameStart: Date;
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+
+        gameStart = new Date("2023-01-01T13:00:00");
+
+        vi.setSystemTime(gameStart);
+        game = new FishGame({
+            startTime: Date.now(),
+        });
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
     describe("Date time interactions", () => {
         let gameInitialization: Date;
@@ -84,59 +83,60 @@ describe("Fishgame", () => {
 
     describe("Handling teams", () => {
         it("Should not have any teams when first initialized", () => {
-            gameData = game.getGameData();
-
-            expect(gameData.currentNumberOfTeams).toEqual(0);
+            asserNumberOfTeamsIs(0);
         });
 
         it("Should add a new team when a player joins a non-existing team", () => {
-            game.addPlayer({
-                teamId: "test-team-1",
-                clientId: "test-player-1",
-            });
+            addOnePlayerToGame();
 
-            gameData = game.getGameData();
-
-            expect(gameData.currentNumberOfTeams).toEqual(1);
+            asserNumberOfTeamsIs(1);
         });
 
         it("Should not add a new team when a player joins an existing team", () => {
-            game.addPlayer({
-                teamId: "test-team-1",
-                clientId: "test-player-1",
-            });
+            addTwoPlayersToSameTeam();
 
-            game.addPlayer({
-                teamId: "test-team-1",
-                clientId: "test-player-2",
-            });
+            asserNumberOfTeamsIs(1);
+        });
 
-            gameData = game.getGameData();
+        it("Should create a new team for each player joining a non existing team", () => {
+            addTwoPlayerToDifferentTeams();
 
-            expect(gameData.currentNumberOfTeams).toEqual(1);
+            asserNumberOfTeamsIs(2);
         });
     });
 
-    describe("getTeamsData", () => {
-        it("Should contain no data when no teams have been added", () => {
-            const teamsData = game.getTeamsData();
-
-            expect(teamsData.length).toEqual(0);
+    function addOnePlayerToGame(): void {
+        game.addPlayer({
+            teamId: "test-team-1",
+            clientId: "test-player-1",
         });
+    }
 
-        it("Should contain one entry for each team added", () => {
-            game.addPlayer({
-                teamId: "test-team-1",
-                clientId: "test-player-1",
-            });
-            game.addPlayer({
-                teamId: "test-team-2",
-                clientId: "test-player-2",
-            });
-
-            const teamsData = game.getTeamsData();
-
-            expect(teamsData.length).toEqual(2);
+    function addTwoPlayersToSameTeam(): void {
+        game.addPlayer({
+            teamId: "test-team-1",
+            clientId: "test-player-1",
         });
-    });
+        game.addPlayer({
+            teamId: "test-team-1",
+            clientId: "test-player-2",
+        });
+    }
+
+    function addTwoPlayerToDifferentTeams(): void {
+        game.addPlayer({
+            teamId: "test-team-1",
+            clientId: "test-player-1",
+        });
+        game.addPlayer({
+            teamId: "test-team-2",
+            clientId: "test-player-1",
+        });
+    }
+
+    function asserNumberOfTeamsIs(expectedValue: number): void {
+        gameData = game.getGameData();
+
+        expect(gameData.currentNumberOfTeams).toEqual(expectedValue);
+    }
 });

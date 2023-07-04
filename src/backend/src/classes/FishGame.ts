@@ -1,4 +1,4 @@
-import type { PlayerJoinInfo } from "../../../shared/types/ManagementTypes";
+import type { PlayerJoinInfo, PlayerLeaveInfo } from "../../../shared/types/ManagementTypes";
 import type { GameInfo, GameState, TeamInfo } from "../../../shared/types/GameTypes";
 import { FishTeam } from "./FishTeam.js";
 
@@ -39,7 +39,6 @@ export class FishGame {
     }
 
     public addPlayer(joinInfo: PlayerJoinInfo): void {
-        console.log(`Adding player with id ${joinInfo.clientId} to team with id ${joinInfo.teamId}`);
         if (!this.teams[joinInfo.teamId]) {
             this.teams[joinInfo.teamId] = new FishTeam({
                 teamId: joinInfo.teamId,
@@ -47,6 +46,14 @@ export class FishGame {
             });
         } else {
             this.teams[joinInfo.teamId].addPlayer(joinInfo.clientId);
+        }
+    }
+
+    public removePlayer(leaveInfo: PlayerLeaveInfo): void {
+        const team = this.teams[leaveInfo.teamId];
+        team.removePlayer(leaveInfo.clientId);
+        if (team.hasNoActivePlayers()) {
+            delete this.teams[leaveInfo.teamId];
         }
     }
 

@@ -1,5 +1,5 @@
 import { MqttWrapper } from "../shared/classes/MqttWrapper.js";
-import type { PlayerJoinInfo } from "../shared/types/ManagementTypes.js";
+import type { PlayerJoinInfo, PlayerLeaveInfo } from "../shared/types/ManagementTypes.js";
 import { FishGame } from "./src/classes/FishGame.js";
 
 const mqtt = new MqttWrapper({
@@ -26,7 +26,7 @@ function onConnect(_: any): void {
         game.getTeamsData().forEach(teamInfo => {
             mqtt.publishToTopic(`team-data/${teamInfo.teamId}`, JSON.stringify(teamInfo));
         });
-    }, 500);
+    }, 250);
 }
 
 function onMessageRecieved(topic: string, message: any, packet: any) {
@@ -38,6 +38,7 @@ function onMessageRecieved(topic: string, message: any, packet: any) {
 
             break;
         case "player-leave":
+            game.removePlayer(JSON.parse(message) as PlayerLeaveInfo);
             break;
 
         default:

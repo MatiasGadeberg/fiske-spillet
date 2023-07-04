@@ -34,4 +34,8 @@ export class FishTeam {
             this.players.splice(idx, 1);
         }
     }
+
+    public hasNoActivePlayers(): boolean {
+        return this.players.length === 0;
+    }
 }
