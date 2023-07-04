@@ -3,13 +3,14 @@ import { defineStore } from 'pinia'
 import { useGameStore } from './game.js'
 import { MqttWrapper } from '../../../shared/classes/MqttWrapper.js'
 import type { PlayerJoinInfo, PlayerLeaveInfo } from '../../../shared/types/ManagementTypes.js'
-import type { GameInfo } from '../../../shared/types/GameTypes.js'
+import type { GameInfo, TeamInfo } from '../../../shared/types/GameTypes.js'
+import { useTeamStore } from './team.js'
 
 export const useMqttStore = defineStore('mqtt', () => {
   const game = useGameStore()
-  let mqtt: MqttWrapper
+  const team = useTeamStore()
   const clientId = `player-${Date.now()}`
-  const team = ref('')
+  let mqtt: MqttWrapper
 
   const connect = () => {
     mqtt = new MqttWrapper({
@@ -24,7 +25,7 @@ export const useMqttStore = defineStore('mqtt', () => {
     console.log('Client connected')
     mqtt.subscribeToTopic({
       'game-data': { qos: 0 },
-      [`team-data/${team.value}`]: { qos: 0 }
+      [`team-data/${team.teamId}`]: { qos: 0 }
     })
   }
 
@@ -36,6 +37,8 @@ export const useMqttStore = defineStore('mqtt', () => {
         game.updateGameData(JSON.parse(message) as GameInfo)
 
         break
+      case `team-data/${team.teamId}`:
+        team.updateTeamData(JSON.parse(message) as TeamInfo)
 
       default:
         break
@@ -45,7 +48,7 @@ export const useMqttStore = defineStore('mqtt', () => {
   const publishPlayerJoined = (): void => {
     const joinInfo: PlayerJoinInfo = {
       clientId,
-      teamId: team.value
+      teamId: team.teamId
     }
     mqtt.publishToTopic('player-join', JSON.stringify(joinInfo))
   }
@@ -53,14 +56,10 @@ export const useMqttStore = defineStore('mqtt', () => {
   const publishPlayerLeft = (): void => {
     const leaveInfo: PlayerLeaveInfo = {
       clientId,
-      teamId: team.value
+      teamId: team.teamId
     }
     mqtt.publishToTopic('player-leave', JSON.stringify(leaveInfo))
   }
 
-  const setTeamId = (teamId: string): void => {
-    team.value = teamId
-  }
-
-  return { connect, publishPlayerJoined, publishPlayerLeft, setTeamId }
+  return { connect, publishPlayerJoined, publishPlayerLeft }
 })
