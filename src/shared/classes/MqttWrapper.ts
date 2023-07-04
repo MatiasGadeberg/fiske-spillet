@@ -1,7 +1,7 @@
 import mqtt from "mqtt";
 
 type ClientProps = {
-    connectionHost: string;
+    clientId: string;
     connectionType: "mqtt" | "web-mqtt";
     onMessageCallbackFunction: mqtt.OnMessageCallback;
     onConnectCallbackFunction: mqtt.OnConnectCallback;
@@ -9,16 +9,11 @@ type ClientProps = {
 export class MqttWrapper {
     public client: mqtt.Client;
     constructor(props: ClientProps) {
-        const brokerUrl =
-            props.connectionType === "mqtt"
-                ? `mqtt://${props.connectionHost}:1883`
-                : `ws://${props.connectionHost}:15675/ws`;
-
-        const clientId = `client-${Date.now()}`;
+        const brokerUrl = props.connectionType === "mqtt" ? `mqtt://rabbitmq:1883` : `ws://localhost:15675/ws`;
 
         const connectionOption: mqtt.IClientOptions = {
             keepalive: 30,
-            clientId: clientId,
+            clientId: props.clientId,
             protocolId: "MQTT",
             protocolVersion: 4,
             clean: true,

@@ -3,7 +3,7 @@ import type { PlayerJoinInfo } from "../shared/types/ManagementTypes.js";
 import { FishGame } from "./src/classes/FishGame.js";
 
 const mqtt = new MqttWrapper({
-    connectionHost: "rabbitmq",
+    clientId: "game-server",
     connectionType: "mqtt",
     onMessageCallbackFunction: onMessageRecieved,
     onConnectCallbackFunction: onConnect,
