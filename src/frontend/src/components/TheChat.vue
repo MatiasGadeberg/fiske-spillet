@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Time on server is {{ gameTime }}</h1>
+    <h1 class="text-lg p-6">Time on server is {{ gameTime }}</h1>
     <h1>Write you message here!</h1>
     <ul>
       <li v-for="message in chatMessages" :key="message.id">
@@ -9,7 +9,7 @@
     </ul>
 
     <input v-model="inputMessage" type="text" placeholder="Enter your message" />
-    <button @click="sendMessage">Send</button>
+    <button @click="sendMessage" class="p-2 m-3 rounded-xl bg-slate-400">Send</button>
   </div>
 </template>
 
