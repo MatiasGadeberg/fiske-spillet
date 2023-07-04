@@ -15,16 +15,20 @@ describe("FishTeam", () => {
             players: ["player-1", "player-2"],
         });
 
-        expect(team.getNumberOfPlayers()).toEqual(2);
+        const { currentActivePlayers } = team.getTeamData();
+
+        expect(currentActivePlayers).toEqual(2);
     });
 
     it("Should not start with any players if not initialized with any", () => {
-        expect(team.getNumberOfPlayers()).toEqual(0);
+        const { currentActivePlayers } = team.getTeamData();
+        expect(currentActivePlayers).toEqual(0);
     });
 
-    describe("getTeamId", () => {
+    describe("getTeamData", () => {
         it("Should return the correct team id", () => {
-            expect(team.getTeamId()).toEqual("test-team");
+            const { teamId } = team.getTeamData();
+            expect(teamId).toEqual("test-team");
         });
     });
 
@@ -32,35 +36,43 @@ describe("FishTeam", () => {
         it("Should add a player to the team", () => {
             team.addPlayer("test-player-1");
 
-            expect(team.getNumberOfPlayers()).toEqual(1);
+            let { currentActivePlayers } = team.getTeamData();
+            expect(currentActivePlayers).toEqual(1);
 
             team.addPlayer("test-player-2");
+            ({ currentActivePlayers } = team.getTeamData());
 
-            expect(team.getNumberOfPlayers()).toEqual(2);
+            expect(currentActivePlayers).toEqual(2);
         });
 
         it("Should not add a player that is already on the team", () => {
             team.addPlayer("test-player-1");
             team.addPlayer("test-player-1");
 
-            expect(team.getNumberOfPlayers()).toEqual(1);
+            const { currentActivePlayers } = team.getTeamData();
+            expect(currentActivePlayers).toEqual(1);
         });
     });
 
     describe("removePlayer", () => {
         it("should remove the player from the list if they exist", () => {
             team.addPlayer("test-player-1");
-            expect(team.getNumberOfPlayers()).toEqual(1);
+            let { currentActivePlayers } = team.getTeamData();
+
+            expect(currentActivePlayers).toEqual(1);
 
             team.removePlayer("test-player-1");
-            expect(team.getNumberOfPlayers()).toEqual(0);
+            ({ currentActivePlayers } = team.getTeamData());
+
+            expect(currentActivePlayers).toEqual(0);
         });
 
         it("Should do nothing if the player does not exists", () => {
             team.addPlayer("test-player-1");
             team.removePlayer("non-existent-player");
+            const { currentActivePlayers } = team.getTeamData();
 
-            expect(team.getNumberOfPlayers()).toEqual(1);
+            expect(currentActivePlayers).toEqual(1);
         });
     });
 });

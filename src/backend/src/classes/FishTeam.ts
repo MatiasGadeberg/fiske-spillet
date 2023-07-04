@@ -1,3 +1,5 @@
+import { TeamInfo } from "../../../shared/types/GameTypes";
+
 export type FishTeamProps = {
     teamId: string;
     players?: string[];
@@ -11,12 +13,13 @@ export class FishTeam {
         this.players = props.players ?? [];
     }
 
-    public getTeamId(): string {
-        return this.teamId;
-    }
-
-    public getNumberOfPlayers(): number {
-        return this.players.length;
+    public getTeamData(): TeamInfo {
+        return {
+            teamId: this.teamId,
+            currentActivePlayers: this.players.length,
+            boatInventory: [],
+            fishInventory: [],
+        };
     }
 
     public addPlayer(playerId: string): void {

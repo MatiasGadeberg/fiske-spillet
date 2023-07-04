@@ -1,6 +1,6 @@
 import type { PlayerJoinInfo } from "../../../shared/types/ManagementTypes";
-import type { GameInfo } from "../../../shared/types/GameTypes";
-import { FishTeam } from "./FishTeam";
+import type { GameInfo, GameState, TeamInfo } from "../../../shared/types/GameTypes";
+import { FishTeam } from "./FishTeam.js";
 
 export type FishGameProps = {
     startTime: number;
@@ -20,16 +20,22 @@ export class FishGame {
         this.teams = {};
     }
 
-    public getGameData(now: number = Date.now()): GameInfo {
+    public getGameData(): GameInfo {
         return {
-            serverTime: now,
+            serverTime: Date.now(),
             currentNumberOfTeams: Object.keys(this.teams).length,
             fishingAreaInfo: [],
             fishMarketInfo: [],
-            gameActive: this.isGameActive(),
+            gameState: this.getGameState(),
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
         };
+    }
+
+    public getTeamsData(): TeamInfo[] {
+        return Object.values(this.teams).map(team => {
+            return team.getTeamData();
+        });
     }
 
     public addPlayer(joinInfo: PlayerJoinInfo): void {
@@ -44,8 +50,14 @@ export class FishGame {
         }
     }
 
-    private isGameActive(): boolean {
-        return this.timeToStart() === 0 && this.timeToEnd() !== 0;
+    private getGameState(): GameState {
+        if (this.timeToStart() > 0) {
+            return "not-started";
+        } else if (this.timeToEnd() === 0) {
+            return "ended";
+        } else {
+            return "active";
+        }
     }
 
     private timeToEnd(now: number = Date.now()): number {

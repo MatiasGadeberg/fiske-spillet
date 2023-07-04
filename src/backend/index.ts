@@ -23,6 +23,9 @@ function onConnect(_: any): void {
 
     setInterval(() => {
         mqtt.publishToTopic("game-data", JSON.stringify(game.getGameData()));
+        game.getTeamsData().forEach(teamInfo => {
+            mqtt.publishToTopic(`team-data/${teamInfo.teamId}`, JSON.stringify(teamInfo));
+        });
     }, 500);
 }
 

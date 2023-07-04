@@ -1,12 +1,14 @@
 export type GameInfo = {
     serverTime: number;
     currentNumberOfTeams: number;
-    gameActive: boolean;
+    gameState: GameState;
     timeToEndInMs: number;
     timeToStartInMs: number;
     fishMarketInfo: FishMarketFishInfo[];
     fishingAreaInfo: FishingAreaFishInfo[];
 };
+
+export type GameState = "not-started" | "active" | "ended";
 
 type FishingAreaInfo = {
     name: string;
@@ -32,6 +34,7 @@ type FishingAreaFishInfo = FishBaseInfo & {
 };
 
 export type TeamInfo = {
+    teamId: string;
     currentActivePlayers: number;
     boatInventory: BoatInventoryInfo[];
     fishInventory: FishInventoryInfo[];

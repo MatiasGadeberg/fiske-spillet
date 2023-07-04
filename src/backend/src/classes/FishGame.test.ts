@@ -2,13 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FishGame } from "./FishGame";
 import type { GameInfo } from "../../../shared/types/GameTypes";
 
-// vi.mock("./FishTeam", () => {
-//     const FishTeam = vi.fn();
-//     FishTeam.prototype.addPlayer = vi.fn();
-//     FishTeam.prototype.getNumberOfPlayers = vi.fn();
-//     return { FishTeam };
-// });
-
 let game: FishGame;
 let gameStart: Date;
 
@@ -49,21 +42,21 @@ describe("Fishgame", () => {
             vi.setSystemTime(gameInitialization);
             gameData = game.getGameData();
 
-            expect(gameData.gameActive).toBe(false);
+            expect(gameData.gameState).toBe("not-started");
         });
 
         it("Should be active when time is between start and end", () => {
             vi.setSystemTime(gameStarted);
             gameData = game.getGameData();
 
-            expect(gameData.gameActive).toBe(true);
+            expect(gameData.gameState).toBe("active");
         });
 
         it("Should be non active after two hours", () => {
             vi.setSystemTime(gameEnded);
             gameData = game.getGameData();
 
-            expect(gameData.gameActive).toBe(false);
+            expect(gameData.gameState).toBe("ended");
         });
 
         it("Should return server time correctly", () => {
@@ -83,7 +76,9 @@ describe("Fishgame", () => {
             vi.setSystemTime(gameInitialization);
             gameData = game.getGameData();
 
-            expect(gameData.timeToEndInMs).toBe(10 * 1000 + 2 * 60 * 60 * 1000);
+            const tenSecondsPlusTwoHoursInMs = 10 * 1000 + 2 * 60 * 60 * 1000;
+
+            expect(gameData.timeToEndInMs).toBe(tenSecondsPlusTwoHoursInMs);
         });
     });
 
@@ -119,6 +114,29 @@ describe("Fishgame", () => {
             gameData = game.getGameData();
 
             expect(gameData.currentNumberOfTeams).toEqual(1);
+        });
+    });
+
+    describe("getTeamsData", () => {
+        it("Should contain no data when no teams have been added", () => {
+            const teamsData = game.getTeamsData();
+
+            expect(teamsData.length).toEqual(0);
+        });
+
+        it("Should contain one entry for each team added", () => {
+            game.addPlayer({
+                teamId: "test-team-1",
+                clientId: "test-player-1",
+            });
+            game.addPlayer({
+                teamId: "test-team-2",
+                clientId: "test-player-2",
+            });
+
+            const teamsData = game.getTeamsData();
+
+            expect(teamsData.length).toEqual(2);
         });
     });
 });
