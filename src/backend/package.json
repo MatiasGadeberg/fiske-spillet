@@ -6,7 +6,8 @@
     "type": "module",
     "scripts": {
         "start": "nodemon index.ts",
-        "test": "vitest"
+        "test": "vitest",
+        "build": "tsc"
     },
     "keywords": [],
     "author": "",
