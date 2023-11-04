@@ -1,13 +1,5 @@
 version: "3.8"
 services:
-    rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-            - "15675:15675" # Web MQTT
-            - "15672:15672" # Management plugin
-            - "1883:1883" # MQTT
-        volumes:
-            - "./src/middlelayer/etc/enabled_plugins:/etc/rabbitmq/enabled_plugins"
     frontend:
         build:
             context: ./src
@@ -17,8 +9,6 @@ services:
         volumes:
             - "./src/frontend/src:/app/frontend/src"
             - "./src/shared:/app/shared"
-        depends_on:
-            - rabbitmq
     gameserver:
         build:
             context: ./src
@@ -28,5 +18,3 @@ services:
         volumes:
             - "./src/backend:/app/backend"
             - "./src/shared:/app/shared"
-        depends_on:
-            - rabbitmq

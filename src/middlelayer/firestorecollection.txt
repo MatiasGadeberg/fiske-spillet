@@ -1,0 +1,20 @@
+teams
+    teamName
+    boats
+        type
+        shallowWaterSpeed
+        semiDeepWaterSpeed
+        deepWaterSpeed
+        maxHealth
+        id
+        inUse
+        currentHealth
+        timeToHarborInMs
+    players
+        connectionID
+    fish
+        type
+        amount
+
+games
+    

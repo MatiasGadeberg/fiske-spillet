@@ -1,0 +1,19 @@
+{
+    "name": "fiskespil-middlelayer",
+    "version": "1.0.0",
+    "description": "Middlelayer for fiskespillet in VM",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "ts-node index.ts"
+    },
+    "author": "Matias Gadeberg",
+    "license": "ISC",
+    "dependencies": {
+        "firebase": "^10.5.2"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.1"
+    }
+}

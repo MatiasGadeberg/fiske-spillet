@@ -7,12 +7,15 @@
     "scripts": {
         "start": "nodemon index.ts",
         "test": "vitest",
-        "build": "tsc"
+        "build": "tsc",
+        "build:container": "docker build -f Dockerfile.dev -t fiskespil/backend:latest ..",
+        "start:container": "docker run -it --rm fiskespil/backend:latest"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "firebase": "^10.5.2",
         "mqtt": "^4.3.7"
     },
     "devDependencies": {
