@@ -8,7 +8,8 @@
         "start": "nodemon index.ts",
         "test": "vitest",
         "build": "tsc",
-        "build:container": "docker build -f Dockerfile.dev -t fiskespil/backend:latest ..",
+        "build:container:dev": "docker build -f Dockerfile.dev -t fiskespil/backend:latest ..",
+        "build:container:prd": "docker build -f Dockerfile.prod -t fiskespil/backend:latest ..",
         "start:container": "docker run -it --rm fiskespil/backend:latest"
     },
     "keywords": [],

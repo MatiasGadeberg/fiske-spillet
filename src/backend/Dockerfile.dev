@@ -12,8 +12,8 @@ COPY ./shared ./shared
 
 COPY ./backend ./backend
 
-# VOLUME [ "/app/shared/node_modules" ]
-# VOLUME [ "/app/backend/node_modules" ]
+VOLUME [ "/app/shared/node_modules" ]
+VOLUME [ "/app/backend/node_modules" ]
 
 WORKDIR /app/backend
 
