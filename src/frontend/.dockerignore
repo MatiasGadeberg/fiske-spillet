@@ -1,3 +1,6 @@
 .gitignore
 *.md
 .prettierrc.json
+dist
+.vscode
+e2e

@@ -5,17 +5,25 @@ import {
     getFirestore,
     collection,
     CollectionReference,
-    addDoc,
     DocumentReference,
     setDoc,
+    doc,
+    onSnapshot,
+    DocumentSnapshot,
+    query,
+    Unsubscribe,
+    QuerySnapshot,
+    getDoc,
+    updateDoc,
 } from "firebase/firestore";
-import { GameInfo } from "../types/GameTypes";
+import { GameInfo, TeamInfo } from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
     private firestore: Firestore;
     private gameCollectionRef: CollectionReference;
     private game: DocumentReference | null;
+    private snapshots: Unsubscribe[];
 
     constructor() {
         // Your web app's Firebase configuration
@@ -33,18 +41,47 @@ export class FirebaseWrapper {
         this.firestore = getFirestore(this.app);
         this.gameCollectionRef = collection(this.firestore, "games");
         this.game = null;
+        this.snapshots = [];
     }
 
-    public async createGame(gameData: GameInfo) {
-        this.game = await addDoc(this.gameCollectionRef, gameData);
-        console.log("Game created in firebase");
-        console.log(this.game.id);
+    public async setGame(gameData: GameInfo) {
+        await setDoc(doc(this.firestore, "games", `fiskespil`), gameData);
     }
 
-    public async updateGame(gameData: GameInfo) {
-        if (this.game) {
-            await setDoc(this.game, gameData);
-            console.log("updated Game in firebase");
-        }
+    public async setTeam(teamData: TeamInfo) {
+        console.log("Setting team data");
+        console.log(teamData);
+
+        await setDoc(doc(this.firestore, "teams", teamData.teamId), teamData);
+    }
+
+    public async updateTeam(teamData: Partial<TeamInfo>) {
+        console.log("Updating team data");
+        console.log(teamData);
+
+        const teamRef = doc(this.firestore, "teams", teamData.teamId!);
+        await updateDoc(teamRef, teamData);
+    }
+
+    public async getTeamData(teamId: string) {
+        return await getDoc(doc(this.firestore, "teams", teamId));
+    }
+
+    public subscribe(collection: string, document: string, callback: (doc: DocumentSnapshot) => void) {
+        const snap = onSnapshot(doc(this.firestore, collection, document), callback);
+        this.snapshots.push(snap);
+    }
+
+    public subscribeToTeamData(callback: (snapshot: QuerySnapshot) => void) {
+        const teamsRef = collection(this.firestore, "teams");
+        const q = query(teamsRef);
+        const unsubscribe = onSnapshot(q, callback);
+        this.snapshots.push(unsubscribe);
+    }
+
+    public dropConnections(): void {
+        this.snapshots.forEach(snapshot => {
+            snapshot();
+        });
     }
 }

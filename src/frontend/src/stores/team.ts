@@ -6,12 +6,16 @@ import type {
   GameInfo,
   TeamInfo
 } from '../../../shared/types/GameTypes'
+import { useFirestoreStore } from './firestore'
+import { useAuthStore } from './auth'
 
 export const useTeamStore = defineStore('team', () => {
   const currentActivePlayers = ref(0)
   const teamId = ref('')
   const boatInventory = ref([] as BoatInventoryInfo[])
   const fishInventory = ref([] as FishInventoryInfo[])
+  const store = useFirestoreStore()
+  const auth = useAuthStore()
 
   const updateTeamData = (teamInfo: TeamInfo): void => {
     currentActivePlayers.value = teamInfo.currentActivePlayers
@@ -21,6 +25,12 @@ export const useTeamStore = defineStore('team', () => {
 
   const setTeamId = (teamName: string): void => {
     teamId.value = teamName
+    store.addPlayer(teamId.value)
+  }
+
+  const removePlayer = async () => {
+    await store.removePlayer(teamId.value)
+    auth.logout()
   }
 
   return {
@@ -29,6 +39,7 @@ export const useTeamStore = defineStore('team', () => {
     teamId,
     boatInventory,
     fishInventory,
-    setTeamId
+    setTeamId,
+    removePlayer
   }
 })

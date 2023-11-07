@@ -5,7 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import { useMqttStore } from './stores/mqtt'
+import { useTeamStore } from './stores/team'
 
 const app = createApp({
   extends: App,
@@ -14,9 +14,9 @@ const app = createApp({
     window.addEventListener('beforeunload', this.leaving)
   },
   methods: {
-    leaving() {
-      const mqtt = useMqttStore()
-      mqtt.publishPlayerLeft()
+    async leaving() {
+      const team = useTeamStore()
+      await team.removePlayer()
     }
   }
 })

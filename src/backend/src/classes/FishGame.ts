@@ -1,6 +1,4 @@
-import type { PlayerJoinInfo, PlayerLeaveInfo } from "../../../shared/types/ManagementTypes";
 import type { GameInfo, GameState, TeamInfo } from "../../../shared/types/GameTypes";
-import { FishTeam } from "./FishTeam.js";
 
 export type FishGameProps = {
     startTime: number;
@@ -9,21 +7,18 @@ export type FishGameProps = {
 export class FishGame {
     private startTime: number;
     private endTime: number;
-    private teams: {
-        [teamId: string]: FishTeam;
-    };
-
+    private teams: number;
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 2;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
-        this.teams = {};
+        this.teams = 0;
     }
 
     public getGameData(): GameInfo {
         return {
             serverTime: Date.now(),
-            currentNumberOfTeams: Object.keys(this.teams).length,
+            currentNumberOfTeams: this.teams,
             fishingAreaInfo: [],
             fishMarketInfo: [],
             gameState: this.getGameState(),
@@ -32,29 +27,12 @@ export class FishGame {
         };
     }
 
-    public getTeamsData(): TeamInfo[] {
-        return Object.values(this.teams).map(team => {
-            return team.getTeamData();
-        });
+    public addTeam(): void {
+        this.teams++;
     }
 
-    public addPlayer(joinInfo: PlayerJoinInfo): void {
-        if (!this.teams[joinInfo.teamId]) {
-            this.teams[joinInfo.teamId] = new FishTeam({
-                teamId: joinInfo.teamId,
-                players: [joinInfo.clientId],
-            });
-        } else {
-            this.teams[joinInfo.teamId].addPlayer(joinInfo.clientId);
-        }
-    }
-
-    public removePlayer(leaveInfo: PlayerLeaveInfo): void {
-        const team = this.teams[leaveInfo.teamId];
-        team.removePlayer(leaveInfo.clientId);
-        if (team.hasNoActivePlayers()) {
-            delete this.teams[leaveInfo.teamId];
-        }
+    public removeTeam(): void {
+        this.teams--;
     }
 
     private getGameState(): GameState {

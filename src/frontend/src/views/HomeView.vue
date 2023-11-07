@@ -14,5 +14,6 @@ const team = useTeamStore()
     <h1>Time to start is {{ new Date(game.timeToStartInMs).toISOString().slice(11, 19) }}</h1>
     <h1>Time to end is {{ new Date(game.timeToEndInMs).toISOString().slice(11, 19) }}</h1>
     <h1>Game state is {{ game.gameState }}</h1>
+    <button @click="team.removePlayer()">Log af</button>
   </main>
 </template>

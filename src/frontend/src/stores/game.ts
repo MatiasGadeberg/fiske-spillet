@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { GameInfo } from '../../../shared/types/GameTypes'
+import { useFirestoreStore } from './firestore'
 
 export const useGameStore = defineStore('game', () => {
   const currentNumberOfTeams = ref(0)
@@ -8,6 +9,7 @@ export const useGameStore = defineStore('game', () => {
   const timeToStartInMs = ref(0)
   const gameState = ref('')
   const servertime = ref(0)
+  const firestore = useFirestoreStore()
 
   const updateGameData = (gameInfo: GameInfo): void => {
     currentNumberOfTeams.value = gameInfo.currentNumberOfTeams
@@ -17,8 +19,14 @@ export const useGameStore = defineStore('game', () => {
     servertime.value = gameInfo.serverTime
   }
 
+  firestore.subscribe('games', 'fiskespil', (doc) => {
+    const data = doc.data() as GameInfo | undefined
+    if (data) {
+      updateGameData(data)
+    }
+  })
+
   return {
-    updateGameData,
     currentNumberOfTeams,
     timeToEndInMs,
     timeToStartInMs,
