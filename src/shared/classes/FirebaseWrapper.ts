@@ -1,5 +1,7 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, FirebaseApp } from "firebase/app";
+import type { FirebaseApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
+import type { Unsubscribe } from "firebase/firestore";
 import {
     Firestore,
     getFirestore,
@@ -11,12 +13,11 @@ import {
     onSnapshot,
     DocumentSnapshot,
     query,
-    Unsubscribe,
     QuerySnapshot,
     getDoc,
     updateDoc,
 } from "firebase/firestore";
-import { GameInfo, TeamInfo } from "../types/GameTypes";
+import type { GameInfo, TeamInfo } from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
