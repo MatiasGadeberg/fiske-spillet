@@ -34,10 +34,10 @@ type FishingAreaFishInfo = FishBaseInfo & {
 };
 
 export type TeamInfo = {
-    teamId: string;
-    currentActivePlayers: number;
-    boatInventory: BoatInventoryInfo[];
-    fishInventory: FishInventoryInfo[];
+    teamName: string;
+    points: number;
+    salt: string;
+    password: string;
 };
 
 type BoatBaseInfo = {

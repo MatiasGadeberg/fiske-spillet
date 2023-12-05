@@ -4,13 +4,11 @@ teams (collection)
         boats (collection)
             boatId (document)
                 boatType
-                shallowWaterSpeed
-                semiDeepWaterSpeed
-                deepWaterSpeed
-                maxHealth
                 inUse
                 currentHealth
-                timeToHarborInMs
+                timeToDestinationInMs
+                destination (fishAreaName or harbor)
+                status (outbound, inbound, docked)
                 cargo (collection)
                     fishName (document)
                         amount
@@ -20,10 +18,11 @@ teams (collection)
 
 boats (collection)
     boatType (document)
-        shallowWaterSpeed
-        semiDeepWaterSpeed
-        deepWaterSpeed
         maxHealth
+        cargoSize
+        fishingAreas (collection)
+            fishAreaName (document)
+                timeToReach
 
 fish (collection)
     fishName (document)
@@ -42,9 +41,10 @@ events (collection)
             fishName (document)
                 fishAmount
                 fishPrice
-        boatType
-        boatPrice
-        boatAmount
+        boat (collection)
+            boatType (document)
+                boatPrice
+                boatAmount
         fishAreaName
 
 games (collection)
@@ -62,9 +62,7 @@ games (collection)
                 maxPrice
         fishAreaInfo (collection)
             areaName (document)
-                waterType
                 openForFishing
-                distanceFromShore
                 fish (collection)
                     fishname (document)
                         maxAmount
@@ -102,9 +100,22 @@ Gameserver
             - update amount of fishName document in fish collection
         - On boat sail event
             - Update boat with boatId field inUse to true
+            - Track boat progress i.e tracking how long til destingation (To be figured out )
+                - Periodically updates team boat document to track boat time to destination 
+                    - update boat time to destination based on old time to destination for boats with staus != docked
+                    - if updated time to destination =< 0 
+                        - if boat status = outbound
+                            - trigger fish catch event
+                            - change boat status to inbound
+                            - update boat time to destination
+                        - if boat status = inbound
+                            - trigger fish store event
+                                - On team document update fish collection with boat cargo
+                            - update boat status to docked
+                            - update boat cargo to be empty
         - On fish catch event
-            - Evaluate 
-            - Update boat with boatId field cargo with 
+            - Check fish area for amount of fish available
+            - Update boat with boatId field cargo with fish according to boat type, amount available 
     - Updates fishmarket info on fish sell event
         - Add fish to supply
     - Updates fish area info on fish catch event
@@ -118,20 +129,9 @@ User Browser
             - Create starting fish inventory (might be empty)
     - Subscribes to team document for updates to points, boats and fish
     - Subscribes to game data for updates on game time, fish area info and fish market info
-    - Periodically updates team boat document to track boat time to destination
-        - update boat time to destination based on speed and old time to destination for boats with staus != docked
-        - if updated time to destination =< 0 
-            - if boat status = outbound
-                - trigger fish catch event
-                - change boat status to inbound
-                - update boat time to destination
-            - if boat status = inbound
-                - trigger fish store event
-                    - On team document update fish collection with boat cargo
-                - update boat status to docked
-                - update boat cargo to be empty
     - Allow users to send boat to fish area 
         - Choose boat and destination
+        - Trigger boat sail event
         - Update team boatId document
             - update boat status to outbound
             - Updated boat time to destination
@@ -168,5 +168,13 @@ User Browser
                     - fishName
                     - fishAmount
                     - fishPrice
+        - On boat sail event
+            - Send event with
+                - teamId
+                - boatId
+                - eventTarget boat
+                - eventType sail
+                - destination
+                - timeToDestinationInMs
 
     

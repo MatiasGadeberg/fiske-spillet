@@ -49,18 +49,15 @@ export class FirebaseWrapper {
         await setDoc(doc(this.firestore, "games", `fiskespil`), gameData);
     }
 
-    public async setTeam(teamData: TeamInfo) {
-        console.log("Setting team data");
-        console.log(teamData);
-
-        await setDoc(doc(this.firestore, "teams", teamData.teamId), teamData);
+    public async setTeam(teamName: string, teamData: { points: number; password: string; salt: string }) {
+        await setDoc(doc(this.firestore, "teams", teamName), teamData);
     }
 
     public async updateTeam(teamData: Partial<TeamInfo>) {
         console.log("Updating team data");
         console.log(teamData);
 
-        const teamRef = doc(this.firestore, "teams", teamData.teamId!);
+        const teamRef = doc(this.firestore, "teams", teamData.teamName!);
         await updateDoc(teamRef, teamData);
     }
 

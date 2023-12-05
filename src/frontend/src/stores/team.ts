@@ -17,7 +17,7 @@ export const useTeamStore = defineStore('team', () => {
   const store = useFirestoreStore()
   const auth = useAuthStore()
 
-  const updateTeamData = (teamInfo: TeamInfo): void => {
+  const updateTeamData = (teamInfo: any): void => {
     currentActivePlayers.value = teamInfo.currentActivePlayers
     boatInventory.value = teamInfo.boatInventory
     fishInventory.value = teamInfo.fishInventory
@@ -25,12 +25,6 @@ export const useTeamStore = defineStore('team', () => {
 
   const setTeamId = (teamName: string): void => {
     teamId.value = teamName
-    store.addPlayer(teamId.value)
-  }
-
-  const removePlayer = async () => {
-    await store.removePlayer(teamId.value)
-    auth.logout()
   }
 
   return {
@@ -39,7 +33,6 @@ export const useTeamStore = defineStore('team', () => {
     teamId,
     boatInventory,
     fishInventory,
-    setTeamId,
-    removePlayer
+    setTeamId
   }
 })

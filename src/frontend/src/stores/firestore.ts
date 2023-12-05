@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
@@ -14,31 +13,20 @@ export const useFirestoreStore = defineStore('firestore', () => {
     firestore.subscribe(collection, document, callback)
   }
 
-  const addPlayer = async (teamId: string) => {
-    const team = await firestore.getTeamData(teamId)
-    if (!team.data()) {
-      firestore.setTeam({
-        boatInventory: [],
-        currentActivePlayers: 1,
-        fishInventory: [],
-        teamId
-      })
+  const getTeamData = async (teamName: string) => {
+    const team = await firestore.getTeamData(teamName)
+    if (team.exists()) {
+      return team.data() as { points: number; password: string; salt: string }
     } else {
-      firestore.updateTeam({
-        currentActivePlayers: team.data()!.currentActivePlayers + 1,
-        teamId
-      })
+      throw new Error(`No team found with team name: ${teamName}`)
     }
   }
 
-  const removePlayer = async (teamId: string) => {
-    const team = await firestore.getTeamData(teamId)
-    if (team.data()) {
-      firestore.updateTeam({
-        currentActivePlayers: team.data()!.currentActivePlayers - 1,
-        teamId
-      })
-    }
+  const createTeam = async (
+    teamName: string,
+    teamdData: { points: number; password: string; salt: string }
+  ) => {
+    await firestore.setTeam(teamName, teamdData)
   }
 
   const joinGame = () => {
@@ -48,7 +36,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
   return {
     subscribe,
     joinGame,
-    addPlayer,
-    removePlayer
+    getTeamData,
+    createTeam
   }
 })
