@@ -1,3 +1,5 @@
 {
-  "message": "hello i18n !!"
+  "login": {
+      "create-new-team": "Create new team"
+  }
 }
