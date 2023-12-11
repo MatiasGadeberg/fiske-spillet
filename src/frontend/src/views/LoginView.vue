@@ -4,7 +4,7 @@
       <div class="max-w-md w-full space-y-8">
         <div>
           <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {{ newTeam ? 'Opret nyt hold' : 'Log på eksisterende hold' }}
+            {{ newTeam ? $t('login.create-new-team') : 'Log på eksisterende hold' }}
           </h2>
         </div>
         <form
