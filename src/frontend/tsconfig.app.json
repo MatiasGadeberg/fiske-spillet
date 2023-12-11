@@ -3,6 +3,9 @@
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "../shared/**/*"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
+      "plugins": [
+          { "name": "typescript-vue-plugin"}
+      ],
     "composite": true,
     "baseUrl": ".",
     "paths": {

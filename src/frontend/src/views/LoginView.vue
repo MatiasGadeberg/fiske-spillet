@@ -127,6 +127,11 @@
 </template>
 
 <script setup lang="ts">
+function test(test: string) {
+    console.log(test)
+}
+
+test('hello')
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 
@@ -135,4 +140,5 @@ const teamName = ref('')
 const repeatPassword = ref('')
 const password = ref('')
 const newTeam = ref(false)
+
 </script>

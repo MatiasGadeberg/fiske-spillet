@@ -1,13 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import router from '@/router'
-import { useTeamStore } from './team'
 import { useFirestoreStore } from './firestore'
 import { pbkdf2Sync } from 'crypto'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
-  const team = useTeamStore()
   const store = useFirestoreStore()
   const loginError = ref(false)
   const loginErrorMessage = ref('')
@@ -34,15 +32,21 @@ export const useAuthStore = defineStore('auth', () => {
     if (password !== repeatPassword) {
       loginError.value = true
       loginErrorMessage.value = 'Passwords do not match'
+    }
+
+    const teamData = await store.getTeamData(teamName)
+    if (teamData) {
+        loginError.value = true
+        loginErrorMessage.value = `Team with name ${teamName} already exists`
     } else {
-      const salt = Date.now().toString()
-      const hash = hashPassword(password, salt)
-      await store.createTeam(teamName, {
-        password: hash,
-        salt,
-        points: 0
-      })
-      setLogin()
+        const salt = Date.now().toString()
+        const hash = hashPassword(password, salt)
+        await store.createTeam(teamName, {
+            password: hash,
+            salt,
+            points: 0
+        })
+        setLogin()
     }
   }
 
