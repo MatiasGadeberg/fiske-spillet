@@ -21,7 +21,7 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to, _) => {
   const auth = useAuthStore()
   if (!auth.isLoggedIn && to.name !== 'login') {
     return { name: 'login' }

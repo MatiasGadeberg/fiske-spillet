@@ -2,7 +2,6 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { useFirestoreStore } from './firestore'
-import { pbkdf2Sync } from 'crypto'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
@@ -14,15 +13,17 @@ export const useAuthStore = defineStore('auth', () => {
     loginError.value = false
     loginErrorMessage.value = ''
 
-    try {
-      const teamData = await store.getTeamData(teamName)
-      const hash = hashPassword(password, teamData.salt)
-      if (hash === teamData.password) {
-        setLogin()
-      }
-    } catch (error: any) {
+    const teamData = await store.getTeamData(teamName)
+    if (!teamData) {
       loginError.value = true
-      loginErrorMessage.value = error
+      loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer ikke`
+    } else {
+      if (password === teamData.password) {
+        setLogin()
+      } else {
+        loginError.value = true
+        loginErrorMessage.value = 'Forkert kodeord'
+      }
     }
   }
 
@@ -31,27 +32,20 @@ export const useAuthStore = defineStore('auth', () => {
     loginErrorMessage.value = ''
     if (password !== repeatPassword) {
       loginError.value = true
-      loginErrorMessage.value = 'Passwords do not match'
+      loginErrorMessage.value = 'Kodeordene er ikke ens'
     }
 
     const teamData = await store.getTeamData(teamName)
     if (teamData) {
-        loginError.value = true
-        loginErrorMessage.value = `Team with name ${teamName} already exists`
+      loginError.value = true
+      loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer allerede`
     } else {
-        const salt = Date.now().toString()
-        const hash = hashPassword(password, salt)
-        await store.createTeam(teamName, {
-            password: hash,
-            salt,
-            points: 0
-        })
-        setLogin()
+      await store.createTeam(teamName, {
+        password,
+        points: 0
+      })
+      setLogin()
     }
-  }
-
-  function hashPassword(password: string, salt: string): string {
-    return pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex')
   }
 
   function setLogin() {

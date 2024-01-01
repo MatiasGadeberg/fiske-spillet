@@ -16,16 +16,13 @@ export const useFirestoreStore = defineStore('firestore', () => {
   const getTeamData = async (teamName: string) => {
     const team = await firestore.getTeamData(teamName)
     if (team.exists()) {
-      return team.data() as { points: number; password: string; salt: string }
+      return team.data() as { points: number; password: string }
     } else {
-      throw new Error(`No team found with team name: ${teamName}`)
+      return null
     }
   }
 
-  const createTeam = async (
-    teamName: string,
-    teamdData: { points: number; password: string; salt: string }
-  ) => {
+  const createTeam = async (teamName: string, teamdData: { points: number; password: string }) => {
     await firestore.setTeam(teamName, teamdData)
   }
 

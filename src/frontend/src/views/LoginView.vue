@@ -4,7 +4,7 @@
       <div class="max-w-md w-full space-y-8">
         <div>
           <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {{ newTeam ? $t('login.create-new-team') : 'Log på eksisterende hold' }}
+            {{ newTeam ? 'Opret nyt hold' : 'Log på eksisterende hold' }}
           </h2>
         </div>
         <form
@@ -94,9 +94,6 @@
                 />
               </div>
             </div>
-            <div v-if="auth.loginError" class="text-red-500 text-sm mt-2">
-              {{ auth.loginErrorMessage }}
-            </div>
 
             <div>
               <button
@@ -122,16 +119,14 @@
           </button>
         </div>
       </div>
+      <div v-if="auth.loginError" class="text-red-500 text-sm mt-2">
+        {{ auth.loginErrorMessage }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-function test(test: string) {
-    console.log(test)
-}
-
-test('hello')
 import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
 
@@ -140,5 +135,4 @@ const teamName = ref('')
 const repeatPassword = ref('')
 const password = ref('')
 const newTeam = ref(false)
-
 </script>

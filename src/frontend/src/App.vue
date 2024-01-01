@@ -1,9 +1,13 @@
 <script setup lang="ts">
-
+import { RouterView } from 'vue-router'
+import TheHeader from './components/TheHeader.vue'
 </script>
 
 <template>
-  <div class="flex justify-center items-center bg-slate-200 min-h-screen">
+  <div>
+    <TheHeader />
     <RouterView />
   </div>
 </template>
+
+<style scoped></style>

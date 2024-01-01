@@ -1,20 +1,20 @@
-version: "3.8"
+version: '3.8'
 services:
-    frontend:
-        build:
-            context: ./src
-            dockerfile: frontend/Dockerfile.dev
-        ports:
-            - "5173:5173"
-        volumes:
-            - "./src/frontend/src:/app/frontend/src"
-            - "./src/shared:/app/shared"
-    gameserver:
-        build:
-            context: ./src
-            dockerfile: backend/Dockerfile.dev
-        stdin_open: true
-        tty: true
-        volumes:
-            - "./src/backend:/app/backend"
-            - "./src/shared:/app/shared"
+  frontend:
+    build:
+      context: ./src
+      dockerfile: frontend/Dockerfile.dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - './src/shared:/app/shared'
+      - './src/frontend/src:/app/frontend/src'
+  gameserver:
+    build:
+      context: ./src
+      dockerfile: backend/Dockerfile.dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - './src/backend:/app/backend'
+      - './src/shared:/app/shared'

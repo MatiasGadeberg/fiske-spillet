@@ -5,17 +5,12 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
-import i18n from './i18n'
 
-const app = createApp({
-  extends: App,
-  created() {
-    console.log('created OK')
-    window.addEventListener('beforeunload', this.leaving)
-  },
-}).use(i18n)
+const app = createApp(App)
 
+// @ts-ignore
 app.use(createPinia())
+// @ts-ignore
 app.use(router)
 
 app.mount('#app')
