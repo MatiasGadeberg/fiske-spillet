@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
+import type { TeamInfo } from '../../../shared/types/GameTypes'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -22,7 +23,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     }
   }
 
-  const createTeam = async (teamName: string, teamdData: { points: number; password: string }) => {
+  const createTeam = async (teamName: string, teamdData: TeamInfo) => {
     await firestore.setTeam(teamName, teamdData)
   }
 

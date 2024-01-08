@@ -2,10 +2,15 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { useFirestoreStore } from './firestore'
+import { useGameStore } from './game'
+import { useTeamStore } from './team'
+import type { BoatInventoryInfo, FishInventoryInfo } from '../../../shared/types/GameTypes'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
   const store = useFirestoreStore()
+  const team = useTeamStore()
+  const game = useGameStore()
   const loginError = ref(false)
   const loginErrorMessage = ref('')
 
@@ -19,7 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
       loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer ikke`
     } else {
       if (password === teamData.password) {
-        setLogin()
+        setLogin(teamName)
       } else {
         loginError.value = true
         loginErrorMessage.value = 'Forkert kodeord'
@@ -40,16 +45,22 @@ export const useAuthStore = defineStore('auth', () => {
       loginError.value = true
       loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer allerede`
     } else {
+        const fishInventory: FishInventoryInfo[] = []
+        const boatInventory: BoatInventoryInfo[] = []
       await store.createTeam(teamName, {
         password,
-        points: 0
+        points: 0,
+        fish: fishInventory,
+        boats: boatInventory
       })
-      setLogin()
+      setLogin(teamName)
     }
   }
 
-  function setLogin() {
+  function setLogin(teamName: string) {
     isLoggedIn.value = true
+    team.subscribeToTeamData(teamName)
+    game.subscribeToGameData()
     router.push('/')
   }
 

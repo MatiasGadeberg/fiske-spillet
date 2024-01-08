@@ -9,6 +9,7 @@ export const useGameStore = defineStore('game', () => {
   const timeToStartInMs = ref(0)
   const gameState = ref('')
   const servertime = ref(0)
+  const timeToStartLocale = ref('')
   const firestore = useFirestoreStore()
 
   const updateGameData = (gameInfo: GameInfo): void => {
@@ -17,20 +18,25 @@ export const useGameStore = defineStore('game', () => {
     timeToStartInMs.value = gameInfo.timeToStartInMs
     gameState.value = gameInfo.gameState
     servertime.value = gameInfo.serverTime
+    timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
   }
 
-  firestore.subscribe('games', 'fiskespil', (doc) => {
-    const data = doc.data() as GameInfo | undefined
-    if (data) {
-      updateGameData(data)
-    }
-  })
+  const subscribeToGameData = (): void => {
+    firestore.subscribe('games', 'fiskespil', (doc) => {
+      const data = doc.data() as GameInfo | undefined
+      if (data) {
+        updateGameData(data)
+      }
+    })
+  }
 
   return {
     currentNumberOfTeams,
     timeToEndInMs,
     timeToStartInMs,
     gameState,
-    servertime
+    timeToStartLocale,
+    servertime,
+    subscribeToGameData
   }
 })

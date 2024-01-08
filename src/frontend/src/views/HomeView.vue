@@ -1,18 +1,13 @@
 <script setup lang="ts">
+import GameView from './GameView.vue'
+import PreGameView from './PreGameView.vue'
 import { useGameStore } from '@/stores/game'
-import { useTeamStore } from '@/stores/team'
 const game = useGameStore()
-const team = useTeamStore()
 </script>
 
 <template>
-  <main>
-    <h1>There are currently {{ game.currentNumberOfTeams }} teams joined</h1>
-    <h1>You have joined the team {{ team.teamId }}</h1>
-    <h1>There are {{ team.currentActivePlayers }} players joined to your team</h1>
-    <h1>Time on server is {{ new Date(game.servertime).toLocaleTimeString() }}</h1>
-    <h1>Time to start is {{ new Date(game.timeToStartInMs).toISOString().slice(11, 19) }}</h1>
-    <h1>Time to end is {{ new Date(game.timeToEndInMs).toISOString().slice(11, 19) }}</h1>
-    <h1>Game state is {{ game.gameState }}</h1>
+  <main class="bg-slate-200 min-h-screen">
+    <pre-game-view v-if="game.gameState !== 'active'"></pre-game-view>
+    <game-view v-else></game-view>
   </main>
 </template>

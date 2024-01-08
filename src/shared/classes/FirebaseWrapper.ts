@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import type { FirebaseApp } from 'firebase/app';
 import { initializeApp } from 'firebase/app';
 import type { Unsubscribe } from 'firebase/firestore';
@@ -27,7 +26,6 @@ export class FirebaseWrapper {
   private snapshots: Unsubscribe[];
 
   constructor() {
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: 'AIzaSyBm8KO8rDc0dxGqrIlvSVozOfgbnU6Rze8',
       authDomain: 'vm-fiskespillet.firebaseapp.com',
@@ -37,7 +35,6 @@ export class FirebaseWrapper {
       appId: '1:402889246876:web:9e13d7ae6f2c33b8380559'
     };
 
-    // Initialize Firebase
     this.app = initializeApp(firebaseConfig);
     this.firestore = getFirestore(this.app);
     this.gameCollectionRef = collection(this.firestore, 'games');
@@ -59,11 +56,11 @@ export class FirebaseWrapper {
     console.log('Team created');
   }
 
-  public async updateTeam(teamData: Partial<TeamInfo>) {
+  public async updateTeamData(teamName: string, teamData: Partial<TeamInfo>) {
     console.log('Updating team data');
     console.log(teamData);
 
-    const teamRef = doc(this.firestore, 'teams', teamData.teamName!);
+    const teamRef = doc(this.firestore, 'teams', teamName);
     await updateDoc(teamRef, teamData);
   }
 
@@ -83,7 +80,7 @@ export class FirebaseWrapper {
     this.snapshots.push(snap);
   }
 
-  public subscribeToTeamData(callback: (snapshot: QuerySnapshot) => void) {
+  public subscribeToTeamsData(callback: (snapshot: QuerySnapshot) => void) {
     const teamsRef = collection(this.firestore, 'teams');
     const q = query(teamsRef);
     const unsubscribe = onSnapshot(q, callback);

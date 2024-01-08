@@ -1,4 +1,4 @@
-import type { GameInfo, GameState, TeamInfo } from "../../../shared/types/GameTypes";
+import type { GameInfo, GameState } from "../../../shared/types/GameTypes";
 
 export type FishGameProps = {
     startTime: number;
@@ -7,18 +7,18 @@ export type FishGameProps = {
 export class FishGame {
     private startTime: number;
     private endTime: number;
-    private teams: number;
+    private teams: string[];
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 2;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
-        this.teams = 0;
+        this.teams = [];
     }
 
     public getGameData(): GameInfo {
         return {
             serverTime: Date.now(),
-            currentNumberOfTeams: this.teams,
+            currentNumberOfTeams: this.teams.length,
             fishingAreaInfo: [],
             fishMarketInfo: [],
             gameState: this.getGameState(),
@@ -27,12 +27,15 @@ export class FishGame {
         };
     }
 
-    public addTeam(): void {
-        this.teams++;
+    public addTeam(teamName: string): void {
+        this.teams.push(teamName);
     }
 
-    public removeTeam(): void {
-        this.teams--;
+    public removeTeam(teamName: string): void {
+        const idx = this.teams.indexOf(teamName);
+        if (idx !== -1) {
+            this.teams.splice(idx, 1);
+        }
     }
 
     private getGameState(): GameState {
