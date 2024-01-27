@@ -1,8 +1,27 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import FishCard from '../../components/FishCard.vue'
+const fishArray = [
+  {
+    name: 'Torsk',
+    image: 'torsk'
+  },
+  {
+    name: 'Sild',
+    image: 'sild'
+  }
+]
+</script>
 
 <template>
   <div class="bg-green-300 min-h-screen">
-    <h1>This is the fish market page</h1>
+    <div>
+      <h1>Velkommen til fiskemarkedet - her kan I sælge jeres fisk</h1>
+      <ul>
+        <li v-for="fish in fishArray" :key="fish.name">
+          <FishCard :name="fish.name" :image="fish.image" />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
