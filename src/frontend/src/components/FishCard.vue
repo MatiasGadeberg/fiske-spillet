@@ -10,7 +10,14 @@
     />
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
-      <div class="font-bold">{{ currentPrice }} VM$/Ton</div>
+      <div class="flex items-center">
+        <div class="font-bold">{{ currentPrice }} VM$/Ton</div>
+        <div>
+          <trending-up v-if="growth === 'positive'" class="text-green-500" />
+          <trending-down v-if="growth === 'negative'" class="text-red-500" />
+          <trending-neutral v-if="growth === 'neutral'" class="text-yellow-500" />
+        </div>
+      </div>
     </div>
     <div class="team-inventory text-center text-lg">
       <div>Jeres beholdning</div>
@@ -42,6 +49,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import TrendingUp from 'vue-material-design-icons/TrendingUp.vue'
+import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
+import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
 
 const props = defineProps({
   name: String,
@@ -53,6 +63,7 @@ const currentPrice = 25
 const teamAmount = 10
 const maxAmount = teamAmount
 const minAmount = 0
+let growth: 'positive' | 'negative' | 'neutral' = 'positive'
 
 const increment = () => {
   if (toSell.value < maxAmount) {
