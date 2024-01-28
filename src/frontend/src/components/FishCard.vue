@@ -1,16 +1,16 @@
 <template>
-  <div class="card border rounded-lg overflow-hidden shadow-md bg-white p-2 m-4 max-w-md">
+  <div class="card border rounded-lg overflow-hidden shadow-md bg-green-100 p-2 m-4 max-w-md">
     <div class="card-header text-lg font-bold py-2 text-center">
       {{ name }}
     </div>
     <img
       :src="getImageUrl().toString()"
       alt="Product Image"
-      class="card-image w-full h-40 object-cover"
+      class="card-image w-full h-40 object-cover rounded"
     />
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
-      <div class="flex items-center">
+      <div class="flex items-center justify-center">
         <div class="font-bold">{{ currentPrice }} VM$/Ton</div>
         <div>
           <trending-up v-if="growth === 'positive'" class="text-green-500" />
@@ -41,7 +41,10 @@
         <button @click="incrementToMax" class="amount-button">++</button>
       </div>
     </div>
-    <button @click="sell" class="card-button bg-blue-500 text-white py-2 px-4 mt-2 rounded-md">
+    <button
+      @click="sell"
+      class="card-button bg-blue-500 text-white py-2 px-4 mt-2 rounded-md w-full"
+    >
       Sælg
     </button>
   </div>
@@ -52,18 +55,25 @@ import { ref } from 'vue'
 import TrendingUp from 'vue-material-design-icons/TrendingUp.vue'
 import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
 import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
+import { useGameStore } from '@/stores/game'
+import { useTeamStore } from '@/stores/team'
 
 const props = defineProps({
-  name: String,
-  image: String
+  name: {
+    type: String,
+    required: true
+  }
 })
 
+const game = useGameStore()
+const team = useTeamStore()
+
 const toSell = ref(0)
-const currentPrice = 25
-const teamAmount = 10
+const currentPrice = game.fishMarket[props.name].currentPrice
+const growth = game.fishMarket[props.name].growth
+const teamAmount = team.fishInventory[props.name].amount
 const maxAmount = teamAmount
 const minAmount = 0
-let growth: 'positive' | 'negative' | 'neutral' = 'positive'
 
 const increment = () => {
   if (toSell.value < maxAmount) {
@@ -97,7 +107,7 @@ const handleInput = () => {
 }
 
 function getImageUrl() {
-  return new URL(`../assets/fishImages/${props.image}.jpg`, import.meta.url)
+  return new URL(`../assets/fishImages/${props.name}.jpg`, import.meta.url)
 }
 </script>
 

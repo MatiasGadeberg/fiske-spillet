@@ -2,12 +2,10 @@
 import FishCard from '../../components/FishCard.vue'
 const fishArray = [
   {
-    name: 'Torsk',
-    image: 'torsk'
+    name: 'Torsk'
   },
   {
-    name: 'Sild',
-    image: 'sild'
+    name: 'Sild'
   }
 ]
 </script>
@@ -15,12 +13,16 @@ const fishArray = [
 <template>
   <div class="bg-green-300 min-h-screen">
     <div>
-      <h1>Velkommen til fiskemarkedet - her kan I sælge jeres fisk</h1>
-      <ul>
-        <li v-for="fish in fishArray" :key="fish.name">
-          <FishCard :name="fish.name" :image="fish.image" />
-        </li>
-      </ul>
+      <div class="flex justify-center flex-col items-center">
+        <h1 class="font-bold text-4xl m-3">Velkommen til Fiskemarkedet</h1>
+        <h2 class="text-2xl">Her kan I sælge de fisk I har fanget</h2>
+      </div>
+      <div class="fish-card-container flex">
+        <div v-for="fish in fishArray" :key="fish.name" class="fish-card">
+          <FishCard :name="fish.name" />
+        </div>
+      </div>
+      <ul></ul>
     </div>
   </div>
 </template>

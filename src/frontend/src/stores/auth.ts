@@ -4,7 +4,11 @@ import router from '@/router'
 import { useFirestoreStore } from './firestore'
 import { useGameStore } from './game'
 import { useTeamStore } from './team'
-import type { BoatInventoryInfo, FishInventoryInfo } from '../../../shared/types/GameTypes'
+import type {
+  BoatInventoryInfo,
+  FishInventory,
+  FishInventoryInfo
+} from '../../../shared/types/GameTypes'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
@@ -45,8 +49,8 @@ export const useAuthStore = defineStore('auth', () => {
       loginError.value = true
       loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer allerede`
     } else {
-        const fishInventory: FishInventoryInfo[] = []
-        const boatInventory: BoatInventoryInfo[] = []
+      const fishInventory: FishInventory = {}
+      const boatInventory: BoatInventoryInfo[] = []
       await store.createTeam(teamName, {
         password,
         points: 0,
@@ -61,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoggedIn.value = true
     team.subscribeToTeamData(teamName)
     game.subscribeToGameData()
-    router.push('/')
+    router.push('/game/fish')
   }
 
   const logout = () => {

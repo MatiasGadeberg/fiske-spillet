@@ -4,7 +4,7 @@ import TheHeader from './components/TheHeader.vue'
 </script>
 
 <template>
-  <div class="bg-slate-200">
+  <div class="bg-slate-200 app-container font-sans">
     <TheHeader />
     <RouterView />
   </div>
