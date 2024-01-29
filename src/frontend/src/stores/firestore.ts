@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { TeamInfo } from '../../../shared/types/GameTypes'
+import type { EventData, TeamInfo } from '../../../shared/types/GameTypes'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -31,10 +31,35 @@ export const useFirestoreStore = defineStore('firestore', () => {
     console.log('test')
   }
 
+  const sellFish = (
+    teamName: string,
+    fishName: string,
+    sellingPrice: number,
+    fishAmountToSell: number
+  ) => {
+    // firestore sendevent
+    const fish: EventData['fish'] = {}
+    fish[fishName] = {
+      fishAmount: fishAmountToSell,
+      fishPrice: sellingPrice
+    }
+
+    firestore.sendEvent({
+      type: 'sell',
+      eventTarget: 'fish',
+      teamName,
+      fish
+    })
+    console.log(
+      `Selling ${fishAmountToSell} ${fishName} for team ${teamName} at a selling price of ${sellingPrice}`
+    )
+  }
+
   return {
     subscribe,
     joinGame,
     getTeamData,
-    createTeam
+    createTeam,
+    sellFish
   }
 })

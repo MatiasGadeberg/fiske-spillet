@@ -10,6 +10,25 @@ export type GameInfo = {
 
 export type GameState = "not-started" | "active" | "ended";
 
+export type EventData = {
+    type: "sell" | "buy" | "catch";
+    eventTarget: "fish" | "boat";
+    teamName: string;
+    fish?: {
+        [fishName: string]: {
+            fishAmount: number;
+            fishPrice: number;
+        };
+    };
+    boat?: {
+        [boatType: string]: {
+            boatAmount: number;
+            boatPrice: number;
+        };
+    };
+    fishAreaName?: string;
+};
+
 type FishingAreaInfo = {
     name: string;
     waterType: "shallow" | "semi-deep" | "deep";

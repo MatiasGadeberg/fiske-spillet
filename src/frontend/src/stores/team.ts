@@ -9,14 +9,6 @@ export const useTeamStore = defineStore('team', () => {
   const fishInventory = ref({} as FishInventory)
   const points = ref(0)
   const store = useFirestoreStore()
-  fishInventory.value = {
-    Torsk: {
-      amount: 10
-    },
-    Sild: {
-      amount: 20
-    }
-  }
 
   const updateTeamData = (teamInfo: TeamInfo): void => {
     boatInventory.value = teamInfo.boats
@@ -32,9 +24,14 @@ export const useTeamStore = defineStore('team', () => {
     })
   }
 
+  const sellFish = (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
+    store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
+  }
+
   return {
     updateTeamData,
     subscribeToTeamData,
+    sellFish,
     points,
     teamId,
     boatInventory,

@@ -13,11 +13,11 @@ export const useGameStore = defineStore('game', () => {
   const fishMarket = ref({} as FishMarket)
   const firestore = useFirestoreStore()
   fishMarket.value = {
-    Torsk: {
+    torsk: {
       currentPrice: 10,
       growth: 'positive'
     },
-    Sild: {
+    sild: {
       currentPrice: 25,
       growth: 'negative'
     }

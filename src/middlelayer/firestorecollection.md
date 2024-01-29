@@ -86,7 +86,7 @@ games (collection)
         -   [ ] Create new fish market
         -   [ ] Create new fish area
     -   [ ] Subscribes to events collection changes
--   [ ] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
+-   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
 -   [ ] Periodically evaluates game data
     -   [ ] Update fish market
         -   [ ] Optional - update demand based on game phase
@@ -148,9 +148,9 @@ games (collection)
 -   [ ] Allow users to buy boat
     -   [ ] Choose boat to buy
     -   [ ] Trigger boat buy event
--   [ ] Allow users to sell fish
-    -   [ ] Choose fish type and amount
-    -   [ ] Trigger fish sell event
+-   [x] Allow users to sell fish
+    -   [x] Choose fish type and amount
+    -   [x] Trigger fish sell event
 -   [ ] Sends events to events collection on user input
     -   [ ] On boat buy event
         -   [ ] Send event with
@@ -169,15 +169,15 @@ games (collection)
             -   [ ] fish
                 -   [ ] fishName
                 -   [ ] fishAmount
-    -   [ ] On fish sell event
-        -   [ ] Send event with
-            -   [ ] teamId
-            -   [ ] eventTarget fish
-            -   [ ] eventType sell
-            -   [ ] fish
-                -   [ ] fishName
-                -   [ ] fishAmount
-                -   [ ] fishPrice
+    -   [x] On fish sell event
+        -   [x] Send event with
+            -   [x] teamId
+            -   [x] eventTarget fish
+            -   [x] eventType sell
+            -   [x] fish
+                -   [x] fishName
+                -   [x] fishAmount
+                -   [x] fishPrice
     -   [ ] On boat sail event
         -   [ ] Send event with
             -   [ ] teamId

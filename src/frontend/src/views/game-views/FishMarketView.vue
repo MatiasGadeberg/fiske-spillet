@@ -2,10 +2,10 @@
 import FishCard from '../../components/FishCard.vue'
 const fishArray = [
   {
-    name: 'Torsk'
+    name: 'torsk'
   },
   {
-    name: 'Sild'
+    name: 'sild'
   }
 ]
 </script>
