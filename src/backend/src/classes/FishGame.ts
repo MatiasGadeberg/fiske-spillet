@@ -1,18 +1,36 @@
-import type { GameInfo, GameState } from "../../../shared/types/GameTypes";
+import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper";
+import type { EventData, GameInfo, GameState } from "../../../shared/types/GameTypes";
+import { QuerySnapshot } from "firebase/firestore";
 
 export type FishGameProps = {
     startTime: number;
+    store: FirebaseWrapper;
 };
 
 export class FishGame {
     private startTime: number;
     private endTime: number;
     private teams: string[];
+    private store: FirebaseWrapper;
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 2;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
         this.teams = [];
+        this.store = props.store;
+    }
+
+    public async setupGame() {
+        this.store.subscribeToEvents(events => this.handleEvents(events));
+    }
+
+    private handleEvents(events: EventData[]) {
+        events.forEach(async event => {
+            if (event.teamName) {
+                const teamData = await this.store.getTeamData(event.teamName);
+                console.log(teamData);
+            }
+        });
     }
 
     public getGameData(): GameInfo {

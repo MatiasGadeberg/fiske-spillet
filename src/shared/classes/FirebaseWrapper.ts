@@ -1,8 +1,8 @@
 import type { FirebaseApp } from "firebase/app";
 import { initializeApp } from "firebase/app";
-import type { Unsubscribe } from "firebase/firestore";
 import {
     Firestore,
+    Unsubscribe,
     getFirestore,
     collection,
     CollectionReference,
@@ -16,6 +16,7 @@ import {
     getDoc,
     updateDoc,
     addDoc,
+    DocumentData,
 } from "firebase/firestore";
 import type { EventData, GameInfo, TeamInfo } from "../types/GameTypes";
 
@@ -63,11 +64,28 @@ export class FirebaseWrapper {
     }
 
     public async getTeamData(teamId: string) {
-        return await getDoc(doc(this.firestore, "teams", teamId));
+        const document = await getDoc(doc(this.firestore, "teams", teamId));
+        return document.data() as TeamInfo;
     }
 
     public async sendEvent(eventData: EventData) {
         await addDoc(collection(this.firestore, "events"), eventData);
+    }
+
+    public subscribeToEvents(callback: (events: EventData[]) => void) {
+        const eventsRef = collection(this.firestore, "events");
+        const q = query(eventsRef);
+        const unsubscribe = onSnapshot(q, snapshot => {
+            const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
+                if (change.type === "added") {
+                    eventArr.push(change.doc.data() as EventData);
+                }
+                return eventArr;
+            }, []);
+
+            callback(events);
+        });
+        this.snapshots.push(unsubscribe);
     }
 
     public subscribe(collection: string, document: string, callback: (doc: DocumentSnapshot) => void) {

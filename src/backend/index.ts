@@ -5,7 +5,10 @@ const firebase = new FirebaseWrapper();
 
 const game = new FishGame({
     startTime: Date.now() + 2 * 60 * 1000,
+    store: firebase
 });
+
+game.setupGame()
 
 firebase.setGame(game.getGameData());
 
@@ -17,4 +20,4 @@ setInterval(() => {
     } else {
         firebase.setGame(game.getGameData());
     }
-}, 250);
+}, 1000);
