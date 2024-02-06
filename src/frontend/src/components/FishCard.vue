@@ -53,10 +53,13 @@
       </div>
     </div>
     <button
-      @click="team.sellFish(props.name, game.fishMarket[props.name]?.currentPrice, toSell)"
+      @click="sell"
+      :disabled="toSell === 0 || loading"
+      :class="{ 'bg-gray-300': toSell === 0 || loading }"
       class="card-button bg-blue-500 text-white py-2 px-4 mt-2 rounded-md w-full"
     >
-      Sælg
+      <span v-if="!loading">Sælg</span>
+      <span v-else> Sælger... </span>
     </button>
   </div>
 </template>
@@ -80,7 +83,7 @@ const game = useGameStore()
 const team = useTeamStore()
 
 const toSell = ref(0)
-
+const loading = ref(false)
 const increment = () => {
   if (toSell.value < team.fishInventory[props.name]?.amount) {
     toSell.value++
@@ -97,6 +100,16 @@ const handleInput = () => {
   // Ensure the entered value does not exceed the maximum
   if (toSell.value > team.fishInventory[props.name]?.amount) {
     toSell.value = team.fishInventory[props.name]?.amount
+  }
+}
+
+const sell = async () => {
+  try {
+    loading.value = true
+    await team.sellFish(props.name, game.fishMarket[props.name]?.currentPrice, toSell.value)
+  } finally {
+    toSell.value = 0
+    loading.value = false
   }
 }
 

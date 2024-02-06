@@ -19,13 +19,12 @@ export const useTeamStore = defineStore('team', () => {
   const subscribeToTeamData = (teamName: string): void => {
     teamId.value = teamName
     store.subscribe('teams', teamName, (doc) => {
-      console.log('Recieved team data:' + JSON.stringify(doc.data()))
       updateTeamData(doc.data() as TeamInfo)
     })
   }
 
-  const sellFish = (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
-    store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
+  const sellFish = async (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
+    await store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
   }
 
   return {

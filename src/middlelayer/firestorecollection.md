@@ -85,7 +85,7 @@ games (collection)
         -   [x] Set end time
         -   [ ] Create new fish market
         -   [ ] Create new fish area
-    -   [ ] Subscribes to events collection changes
+    -   [x] Subscribes to events collection changes
 -   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
 -   [ ] Periodically evaluates game data
     -   [ ] Update fish market
@@ -100,10 +100,10 @@ games (collection)
         -   [ ] Check that there is enough points to avoid using the same points multiple times
         -   [ ] Remove points based on price and buy amount
         -   [ ] Add boat to team boats collection
-    -   [ ] On fish sell event
-        -   [ ] Check team fish stock to avoid multiple sells of the same fish
-        -   [ ] Remove fish from team stock based on amount
-        -   [ ] Add points equal to fish price and sell amount
+    -   [x] On fish sell event
+        -   [x] Check team fish stock to avoid multiple sells of the same fish
+        -   [x] Remove fish from team stock based on amount
+        -   [x] Add points equal to fish price and sell amount
     -   [ ] On fish store event
         -   [ ] update amount of fishName document in fish collection
     -   [ ] On boat sail event
@@ -196,5 +196,6 @@ Create a series of fuctions to build up the fish - maybe stored in an array - in
 ```
 return function(supply) {
 price = max(min(demandFunction(supply)/supply * ratelimit, minValue), maxValue)
+return price
 }
 ```

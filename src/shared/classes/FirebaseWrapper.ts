@@ -56,9 +56,6 @@ export class FirebaseWrapper {
     }
 
     public async updateTeamData(teamName: string, teamData: Partial<TeamInfo>) {
-        console.log("Updating team data");
-        console.log(teamData);
-
         const teamRef = doc(this.firestore, "teams", teamName);
         await updateDoc(teamRef, teamData);
     }

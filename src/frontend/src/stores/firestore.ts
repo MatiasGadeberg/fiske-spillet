@@ -26,7 +26,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     console.log('test')
   }
 
-  const sellFish = (
+  const sellFish = async (
     teamName: string,
     fishName: string,
     sellingPrice: number,
@@ -39,15 +39,12 @@ export const useFirestoreStore = defineStore('firestore', () => {
       fishPrice: sellingPrice
     }
 
-    firestore.sendEvent({
+    await firestore.sendEvent({
       type: 'sell',
       eventTarget: 'fish',
       teamName,
       fish
     })
-    console.log(
-      `Selling ${fishAmountToSell} ${fishName} for team ${teamName} at a selling price of ${sellingPrice}`
-    )
   }
 
   return {

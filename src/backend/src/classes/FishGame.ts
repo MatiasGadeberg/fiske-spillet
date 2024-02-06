@@ -1,12 +1,10 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper";
 import type { EventData, GameInfo, GameState } from "../../../shared/types/GameTypes";
-import { QuerySnapshot } from "firebase/firestore";
 
 export type FishGameProps = {
     startTime: number;
     store: FirebaseWrapper;
 };
-
 export class FishGame {
     private startTime: number;
     private endTime: number;
@@ -27,10 +25,23 @@ export class FishGame {
     private handleEvents(events: EventData[]) {
         events.forEach(async event => {
             if (event.teamName) {
-                const teamData = await this.store.getTeamData(event.teamName);
-                console.log(teamData);
+                if (event.type === "sell" && event.eventTarget === "fish") {
+                    this.handleFishSellEvent(event);
+                }
             }
         });
+    }
+
+    private async handleFishSellEvent(event: EventData) {
+        if (!event.fish) return;
+        const teamData = await this.store.getTeamData(event.teamName);
+
+        const fishToSell = Object.keys(event.fish)[0];
+        if (teamData.fish[fishToSell].amount >= event.fish[fishToSell].fishAmount) {
+            teamData.fish[fishToSell].amount -= event.fish[fishToSell].fishAmount;
+            teamData.points += event.fish[fishToSell].fishAmount * event.fish[fishToSell].fishPrice;
+            await this.store.updateTeamData(event.teamName, teamData);
+        }
     }
 
     public getGameData(): GameInfo {
