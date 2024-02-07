@@ -64,7 +64,6 @@ export const useAuthStore = defineStore('auth', () => {
   function setLogin(teamName: string) {
     isLoggedIn.value = true
     team.subscribeToTeamData(teamName)
-    game.subscribeToGameData()
     router.push('/game/fish')
   }
 

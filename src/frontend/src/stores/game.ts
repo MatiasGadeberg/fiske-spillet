@@ -12,16 +12,6 @@ export const useGameStore = defineStore('game', () => {
   const timeToStartLocale = ref('')
   const fishMarket = ref({} as FishMarket)
   const firestore = useFirestoreStore()
-  fishMarket.value = {
-    torsk: {
-      currentPrice: 10,
-      growth: 'positive'
-    },
-    sild: {
-      currentPrice: 25,
-      growth: 'negative'
-    }
-  }
 
   const updateGameData = (gameInfo: GameInfo): void => {
     currentNumberOfTeams.value = gameInfo.currentNumberOfTeams
@@ -30,6 +20,7 @@ export const useGameStore = defineStore('game', () => {
     gameState.value = gameInfo.gameState
     servertime.value = gameInfo.serverTime
     timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
+    fishMarket.value = gameInfo.fishMarketInfo
   }
 
   const subscribeToGameData = (): void => {

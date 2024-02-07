@@ -4,7 +4,7 @@ export type GameInfo = {
     gameState: GameState;
     timeToEndInMs: number;
     timeToStartInMs: number;
-    fishMarketInfo: FishMarketFishInfo[];
+    fishMarketInfo: FishMarket;
     fishingAreaInfo: FishingAreaFishInfo[];
 };
 
@@ -50,6 +50,7 @@ export type FishMarket = {
     [fishName: string]: {
         currentPrice: number;
         growth: "positive" | "negative" | "neutral";
+        supply: number;
     };
 };
 

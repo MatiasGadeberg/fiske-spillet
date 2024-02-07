@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import { useGameStore } from '@/stores/game';
 import FishCard from '../../components/FishCard.vue'
-const fishArray = [
-  {
-    name: 'torsk'
-  },
-  {
-    name: 'sild'
-  }
-]
+
+const game = useGameStore();
+const fishMarket = game.fishMarket
+const fishArray = Object.keys(fishMarket).map((fishName) => {
+    return { name: fishName }
+}).sort((a,b) => a.name.localeCompare(b.name))
+
 </script>
 
 <template>

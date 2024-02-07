@@ -6,7 +6,7 @@
     <img
       :src="getImageUrl().toString()"
       alt="Product Image"
-      class="card-image w-full h-40 object-cover rounded"
+      class="card-image object-fill w-full h-40 object-cover rounded"
     />
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
@@ -14,15 +14,15 @@
         <div class="font-bold">{{ game.fishMarket[props.name]?.currentPrice }} VM$/Ton</div>
         <div>
           <trending-up
-            v-if="game.fishMarket[props.name].growth === 'positive'"
+            v-if="game.fishMarket[props.name]?.growth === 'positive'"
             class="text-green-500"
           />
           <trending-down
-            v-if="game.fishMarket[props.name].growth === 'negative'"
+            v-if="game.fishMarket[props.name]?.growth === 'negative'"
             class="text-red-500"
           />
           <trending-neutral
-            v-if="game.fishMarket[props.name].growth === 'neutral'"
+            v-if="game.fishMarket[props.name]?.growth === 'neutral'"
             class="text-yellow-500"
           />
         </div>
@@ -114,7 +114,7 @@ const sell = async () => {
 }
 
 function getImageUrl() {
-  return new URL(`../assets/fishImages/${props.name}.jpg`, import.meta.url)
+  return new URL(`../assets/fishImages/${props.name}.svg`, import.meta.url)
 }
 </script>
 
