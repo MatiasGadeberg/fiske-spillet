@@ -23,10 +23,13 @@ teams (collection)
 boats (collection)
     boatType (document)
         maxHealth
+        speed
         cargoSize
         fishingAreas (collection)
             fishAreaName (document)
                 timeToReach
+        fish: fishName[]
+            
 
 fish (collection)
     fishName (document)
@@ -83,15 +86,15 @@ games (collection)
     -   [ ] Start new FishGame
         -   [x] Set start time
         -   [x] Set end time
-        -   [ ] Create new fish market
+        -   [x] Create new fish market
         -   [ ] Create new fish area
     -   [x] Subscribes to events collection changes
 -   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
 -   [ ] Periodically evaluates game data
-    -   [ ] Update fish market
-        -   [ ] Optional - update demand based on game phase
-        -   [ ] Remove fish from supply based on demand
-        -   [ ] Update fish prices based on supply vs. demand
+    -   [x] Update fish market
+        -   [-] Optional - update demand based on game phase
+        -   [x] Remove fish from supply based on demand
+        -   [x] Update fish prices based on supply vs. demand
     -   [ ] Update fish area
         -   [ ] Add fish based on current amount and growth rate
         -   [ ] Cannot go above max
@@ -124,8 +127,8 @@ games (collection)
     -   [ ] On fish catch event
         -   [ ] Check fish area for amount of fish available
         -   [ ] Update boat with boatId field cargo with fish according to boat type, amount available
--   [ ] Updates fishmarket info on fish sell event
-    -   [ ] Add fish to supply
+-   [x] Updates fishmarket info on fish sell event
+    -   [x] Add fish to supply
 -   [ ] Updates fish area info on fish catch event
     -   [ ] Remove fish from amount in area
 
@@ -138,7 +141,7 @@ games (collection)
         -   [x] Add starting points (might be 0)
         -   [x] Create starting fish inventory (might be empty)
 -   [x] Subscribes to team document for updates to points, boats and fish
--   [ ] Subscribes to game data for updates on game time, fish area info and fish market info
+-   [x] Subscribes to game data for updates on game time, fish area info and fish market info
 -   [ ] Allow users to send boat to fish area
     -   [ ] Choose boat and destination
     -   [ ] Trigger boat sail event

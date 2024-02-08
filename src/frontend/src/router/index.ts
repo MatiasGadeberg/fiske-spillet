@@ -26,7 +26,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/GameView.vue'),
       children: [
-        { path: 'boat', component: () => import('../views/game-views/BoathMarketView.vue') },
+        { path: 'boat', component: () => import('../views/game-views/BoatMarketView.vue') },
         { path: 'fish', component: () => import('../views/game-views/FishMarketView.vue') },
         { path: 'ocean', component: () => import('../views/game-views/OceanView.vue') }
       ]

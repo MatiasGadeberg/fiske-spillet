@@ -5,6 +5,7 @@ export type GameInfo = {
     timeToEndInMs: number;
     timeToStartInMs: number;
     fishMarketInfo: FishMarket;
+    boatMarketInfo: BoatMarket;
     fishingAreaInfo: FishingAreaFishInfo[];
 };
 
@@ -53,6 +54,15 @@ export type FishMarket = {
         supply: number;
     };
 };
+
+export type BoatMarket = {
+    [boatName: string]: {
+        price: number;
+        cargo: number;
+        speed: number;
+        availableFish: string[]
+    }
+}
 
 export type FishInventory = {
     [fishName: string]: {

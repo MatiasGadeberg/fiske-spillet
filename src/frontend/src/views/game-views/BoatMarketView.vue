@@ -1,0 +1,37 @@
+<script setup lang="ts">
+import BoatCard from '../../components/BoatCard.vue'
+
+const boatArray = [
+    {
+        name: 'kutter',
+    },
+    {
+        name: 'fiskeskib',
+    },
+    {
+        name: 'hummerskib',
+    },
+    {
+        name: 'trawler',
+    }
+]
+</script>
+
+<template>
+  <div class="bg-red-300 min-h-screen">
+    <div>
+      <div class="flex justify-center flex-col items-center">
+        <h1 class="font-bold text-4xl m-3">Velkommen til Rederiet</h1>
+        <h2 class="text-2xl">Her kan I købe flere både til jeres beholding</h2>
+      </div>
+      <div class="boat-card-container flex">
+        <div v-for="boat in boatArray" :key="boat.name" class="boat-card">
+          <BoatCard :name="boat.name" />
+        </div>
+      </div>
+      <ul></ul>
+    </div>
+  </div>
+</template>
+
+<style scoped></style>

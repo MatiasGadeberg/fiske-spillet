@@ -6,7 +6,7 @@
     <img
       :src="getImageUrl().toString()"
       alt="Product Image"
-      class="card-image object-fill w-full h-40 object-cover rounded"
+      class="card-image object-fill w-full h-40 rounded"
     />
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
@@ -71,6 +71,7 @@ import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
 import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
 import { useGameStore } from '@/stores/game'
 import { useTeamStore } from '@/stores/team'
+import type { argv0 } from 'process'
 
 const props = defineProps({
   name: {
@@ -100,6 +101,9 @@ const handleInput = () => {
   // Ensure the entered value does not exceed the maximum
   if (toSell.value > team.fishInventory[props.name]?.amount) {
     toSell.value = team.fishInventory[props.name]?.amount
+  }
+  if (toSell.value < 0) {
+      toSell.value = 0
   }
 }
 
