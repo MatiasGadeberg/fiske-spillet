@@ -103,7 +103,12 @@ const handleInput = () => {
 }
 
 const buy = () => {
-    console.log('buying boat')
+    try {
+        loading.value = true
+        team.buyBoat(props.name, toBuy.value, game.boatMarket[props.name]?.price)
+    } finally {
+        loading.value = false
+    }
 }
 
 

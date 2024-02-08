@@ -26,11 +26,16 @@ export const useTeamStore = defineStore('team', () => {
   const sellFish = async (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
     await store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
   }
+  
+  const buyBoat = async (boatName: string, boatAmountToBuy: number, boatPrice: number) => {
+    await store.buyBoat(teamId.value, boatName, boatAmountToBuy, boatPrice)
+  }
 
   return {
     updateTeamData,
     subscribeToTeamData,
     sellFish,
+    buyBoat,
     points,
     teamId,
     boatInventory,

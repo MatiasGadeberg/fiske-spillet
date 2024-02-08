@@ -148,21 +148,21 @@ games (collection)
     -   [ ] Update team boatId document
         -   [ ] update boat status to outbound
         -   [ ] Updated boat time to destination
--   [ ] Allow users to buy boat
-    -   [ ] Choose boat to buy
-    -   [ ] Trigger boat buy event
+-   [x] Allow users to buy boat
+    -   [x] Choose boat to buy
+    -   [x] Trigger boat buy event
 -   [x] Allow users to sell fish
     -   [x] Choose fish type and amount
     -   [x] Trigger fish sell event
 -   [ ] Sends events to events collection on user input
-    -   [ ] On boat buy event
-        -   [ ] Send event with
-            -   [ ] teamId
-            -   [ ] eventTarget boat
-            -   [ ] eventType buy
-            -   [ ] boat type
-            -   [ ] current price
-            -   [ ] amount
+    -   [x] On boat buy event
+        -   [x] Send event with
+            -   [x] teamId
+            -   [x] eventTarget boat
+            -   [x] eventType buy
+            -   [x] boat type
+            -   [x] current price
+            -   [x] amount
     -   [ ] On fish catch event
         -   [ ] Send event with
             -   [ ] teamId
