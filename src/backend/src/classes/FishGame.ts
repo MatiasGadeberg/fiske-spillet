@@ -36,6 +36,9 @@ export class FishGame {
                 if (event.type === "sell" && event.eventTarget === "fish") {
                     this.handleFishSellEvent(event);
                 }
+                if (event.type === "buy" && event.eventTarget === "boat") {
+                    this.handleBoatBuyEvent(event);
+                }
             }
         });
     }
@@ -57,6 +60,21 @@ export class FishGame {
         }
     }
 
+
+    private async handleBoatBuyEvent(event: EventData) {
+        if (!event.boat) return
+        const teamData = await this.store.getTeamData(event.teamName);
+
+        if (teamData.points >= event.boat.price * event.boat.amount) {
+            teamData.points -= event.boat.price * event.boat.amount
+            for (let i = 0; i < event.boat.amount; i++) {
+                const boat = await this.store.createBoat({ type: event.boat.type, teamId: event.teamName })
+                teamData.boats.push(boat.id);
+            }
+            await this.store.updateTeamData(event.teamName, teamData);
+        }
+    }
+
     private addFishSupply(fishName: string, amount: number) {
         this.fish.forEach((fish) => {
             if (fish.name === fishName) {
@@ -74,6 +92,14 @@ export class FishGame {
             gameState: this.getGameState(),
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
+            boatMarketInfo: {
+                kutter: {
+                    price: 10,
+                    cargo: 5,
+                    availableFish: ['hummer'],
+                    speed: 3,
+                }
+            }
         };
     }
 

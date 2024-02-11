@@ -108,6 +108,7 @@ const buy = () => {
         team.buyBoat(props.name, toBuy.value, game.boatMarket[props.name]?.price)
     } finally {
         loading.value = false
+        toBuy.value = 0
     }
 }
 

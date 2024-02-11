@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { EventData, TeamInfo } from '../../../shared/types/GameTypes'
+import type { Boats, EventData, TeamInfo } from '../../../shared/types/GameTypes'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -49,22 +49,20 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   const buyBoat = async (
     teamName: string,
-    boatName: string,
-    boatAmountToBuy: number,
-    boatPrice: number
+    type: Boats,
+    amount: number,
+    price: number
   ) => {
-    // firestore sendevent
-    const boat: EventData['boat'] = {}
-    boat[boatName] = {
-      boatAmount: boatAmountToBuy,
-      boatPrice 
-    }
 
     await firestore.sendEvent({
       type: 'buy',
       eventTarget: 'boat',
       teamName,
-      boat
+      boat: {
+        amount,
+        price,
+        type,
+      }
     })
   }
 

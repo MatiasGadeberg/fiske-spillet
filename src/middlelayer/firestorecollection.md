@@ -99,10 +99,11 @@ games (collection)
         -   [ ] Add fish based on current amount and growth rate
         -   [ ] Cannot go above max
 -   [ ] Updates team document on event
-    -   [ ] On boat buy event
-        -   [ ] Check that there is enough points to avoid using the same points multiple times
-        -   [ ] Remove points based on price and buy amount
-        -   [ ] Add boat to team boats collection
+    -   [x] On boat buy event
+        -   [x] Check that there is enough points to avoid using the same points multiple times
+        -   [x] Remove points based on price and buy amount
+        -   [x] Create new boat(s) in boats collection based on event details
+        -   [x] Add boatId to team boats array
     -   [x] On fish sell event
         -   [x] Check team fish stock to avoid multiple sells of the same fish
         -   [x] Remove fish from team stock based on amount
@@ -202,3 +203,126 @@ price = max(min(demandFunction(supply)/supply * ratelimit, minValue), maxValue)
 return price
 }
 ```
+
+## Options for tracking boats:
+### Object in each team document
+Each team has a object with all their boats i.e
+
+```typescript
+team = {
+    boats: {
+        boat1: {
+            boatType: 'kutter',
+            inUse: true
+            timeToDestinationInMs: 1000,
+            destination: harbor,
+            status: inbound,
+            cargo: {
+                markrel: {
+                    amount: 10
+                },
+                hornfisk: {
+                    amount: 5
+                }
+            }
+        },
+        boat2: {
+            boatType: 'hummerskib',
+            inUse: false
+            timeToDestinationInMs: null,
+            destination: null,
+            status: docked,
+            cargo: {}
+        }
+    }
+}
+```
+
+pros:
+- team data subscription will handle getting all updates to boats for the frontend
+
+cons: 
+- Server update of all boats becomes tricky
+
+### List in each team object
+Each team has an array of objects with their boat data
+
+```typescript
+team = {
+    boats: [
+         {
+            boatId: boat1,
+            boatType: 'kutter',
+            inUse: true
+            timeToDestinationInMs: 1000,
+            destination: harbor,
+            status: inbound,
+            cargo: {
+                markrel: {
+                    amount: 10
+                },
+                hornfisk: {
+                    amount: 5
+                }
+            }
+        },
+         {
+        boatId: boat2,
+        boatType: 'hummerskib',
+        inUse: false
+        timeToDestinationInMs: null,
+        destination: null,
+        status: docked,
+        cargo: {}
+    }
+]
+}
+```
+
+pros:
+- Easier on frontend to loop over boats and show card
+
+cons: 
+- Also problems with server update of boats and if one boat makes update to array can the database then figure out not to
+override all the other parts of the array
+
+### Seperate boat collection and team array of ID'a
+A new main collection is started on the database 'boats' with auto-generated ID's
+Each document has the following fields
+
+```typescript
+ [boatId]: {
+    teamId: team1,
+    boatType: 'kutter',
+    inUse: true
+    timeToDestinationInMs: 1000,
+    destination: harbor,
+    status: inbound,
+    cargo: {
+        markrel: {
+            amount: 10
+        },
+        hornfisk: {
+            amount: 5
+        }
+    }
+}
+```
+And teams then only have an array of boatId's
+
+```typescript
+team = {
+    boats: [
+        'boat1',
+        'boat2'
+    ]
+}
+```
+
+pro: 
+- server can on boat sail events create a boat object in a sailingBoats array and loop over this for boat updates
+- Each boat object can update its own individual document very easily
+- Frontend can create a boat card by looping over the array
+
+con:
+- Each boat object on the frontend needs to subscribe to its own data updates? So no central store? Maybe not a con?

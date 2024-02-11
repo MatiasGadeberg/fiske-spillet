@@ -22,10 +22,9 @@ export type EventData = {
         };
     };
     boat?: {
-        [boatType: string]: {
-            boatAmount: number;
-            boatPrice: number;
-        };
+        type: Boats;
+        amount: number;
+        price: number;
     };
     fishAreaName?: string;
 };
@@ -83,12 +82,21 @@ export type TeamInfo = {
     fish: FishInventory;
 };
 
-type BoatBaseInfo = {
-    type: string;
-    shallowWaterSpeed: number;
-    semiDeepWaterSpeed: number;
-    deepWaterSpeed: number;
-    maxHealth: number;
+export type Boats = 'kutter' | 'fiskeskib' | 'hummerskib' | 'trawler'
+
+
+export type BoatInfo = {
+    teamId: string,
+    type: Boats; 
+    inUse: boolean;
+    timeToDestinationInMs: number | null; 
+    destination: string | null;
+    status: 'inbound' | 'outbound' | 'docked';
+    cargo: {
+        [fishName: string]: {
+            amount: number
+        }
+    }
 };
 
 type BoatInventoryInfo = BoatBaseInfo & {

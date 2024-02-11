@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { BoatInventoryInfo, FishInventory, TeamInfo } from '../../../shared/types/GameTypes'
+import type { BoatInventoryInfo, Boats, FishInventory, TeamInfo } from '../../../shared/types/GameTypes'
 import { useFirestoreStore } from './firestore'
 
 export const useTeamStore = defineStore('team', () => {
@@ -27,8 +27,8 @@ export const useTeamStore = defineStore('team', () => {
     await store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
   }
   
-  const buyBoat = async (boatName: string, boatAmountToBuy: number, boatPrice: number) => {
-    await store.buyBoat(teamId.value, boatName, boatAmountToBuy, boatPrice)
+  const buyBoat = async (type: Boats, amount: number, price: number) => {
+    await store.buyBoat(teamId.value, type, amount, price)
   }
 
   return {

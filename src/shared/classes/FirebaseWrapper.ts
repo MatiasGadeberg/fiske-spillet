@@ -18,7 +18,7 @@ import {
     addDoc,
     DocumentData,
 } from "firebase/firestore";
-import type { EventData, GameInfo, TeamInfo } from "../types/GameTypes";
+import type { BoatInfo, Boats, EventData, GameInfo, TeamInfo } from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
@@ -68,6 +68,22 @@ export class FirebaseWrapper {
     public async sendEvent(eventData: EventData) {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
+
+    public async createBoat(data: { type: Boats; teamId: string;}) {
+            const boatData: BoatInfo = {
+                teamId: data.teamId,
+                type: data.type,
+                inUse: false,
+                timeToDestinationInMs: null,
+                destination: null,
+                status: 'docked',
+                cargo: {}
+            }
+
+           return await addDoc(collection(this.firestore, "boats"), boatData)
+        }
+    
+
 
     public subscribeToEvents(callback: (events: EventData[]) => void) {
         const eventsRef = collection(this.firestore, "events");
