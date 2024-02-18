@@ -18,7 +18,7 @@ const boatArray = [
 </script>
 
 <template>
-  <div class="bg-red-300 min-h-screen">
+  <div class="bg-red-300 ">
     <div>
       <div class="flex justify-center flex-col items-center">
         <h1 class="font-bold text-4xl m-3">Velkommen til Rederiet</h1>

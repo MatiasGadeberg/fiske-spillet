@@ -8,7 +8,7 @@ game.subscribeToGameData()
 </script>
 
 <template>
-  <div class="bg-slate-200 app-container font-sans">
+  <div class="bg-slate-200 app-container font-sans flex flex-col h-screen">
     <TheHeader />
     <RouterView />
   </div>

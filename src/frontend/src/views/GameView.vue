@@ -1,5 +1,5 @@
 <template>
-  <div class="game-view min-h-screen">
+  <div class="game-view flex flex-col flex-grow overflow-auto">
     <div class="flex">
       <router-link to="/game/boat" class="flex-grow">
         <div class="bg-red-300 p-2 text-center hover:bg-red-600 text-white">Rederiet</div>
@@ -12,7 +12,7 @@
       </router-link>
     </div>
 
-    <router-view class="" />
+    <router-view class="grow overflow-auto" />
   </div>
 </template>
 

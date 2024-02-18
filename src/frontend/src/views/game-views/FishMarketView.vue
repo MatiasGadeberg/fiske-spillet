@@ -11,7 +11,7 @@ const fishArray = Object.keys(fishMarket).map((fishName) => {
 </script>
 
 <template>
-  <div class="bg-green-300 min-h-screen">
+  <div class="bg-green-300">
     <div>
       <div class="flex justify-center flex-col items-center">
         <h1 class="font-bold text-4xl m-3">Velkommen til Fiskemarkedet</h1>
