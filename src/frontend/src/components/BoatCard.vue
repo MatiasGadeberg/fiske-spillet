@@ -1,5 +1,5 @@
 <template>
-  <div class="card border rounded-lg overflow-hidden shadow-md bg-red-100 p-2 m-4 max-w-md">
+  <div class="card border rounded-lg overflow-hidden shadow-md bg-violet-100 p-2 m-4 max-w-md">
     <div class="card-header text-lg font-bold py-2 text-center">
       {{ name.charAt(0).toUpperCase() + name.slice(1) }}
     </div>
