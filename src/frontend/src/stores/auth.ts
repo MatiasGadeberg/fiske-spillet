@@ -2,19 +2,16 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import router from '@/router'
 import { useFirestoreStore } from './firestore'
-import { useGameStore } from './game'
 import { useTeamStore } from './team'
 import type {
   BoatInventoryInfo,
   FishInventory,
-  FishInventoryInfo
 } from '../../../shared/types/GameTypes'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
   const store = useFirestoreStore()
   const team = useTeamStore()
-  const game = useGameStore()
   const loginError = ref(false)
   const loginErrorMessage = ref('')
 
@@ -64,6 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
   function setLogin(teamName: string) {
     isLoggedIn.value = true
     team.subscribeToTeamData(teamName)
+    team.subscribeToTeamBoatData()
     router.push('/game/fish')
   }
 

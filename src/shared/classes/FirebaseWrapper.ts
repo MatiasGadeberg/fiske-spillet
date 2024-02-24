@@ -16,7 +16,7 @@ import {
     getDoc,
     updateDoc,
     addDoc,
-    DocumentData,
+    where,
 } from "firebase/firestore";
 import type { BoatInfo, Boats, EventData, GameInfo, TeamInfo } from "../types/GameTypes";
 
@@ -49,10 +49,7 @@ export class FirebaseWrapper {
     }
 
     public async setTeam(teamName: string, teamData: { points: number; password: string }) {
-        console.log("Creating team");
-        const test = await setDoc(doc(this.firestore, "teams", teamName), teamData);
-        console.log(test);
-        console.log("Team created");
+        await setDoc(doc(this.firestore, "teams", teamName), teamData);
     }
 
     public async updateTeamData(teamName: string, teamData: Partial<TeamInfo>) {
@@ -106,12 +103,21 @@ export class FirebaseWrapper {
         this.snapshots.push(snap);
     }
 
-    public subscribeToTeamsData(callback: (snapshot: QuerySnapshot) => void) {
-        const teamsRef = collection(this.firestore, "teams");
-        const q = query(teamsRef);
+    private subscribeToCollection(collectionName: string, callback: (snapshot: QuerySnapshot) => void, filter: any = null) {
+        const collectionRef = collection(this.firestore, collectionName);
+        const q = query(collectionRef, filter);
         const unsubscribe = onSnapshot(q, callback);
         this.snapshots.push(unsubscribe);
     }
+
+    public subscribeToTeamsData(callback: (snapshot: QuerySnapshot) => void) {
+        this.subscribeToCollection("teams", callback)
+    }
+
+    public subscribeToTeamsBoatData(teamId: string, callback: (snapshot: QuerySnapshot) => void) {
+        this.subscribeToCollection("boats", callback, where("teamId", "==", teamId))
+    }
+
 
     public dropConnections(): void {
         this.snapshots.forEach(snapshot => {

@@ -86,7 +86,8 @@ export type Boats = 'kutter' | 'fiskeskib' | 'hummerskib' | 'trawler'
 
 
 export type BoatInfo = {
-    teamId: string,
+    boatId: string;
+    teamId: string;
     type: Boats; 
     inUse: boolean;
     timeToDestinationInMs: number | null; 
@@ -97,13 +98,6 @@ export type BoatInfo = {
             amount: number
         }
     }
-};
-
-type BoatInventoryInfo = BoatBaseInfo & {
-    id: string;
-    inUse: boolean;
-    currentHealth: number;
-    timeToHarborInMs: number;
 };
 
 type FishInventoryInfo = FishBaseInfo & {

@@ -15,18 +15,21 @@
       </div>
     </div>
     <div class="flex bg-slate-300 overflow-auto min-h-28 w-full items-center">
-        <InventoryBoat v-for="boat in boats" :key="boat" :name="boat"/>
-             
+        <InventoryBoat v-for="boat in team.boatInventory" 
+            :key="boat.boatId" 
+            :name="boat.type" 
+            :type="boat.type"
+            :inUse="boat.inUse"
+            
+        />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import InventoryBoat from '../../components/InventoryBoat.vue'
-const boats = ['fiskeskib', 
-                'kutter', 
-                'hummerskib', 
-                'trawler'
-              ]
+import { useTeamStore } from '@/stores/team';
+
+const team = useTeamStore();
 
 </script>

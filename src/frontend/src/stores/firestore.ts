@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { Boats, EventData, TeamInfo } from '../../../shared/types/GameTypes'
+import type { BoatInfo, Boats, EventData, TeamInfo } from '../../../shared/types/GameTypes'
+import type { QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -20,6 +21,21 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   const createTeam = async (teamName: string, teamdData: TeamInfo) => {
     await firestore.setTeam(teamName, teamdData)
+  }
+
+  const getTeamBoatData = (teamId: string, boatCallback: (boats: any[]) => void) => {
+      
+      const callback = (snapshot: QuerySnapshot) => {
+          const boats = snapshot.docs.map(doc => {
+              const data = doc.data() as BoatInfo;
+              data.boatId = doc.id
+              return data
+          })
+          boatCallback(boats)
+      }
+          
+      firestore.subscribeToTeamsBoatData(teamId, callback) 
+    
   }
 
   const joinGame = () => {
@@ -70,6 +86,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     subscribe,
     joinGame,
     getTeamData,
+    getTeamBoatData,
     createTeam,
     sellFish,
     buyBoat
