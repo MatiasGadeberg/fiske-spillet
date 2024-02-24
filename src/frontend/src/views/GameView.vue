@@ -1,11 +1,11 @@
 <template>
   <div class="game-view flex flex-col flex-grow overflow-auto">
     <div class="flex">
-      <router-link to="/game/boat" class="flex-grow">
-        <div class="bg-red-300 p-2 text-center hover:bg-red-600 text-white">Rederiet</div>
+      <router-link to="/game/boat" class="flex-grow outline">
+        <div class="bg-violet-500 p-2 text-center hover:bg-violet-600 text-white">Rederiet</div>
       </router-link>
       <router-link to="/game/fish" class="flex-grow">
-        <div class="bg-green-300 p-2 text-center hover:bg-green-600 text-white">Fiskemarkedet</div>
+        <div class="bg-red-300 p-2 text-center hover:bg-red-400 text-white">Fiskemarkedet</div>
       </router-link>
       <router-link to="/game/ocean" class="flex-grow">
         <div class="bg-blue-300 p-2 text-center hover:bg-blue-600 text-white">Havet</div>
