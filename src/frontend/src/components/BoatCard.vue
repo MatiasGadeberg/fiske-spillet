@@ -121,7 +121,9 @@ function getImageUrl(type: string, fishName?: string) {
          name = props.name
      }
 
-  return new URL(`../assets/${type}Images/${name}.svg`, import.meta.url)
+     const path = `../assets/${type}Images/${name}.svg`
+
+  return new URL(path , import.meta.url)
 }
 </script>
 

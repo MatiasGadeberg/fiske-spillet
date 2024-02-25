@@ -43,7 +43,8 @@ function millisToMinutesAndSeconds(millis: number | null) {
 }
 
 function getImageUrl() {
-  return new URL(`../assets/boatImages/${props.type}.svg`, import.meta.url)
+    const path = `../assets/boatImages/${props.type}.svg`
+  return new URL(path , import.meta.url)
 }
 
 </script>

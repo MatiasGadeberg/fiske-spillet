@@ -49,6 +49,7 @@ export const useGameStore = defineStore('game', () => {
     servertime.value = gameInfo.serverTime
     timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
     fishMarket.value = gameInfo.fishMarketInfo
+    boatMarket.value = gameInfo.boatMarketInfo
   }
 
   const subscribeToGameData = (): void => {

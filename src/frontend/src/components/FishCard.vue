@@ -84,6 +84,7 @@ const team = useTeamStore()
 
 const toSell = ref(0)
 const loading = ref(false)
+
 const increment = () => {
   if (toSell.value < team.fishInventory[props.name]?.amount) {
     toSell.value++
@@ -117,8 +118,10 @@ const sell = async () => {
 }
 
 function getImageUrl() {
-  return new URL(`../assets/fishImages/${props.name}.svg`, import.meta.url)
+    const path = `../assets/fishImages/${props.name}.svg`
+    return new URL(path, import.meta.url)
 }
+
 </script>
 
 <style scoped>
