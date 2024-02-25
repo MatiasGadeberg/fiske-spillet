@@ -93,11 +93,29 @@ export class FishGame {
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
             boatMarketInfo: {
-                kutter: {
-                    price: 10,
-                    cargo: 5,
-                    availableFish: ['hummer'],
+                'trawler': {
+                    price: 25000,
+                    cargo: 7,
+                    speed: 4,
+                    availableFish: [ 'hornfisk', 'rødspætte']
+                },
+                'fiskeskib': {
+                    price: 100000,
+                    cargo: 10,
                     speed: 3,
+                    availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
+                },
+                'hummerskib': {
+                    price: 50000,
+                    cargo: 4,
+                    speed: 6,
+                    availableFish: ['hummer']
+                },
+                'kutter': {
+                    price: 10000,
+                    cargo: 3,
+                    speed: 9,
+                    availableFish: ['torsk', 'markrel']
                 }
             }
         };

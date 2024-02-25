@@ -14,13 +14,13 @@
         <h1 class="p-2">Område 3</h1>
       </div>
     </div>
-    <div class="flex bg-slate-300 overflow-auto min-h-28 w-full items-center">
+    <div class="flex bg-slate-300 overflow-x-auto overflow-y-visible min-h-28 w-full items-center">
         <InventoryBoat v-for="boat in team.boatInventory" 
             :key="boat.boatId" 
-            :name="boat.type" 
             :type="boat.type"
             :inUse="boat.inUse"
-            
+            :cargo="boat.cargo"
+            :time-to-destination-in-ms="boat.timeToDestinationInMs"
         />
     </div>
   </div>

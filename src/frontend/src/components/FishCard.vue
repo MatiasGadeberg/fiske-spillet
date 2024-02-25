@@ -71,7 +71,6 @@ import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
 import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
 import { useGameStore } from '@/stores/game'
 import { useTeamStore } from '@/stores/team'
-import type { argv0 } from 'process'
 
 const props = defineProps({
   name: {

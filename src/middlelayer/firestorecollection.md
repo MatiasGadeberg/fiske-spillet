@@ -87,6 +87,7 @@ games (collection)
         -   [x] Set start time
         -   [x] Set end time
         -   [x] Create new fish market
+        -   [ ] Create new boat market
         -   [ ] Create new fish area
     -   [x] Subscribes to events collection changes
 -   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
@@ -113,7 +114,7 @@ games (collection)
     -   [ ] On boat sail event
         -   [ ] Update boat with boatId field inUse to true
         -   [ ] Track boat progress i.e tracking how long til destingation (To be figured out )
-            -   [ ] Periodically updates team boat document to track boat time to destination
+            -   [ ] Periodically updates boat document to track boat time to destination
                 -   [ ] update boat time to destination based on old time to destination for boats with staus != docked
                 -   [ ] if updated time to destination =< 0
                     -   [ ] if boat status = outbound
@@ -146,9 +147,10 @@ games (collection)
 -   [ ] Allow users to send boat to fish area
     -   [ ] Choose boat and destination
     -   [ ] Trigger boat sail event
-    -   [ ] Update team boatId document
+    -   [ ] Update boatId document
         -   [ ] update boat status to outbound
         -   [ ] Updated boat time to destination
+        -   [ ] Updated boat inUse to
 -   [x] Allow users to buy boat
     -   [x] Choose boat to buy
     -   [x] Trigger boat buy event
@@ -184,12 +186,10 @@ games (collection)
                 -   [x] fishPrice
     -   [ ] On boat sail event
         -   [ ] Send event with
-            -   [ ] teamId
-            -   [ ] boatId
             -   [ ] eventTarget boat
             -   [ ] eventType sail
+            -   [ ] boatId
             -   [ ] destination
-            -   [ ] timeToDestinationInMs
 
 ## Coding thoughts
 
