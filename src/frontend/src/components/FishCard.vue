@@ -1,7 +1,7 @@
 <template>
   <div class="card border rounded-lg overflow-hidden shadow-md bg-red-100 p-2 m-4 max-w-md">
     <div class="card-header text-lg font-bold py-2 text-center">
-      {{ name.charAt(0).toUpperCase() + name.slice(1) }}
+      {{ props.fish.name.charAt(0).toUpperCase() + props.fish.name.slice(1) }}
     </div>
     <img
       :src="getImageUrl().toString()"
@@ -11,18 +11,18 @@
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
       <div class="flex items-center justify-center">
-        <div class="font-bold">{{ game.fishMarket[props.name]?.currentPrice }} VM$/Ton</div>
+        <div class="font-bold">{{ props.fish.currentPrice.toFixed(2) }} VM$/Ton</div>
         <div>
           <trending-up
-            v-if="game.fishMarket[props.name]?.growth === 'positive'"
+            v-if="props.fish.growth === 'positive'"
             class="text-green-500"
           />
           <trending-down
-            v-if="game.fishMarket[props.name]?.growth === 'negative'"
+            v-if="props.fish.growth === 'negative'"
             class="text-red-500"
           />
           <trending-neutral
-            v-if="game.fishMarket[props.name]?.growth === 'neutral'"
+            v-if="props.fish.growth === 'neutral'"
             class="text-yellow-500"
           />
         </div>
@@ -30,7 +30,7 @@
     </div>
     <div class="team-inventory text-center text-lg">
       <div>Jeres beholdning</div>
-      <div class="font-bold">{{ team.fishInventory[props.name]?.amount }} Ton</div>
+      <div class="font-bold">{{ team.fishInventory[props.fish.name]?.amount }} Ton</div>
     </div>
     <div class="flex justify-between items-center p-4">
       <div>
@@ -41,13 +41,13 @@
         v-model="toSell"
         type="number"
         class="amount-input text-center w-16 flex-grow appearance-none"
-        :max="team.fishInventory[props.name]?.amount"
+        :max="team.fishInventory[props.fish.name]?.amount"
         :min="0"
         @input="handleInput()"
       />
       <div>
         <button @click="increment" class="amount-button">+</button>
-        <button @click="toSell = team.fishInventory[props.name]?.amount" class="amount-button">
+        <button @click="toSell = team.fishInventory[props.fish.name]?.amount" class="amount-button">
           ++
         </button>
       </div>
@@ -69,24 +69,20 @@ import { ref } from 'vue'
 import TrendingUp from 'vue-material-design-icons/TrendingUp.vue'
 import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
 import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
-import { useGameStore } from '@/stores/game'
 import { useTeamStore } from '@/stores/team'
+import type { FishMarketEntry } from '../../../shared/types/GameTypes';
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  }
-})
+const props = defineProps<{
+    fish: FishMarketEntry
+}>()
 
-const game = useGameStore()
 const team = useTeamStore()
 
 const toSell = ref(0)
 const loading = ref(false)
 
 const increment = () => {
-  if (toSell.value < team.fishInventory[props.name]?.amount) {
+  if (toSell.value < team.fishInventory[props.fish.name]?.amount) {
     toSell.value++
   }
 }
@@ -99,8 +95,8 @@ const decrement = () => {
 
 const handleInput = () => {
   // Ensure the entered value does not exceed the maximum
-  if (toSell.value > team.fishInventory[props.name]?.amount) {
-    toSell.value = team.fishInventory[props.name]?.amount
+  if (toSell.value > team.fishInventory[props.fish.name]?.amount) {
+    toSell.value = team.fishInventory[props.fish.name]?.amount
   }
   if (toSell.value < 0) {
       toSell.value = 0
@@ -110,7 +106,7 @@ const handleInput = () => {
 const sell = async () => {
   try {
     loading.value = true
-    await team.sellFish(props.name, game.fishMarket[props.name]?.currentPrice, toSell.value)
+    await team.sellFish(props.fish.name, props.fish.currentPrice, toSell.value)
   } finally {
     toSell.value = 0
     loading.value = false
@@ -118,7 +114,7 @@ const sell = async () => {
 }
 
 function getImageUrl() {
-    const path = `../assets/fishImages/${props.name}.svg`
+    const path = `../assets/fishImages/${props.fish.name}.svg`
     return new URL(path, import.meta.url)
 }
 

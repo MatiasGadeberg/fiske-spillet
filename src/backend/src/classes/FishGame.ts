@@ -1,5 +1,5 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper";
-import type { EventData, FishMarket, GameInfo, GameState } from "../../../shared/types/GameTypes";
+import type { EventData, GameInfo, GameState } from "../../../shared/types/GameTypes";
 import { Fish } from "./Fish.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
 
@@ -92,43 +92,45 @@ export class FishGame {
             gameState: this.getGameState(),
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
-            boatMarketInfo: {
-                'trawler': {
+            boatMarketInfo: [
+                 {
+                    type: 'trawler',
                     price: 25000,
                     cargo: 7,
                     speed: 4,
                     availableFish: [ 'hornfisk', 'rødspætte']
                 },
-                'fiskeskib': {
+                 {
+                    type: 'fiskeskib',
                     price: 100000,
                     cargo: 10,
                     speed: 3,
                     availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
                 },
-                'hummerskib': {
+                 {
+                    type: 'hummerskib',
                     price: 50000,
                     cargo: 4,
                     speed: 6,
                     availableFish: ['hummer']
                 },
-                'kutter': {
+                 {
+                    type: 'kutter',
                     price: 10000,
                     cargo: 3,
                     speed: 9,
                     availableFish: ['torsk', 'markrel']
                 }
-            }
+            ]
         };
     }
 
     private createFishMarket() {
-        const market: FishMarket = {}
-        this.fish.forEach((fish) => {
+        return this.fish.map((fish) => {
             fish.updatePrice();
             fish.decaySupply();
-            market[fish.name] = fish.getFishData();
+            return fish.getFishData();
         })
-        return market
     }
 
     public addTeam(teamName: string): void {

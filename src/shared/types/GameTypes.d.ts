@@ -4,8 +4,8 @@ export type GameInfo = {
     gameState: GameState;
     timeToEndInMs: number;
     timeToStartInMs: number;
-    fishMarketInfo: FishMarket;
-    boatMarketInfo: BoatMarket;
+    fishMarketInfo: FishMarketEntry[];
+    boatMarketInfo: BoatMarket[];
     fishingAreaInfo: FishingAreaFishInfo[];
 };
 
@@ -46,22 +46,21 @@ type FishMarketFishInfo = FishBaseInfo & {
     maxPrice: number;
 };
 
-export type FishMarket = {
-    [fishName: string]: {
-        currentPrice: number;
-        growth: "positive" | "negative" | "neutral";
-        supply: number;
-    };
+export type FishMarketEntry = {
+    name: string;
+    currentPrice: number;
+    growth: "positive" | "negative" | "neutral";
+    supply: number;
 };
 
 export type BoatMarket = {
-    [boatName: string]: {
+        type: Boats;
         price: number;
         cargo: number;
         speed: number;
         availableFish: string[]
-    }
 }
+
 
 export type FishInventory = {
     [fishName: string]: {

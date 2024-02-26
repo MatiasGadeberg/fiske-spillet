@@ -1,3 +1,5 @@
+import { FishMarketEntry } from "../../../shared/types/GameTypes";
+
 export type FishProps = {
     name: string;
     startingSupply: number;
@@ -28,9 +30,10 @@ export class Fish {
         this.supply += amount;
     }
 
-    public getFishData() {
+    public getFishData(): FishMarketEntry {
         return {
-            currentPrice: Math.round(this.price),
+            name: this.name,
+            currentPrice: this.price,
             growth: this.growth,
             supply: this.supply
         }

@@ -1,7 +1,7 @@
 <template>
   <div class="card border rounded-lg overflow-hidden shadow-md bg-violet-100 p-2 m-4 max-w-md">
     <div class="card-header text-lg font-bold py-2 text-center">
-      {{ name.charAt(0).toUpperCase() + name.slice(1) }}
+      {{ props.boat.type.charAt(0).toUpperCase() + props.boat.type.slice(1) }}
     </div>
     <img
       :src="getImageUrl('boat').toString()"
@@ -10,26 +10,26 @@
     <div class="current-price text-center text-lg">
       <div>Pris:</div>
       <div class="flex items-center justify-center">
-        <div class="font-bold">{{ game.boatMarket[props.name]?.price }} VM$</div>
+        <div class="font-bold">{{ props.boat.price }} VM$</div>
       </div>
     </div>
         <div class="flex flex-col space-y-4">
         <div class="flex flex-col space-y-1">
           <div class="font-semibold">Lastrum:</div>
           <div class="w-full bg-gray-300 h-4 rounded-full overflow-hidden">
-            <div class="bg-green-500 h-full" :style="{ width: `${game.boatMarket[props.name]?.cargo * 10}%` }"></div>
+            <div class="bg-green-500 h-full" :style="{ width: `${props.boat.cargo * 10}%` }"></div>
           </div>
         </div>
         <div class="flex flex-col space-y-1">
           <div class="font-semibold">Fart:</div>
           <div class="w-full bg-gray-300 h-4 rounded-full overflow-hidden">
-            <div class="bg-green-500 h-full" :style="{ width: `${game.boatMarket[props.name]?.speed  * 10}%` }"></div>
+            <div class="bg-green-500 h-full" :style="{ width: `${props.boat.speed  * 10}%` }"></div>
           </div>
         </div>
         <div class="flex flex-col space-y-1">
           <div class="font-semibold">Kan fange:</div>
           <div class="flex space-x-2">
-            <span v-for="fish in game.boatMarket[props.name]?.availableFish" :key="fish" class="relative">
+            <span v-for="fish in props.boat.availableFish" :key="fish" class="relative">
               <img :src="getImageUrl('fish', fish).toString()" alt="Fish Icon" class="w-14 h-14" />
             </span>
           </div>
@@ -43,7 +43,6 @@
         v-model="toBuy"
         type="number"
         class="amount-input text-center w-16 flex-grow appearance-none"
-        :max="team.fishInventory[props.name]?.amount"
         :min="0"
         @input="handleInput()"
       />
@@ -66,17 +65,13 @@
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue'
-import { useGameStore } from '@/stores/game'
 import { useTeamStore } from '@/stores/team'
+import type { BoatMarket } from '../../../shared/types/GameTypes';
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true
-  }
-})
+const props = defineProps<{
+    boat: BoatMarket
+}>()
 
-const game = useGameStore()
 const team = useTeamStore()
 
 const toBuy = ref(0)
@@ -91,7 +86,7 @@ const decrement = () => {
 }
 
 watchEffect(() => {
-    expensive.value = toBuy.value * game.boatMarket[props.name]?.price > team.points
+    expensive.value = toBuy.value * props.boat.price > team.points
     let isString = typeof(toBuy.value) === 'string'
     disabled.value = expensive.value || isString || loading.value || toBuy.value === 0
 })
@@ -105,7 +100,7 @@ const handleInput = () => {
 const buy = () => {
     try {
         loading.value = true
-        team.buyBoat(props.name, toBuy.value, game.boatMarket[props.name]?.price)
+        team.buyBoat(props.boat.type, toBuy.value, props.boat.price)
     } finally {
         loading.value = false
         toBuy.value = 0
@@ -118,7 +113,7 @@ function getImageUrl(type: string, fishName?: string) {
      if (fishName) {
          name = fishName
      } else {
-         name = props.name
+         name = props.boat.type
      }
 
      const path = `../assets/${type}Images/${name}.svg`
