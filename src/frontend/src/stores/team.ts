@@ -30,7 +30,6 @@ export const useTeamStore = defineStore('team', () => {
           store.sendBoat(selectedBoat.value, fishAreaNumber, teamId.value)
           selectedBoat.value = null
       }
-
   }
 
   const subscribeToTeamData = (teamName: string): void => {

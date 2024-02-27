@@ -63,7 +63,6 @@ export class FishGame {
         }
     }
 
-
     private async handleBoatBuyEvent(event: EventData) {
         if (!event.boat) return
         const teamData = await this.store.getTeamData(event.teamName);
@@ -80,6 +79,9 @@ export class FishGame {
     }
 
     private async handleBoatSailEvent(event: EventData) {
+        // Create new sailingBoat instance with boatID
+        // call sailingBoat inUse function
+        // Push sailingBoat instance to sailing boats array
         console.log('Boat is sailing')
         console.log(event)
     }
@@ -91,6 +93,14 @@ export class FishGame {
             }
         })
     }
+
+    // public sailBoats(): {
+    //      this.sailingBoats.forEach
+    //          boat.move()
+    //          if (boat.isAtArea) {
+    //              this.fishArea = boat.catch(this.fishArea)
+    //          }
+    // }
 
     public getGameData(): GameInfo {
         return {
