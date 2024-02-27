@@ -39,6 +39,9 @@ export class FishGame {
                 if (event.type === "buy" && event.eventTarget === "boat") {
                     this.handleBoatBuyEvent(event);
                 }
+                if (event.type === "sail") {
+                    this.handleBoatSailEvent(event);
+                }
             }
         });
     }
@@ -70,9 +73,15 @@ export class FishGame {
             for (let i = 0; i < event.boat.amount; i++) {
                 const boat = await this.store.createBoat({ type: event.boat.type, teamId: event.teamName })
                 teamData.boats.push(boat.id);
+
             }
             await this.store.updateTeamData(event.teamName, teamData);
         }
+    }
+
+    private async handleBoatSailEvent(event: EventData) {
+        console.log('Boat is sailing')
+        console.log(event)
     }
 
     private addFishSupply(fishName: string, amount: number) {

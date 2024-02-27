@@ -1,14 +1,17 @@
 <template>
-    <div class="relative rounded hover:scale-110 hover:outline">
+    <div  
+        class="relative rounded hover:scale-110 hover:outline" 
+        :class="{ 'bg-green-400': props.boat.boatId === team.selectedBoat }"
+    >
         <img
             :src="getImageUrl().toString()"
             alt="Product Image"
             class="object-fill w-28 h-20 mx-3 "
-            :class="{ grayscale: inUse}"
+            :class="{ grayscale: props.boat.inUse}"
         />  
-        <div v-if="inUse" class="absolute inset-0 flex items-center justify-center z-10">
+        <div v-if="props.boat.inUse" class="absolute inset-0 flex items-center justify-center z-10">
             <div class="bg-slate-100 rounded px-2 h-min-fit text-black text-m font-bold">
-                <p>{{ millisToMinutesAndSeconds(props.timeToDestinationInMs) }}</p>
+                <p>{{ millisToMinutesAndSeconds(props.boat.timeToDestinationInMs) }}</p>
             </div>
         </div>
     </div>
@@ -16,15 +19,14 @@
 </template>
 
 <script setup lang="ts">
+import { useTeamStore } from '@/stores/team';
 import type { BoatInfo } from '../../../shared/types/GameTypes';
 
-
 const props = defineProps<{
-    type: BoatInfo["type"]
-    inUse: BoatInfo["inUse"]
-    cargo: BoatInfo["cargo"]
-    timeToDestinationInMs: BoatInfo["timeToDestinationInMs"]
+    boat: BoatInfo
 }>()
+
+const team = useTeamStore()
 
 function millisToMinutesAndSeconds(millis: number | null) {
     if (millis) {
@@ -43,7 +45,7 @@ function millisToMinutesAndSeconds(millis: number | null) {
 }
 
 function getImageUrl() {
-    const path = `../assets/boatImages/${props.type}.svg`
+    const path = `../assets/boatImages/${props.boat.type}.svg`
   return new URL(path , import.meta.url)
 }
 

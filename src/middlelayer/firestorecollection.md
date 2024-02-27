@@ -144,20 +144,16 @@ games (collection)
         -   [x] Create starting fish inventory (might be empty)
 -   [x] Subscribes to team document for updates to points, boats and fish
 -   [x] Subscribes to game data for updates on game time, fish area info and fish market info
--   [ ] Allow users to send boat to fish area
-    -   [ ] Choose boat and destination
-    -   [ ] Trigger boat sail event
-    -   [ ] Update boatId document
-        -   [ ] update boat status to outbound
-        -   [ ] Updated boat time to destination
-        -   [ ] Updated boat inUse to
+-   [x] Allow users to send boat to fish area
+    -   [x] Choose boat and destination
+    -   [x] Trigger boat sail event
 -   [x] Allow users to buy boat
     -   [x] Choose boat to buy
     -   [x] Trigger boat buy event
 -   [x] Allow users to sell fish
     -   [x] Choose fish type and amount
     -   [x] Trigger fish sell event
--   [ ] Sends events to events collection on user input
+-   [x] Sends events to events collection on user input
     -   [x] On boat buy event
         -   [x] Send event with
             -   [x] teamId
@@ -166,15 +162,6 @@ games (collection)
             -   [x] boat type
             -   [x] current price
             -   [x] amount
-    -   [ ] On fish catch event
-        -   [ ] Send event with
-            -   [ ] teamId
-            -   [ ] eventTarget fish
-            -   [ ] eventType catch
-            -   [ ] areaName
-            -   [ ] fish
-                -   [ ] fishName
-                -   [ ] fishAmount
     -   [x] On fish sell event
         -   [x] Send event with
             -   [x] teamId
@@ -184,12 +171,12 @@ games (collection)
                 -   [x] fishName
                 -   [x] fishAmount
                 -   [x] fishPrice
-    -   [ ] On boat sail event
-        -   [ ] Send event with
-            -   [ ] eventTarget boat
-            -   [ ] eventType sail
-            -   [ ] boatId
-            -   [ ] destination
+    -   [x] On boat sail event
+        -   [x] Send event with
+            -   [x] eventTarget boat
+            -   [x] eventType sail
+            -   [x] boatId
+            -   [x] destination
 
 ## Coding thoughts
 

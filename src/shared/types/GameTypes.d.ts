@@ -12,9 +12,10 @@ export type GameInfo = {
 export type GameState = "not-started" | "active" | "ended";
 
 export type EventData = {
-    type: "sell" | "buy" | "catch";
+    type: "sell" | "buy" | "catch" | "sail"; 
     eventTarget: "fish" | "boat";
     teamName: string;
+    boatId?: string;
     fish?: {
         [fishName: string]: {
             fishAmount: number;
@@ -26,7 +27,7 @@ export type EventData = {
         amount: number;
         price: number;
     };
-    fishAreaName?: string;
+    fishAreaNumber?: number;
 };
 
 type FishingAreaInfo = {

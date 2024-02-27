@@ -82,6 +82,21 @@ export const useFirestoreStore = defineStore('firestore', () => {
     })
   }
 
+  const sendBoat = async (
+    boatId: string,
+    fishAreaNumber: number,
+    teamName: string
+  ) => {
+
+    await firestore.sendEvent({
+      type: 'sail',
+      eventTarget: 'boat',
+      teamName,
+      boatId,
+      fishAreaNumber
+    })
+  }
+
   return {
     subscribe,
     joinGame,
@@ -89,6 +104,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     getTeamBoatData,
     createTeam,
     sellFish,
-    buyBoat
+    buyBoat,
+    sendBoat
   }
 })

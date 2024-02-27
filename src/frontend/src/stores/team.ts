@@ -1,18 +1,36 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { BoatInfo, Boats, FishInventory, TeamInfo } from '../../../shared/types/GameTypes'
 import { useFirestoreStore } from './firestore'
+import { setSyntheticLeadingComments } from 'typescript'
 
 export const useTeamStore = defineStore('team', () => {
-  const teamId = ref('')
-  const boatInventory = ref([] as BoatInfo[])
-  const fishInventory = ref({} as FishInventory)
-  const points = ref(0)
   const store = useFirestoreStore()
+  const teamId = ref('')
+  const points = ref(0)
+  const boatInventory: Ref<BoatInfo[]> = ref([])
+  const fishInventory: Ref<FishInventory> = ref({})
+  const selectedBoat: Ref<string | null> = ref(null)
 
   const updateTeamData = (teamInfo: TeamInfo): void => {
     fishInventory.value = teamInfo.fish
     points.value = teamInfo.points
+  }
+
+  const updateSelectedBoat = (boatId: string) => {
+      if (selectedBoat.value === boatId) {
+          selectedBoat.value = null
+      } else {
+          selectedBoat.value = boatId
+      }
+  }
+
+  const sendBoat = (fishAreaNumber: number) => {
+      if (selectedBoat.value) {
+          store.sendBoat(selectedBoat.value, fishAreaNumber, teamId.value)
+          selectedBoat.value = null
+      }
+
   }
 
   const subscribeToTeamData = (teamName: string): void => {
@@ -41,12 +59,15 @@ export const useTeamStore = defineStore('team', () => {
 
   return {
     updateTeamData,
+    updateSelectedBoat,
     subscribeToTeamData,
     subscribeToTeamBoatData,
     sellFish,
     buyBoat,
+    sendBoat,
     points,
     teamId,
+    selectedBoat,
     boatInventory,
     fishInventory
   }
