@@ -1,16 +1,20 @@
 <template>
     <div  
-        class="relative rounded hover:scale-110 hover:outline" 
-        :class="{ 'bg-green-400': props.boat.boatId === team.selectedBoat }"
+        class="relative rounded" 
+        :class="{ 
+            'bg-green-400': props.boat.boatId === team.selectedBoat,
+            'hover:scale-110': !props.boat.inUse,
+            'hover:outline': !props.boat.inUse
+        }"
     >
         <img
             :src="getImageUrl().toString()"
             alt="Product Image"
             class="object-fill w-28 h-20 mx-3 "
-            :class="{ grayscale: props.boat.inUse}"
+            :class="{ grayscale: props.boat.inUse, 'scale-x-[-1]': props.boat.status === 'outbound'}"
         />  
-        <div v-if="props.boat.inUse" class="absolute inset-0 flex items-center justify-center z-10">
-            <div class="bg-slate-100 rounded px-2 h-min-fit text-black text-m font-bold">
+        <div v-if="props.boat.inUse" class="absolute inset-0 w-full flex items-center justify-center z-10">
+            <div class="bg-slate-100 opacity-70 rounded px-2 h-min-fit text-black text-m font-bold">
                 <p>{{ millisToMinutesAndSeconds(props.boat.timeToDestinationInMs) }}</p>
             </div>
         </div>

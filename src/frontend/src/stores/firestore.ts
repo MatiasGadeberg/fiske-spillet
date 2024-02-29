@@ -86,6 +86,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     boatId: string,
     boatSpeed: number,
     fishAreaNumber: number,
+    startTime: number,
     teamName: string
   ) => {
 
@@ -95,7 +96,8 @@ export const useFirestoreStore = defineStore('firestore', () => {
       teamName,
       boatId,
       boatSpeed,
-      fishAreaNumber
+      fishAreaNumber,
+      startTime
     })
   }
 

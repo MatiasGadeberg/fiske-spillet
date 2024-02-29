@@ -150,6 +150,7 @@ export class FishGame {
             }
             return boatsArray
         }, [])
+
     }
 
     public getGameData(): GameInfo {

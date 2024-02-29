@@ -112,19 +112,19 @@ games (collection)
     -   [ ] On fish store event
         -   [ ] update amount of fishName document in fish collection
     -   [ ] On boat sail event
-        -   [ ] Update boat with boatId field inUse to true
+        -   [x] Update boat with boatId field inUse to true
         -   [ ] Track boat progress i.e tracking how long til destingation (To be figured out )
             -   [ ] Periodically updates boat document to track boat time to destination
-                -   [ ] update boat time to destination based on old time to destination for boats with staus != docked
-                -   [ ] if updated time to destination =< 0
+                -   [x] update boat time to destination based on old time to destination for boats with staus != docked
+                -   [x] if updated time to destination =< 0
                     -   [ ] if boat status = outbound
                         -   [ ] trigger fish catch event
-                        -   [ ] change boat status to inbound
-                        -   [ ] update boat time to destination
+                        -   [x] change boat status to inbound
+                        -   [x] update boat time to destination
                     -   [ ] if boat status = inbound
                         -   [ ] trigger fish store event
                             -   [ ] On team document update fish collection with boat cargo
-                        -   [ ] update boat status to docked
+                        -   [x] update boat status to docked
                         -   [ ] update boat cargo to be empty
     -   [ ] On fish catch event
         -   [ ] Check fish area for amount of fish available

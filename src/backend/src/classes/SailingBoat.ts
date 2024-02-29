@@ -37,7 +37,7 @@ export class SailingBoat {
     }
 
     public async sail(){
-        let timeToDestination: number | null = this.arrivalTime - this.startTime
+        let timeToDestination: number | null = this.arrivalTime - Date.now()
         if (timeToDestination <= this.travelTimeInMs/2 && this.status == "outbound") { 
             this.status = 'inbound'
         } 
