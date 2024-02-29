@@ -20,7 +20,7 @@ setInterval(() => {
     if (gamedata.gameState === "ended") {
         firebase.dropConnections();
     } else {
-        // game.sailBoats()
+        game.sailBoats()
         firebase.setGame(game.getGameData());
     }
 }, 1000);

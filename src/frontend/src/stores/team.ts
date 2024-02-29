@@ -2,7 +2,6 @@ import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { BoatInfo, Boats, FishInventory, TeamInfo } from '../../../shared/types/GameTypes'
 import { useFirestoreStore } from './firestore'
-import { setSyntheticLeadingComments } from 'typescript'
 
 export const useTeamStore = defineStore('team', () => {
   const store = useFirestoreStore()
@@ -26,8 +25,9 @@ export const useTeamStore = defineStore('team', () => {
   }
 
   const sendBoat = (fishAreaNumber: number) => {
-      if (selectedBoat.value) {
-          store.sendBoat(selectedBoat.value, fishAreaNumber, teamId.value)
+        const boat = boatInventory.value.find(boat => boat.boatId === selectedBoat.value);
+      if (boat) {
+          store.sendBoat(boat.boatId, boat.speed, fishAreaNumber, teamId.value)
           selectedBoat.value = null
       }
   }

@@ -15,7 +15,6 @@ export type EventData = {
     type: "sell" | "buy" | "catch" | "sail"; 
     eventTarget: "fish" | "boat";
     teamName: string;
-    boatId?: string;
     fish?: {
         [fishName: string]: {
             fishAmount: number;
@@ -27,7 +26,10 @@ export type EventData = {
         amount: number;
         price: number;
     };
+    boatId?: string;
+    boatSpeed?: number;
     fishAreaNumber?: number;
+    startTime?: number;
 };
 
 type FishingAreaInfo = {
@@ -90,6 +92,7 @@ export type BoatInfo = {
     teamId: string;
     type: Boats; 
     inUse: boolean;
+    speed: number;
     timeToDestinationInMs: number | null; 
     destination: string | null;
     status: 'inbound' | 'outbound' | 'docked';

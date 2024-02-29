@@ -66,19 +66,25 @@ export class FirebaseWrapper {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
 
-    public async createBoat(data: { type: Boats; teamId: string;}) {
-            const boatData: BoatInfo = {
-                teamId: data.teamId,
-                type: data.type,
-                inUse: false,
-                timeToDestinationInMs: null,
-                destination: null,
-                status: 'docked',
-                cargo: {}
-            }
-
-           return await addDoc(collection(this.firestore, "boats"), boatData)
+    public async createBoat(data: { type: Boats; teamId: string; speed: number}) {
+        const boatData: Omit<BoatInfo, 'boatId'> = {
+            teamId: data.teamId,
+            type: data.type,
+            speed: data.speed,
+            inUse: false,
+            timeToDestinationInMs: null,
+            destination: null,
+            status: 'docked',
+            cargo: {}
         }
+
+        return await addDoc(collection(this.firestore, "boats"), boatData)
+    }
+
+    public async updateBoatData(boatId: string, boatData: Partial<BoatInfo>) {
+        const boatRef = doc(this.firestore, "boats", boatId);
+        await updateDoc(boatRef, boatData);
+    }
     
 
 

@@ -1,6 +1,7 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper";
-import type { EventData, GameInfo, GameState } from "../../../shared/types/GameTypes";
+import type { EventData, GameInfo, GameState, BoatMarket } from "../../../shared/types/GameTypes";
 import { Fish } from "./Fish.js";
+import { SailingBoat } from "./SailingBoat.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
 
 export type FishGameProps = {
@@ -15,15 +16,50 @@ export class FishGame {
     private teams: string[];
     private fish: Fish[];
     private store: FirebaseWrapper;
+    private sailingBoats: SailingBoat[];
+    private boatMarketInfo: BoatMarket[];
+
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 2;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
         this.teams = [];
+        this.sailingBoats = [];
         this.store = props.store;
         this.fish = props.fishInput.map((fishInfo) => {
             return createFish(fishInfo)
         })
+
+        this.boatMarketInfo = [
+                 {
+                    type: 'trawler',
+                    price: 25000,
+                    cargo: 7,
+                    speed: 4,
+                    availableFish: [ 'hornfisk', 'rødspætte']
+                },
+                 {
+                    type: 'fiskeskib',
+                    price: 100000,
+                    cargo: 10,
+                    speed: 3,
+                    availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
+                },
+                 {
+                    type: 'hummerskib',
+                    price: 50000,
+                    cargo: 4,
+                    speed: 6,
+                    availableFish: ['hummer']
+                },
+                 {
+                    type: 'kutter',
+                    price: 10000,
+                    cargo: 3,
+                    speed: 9,
+                    availableFish: ['torsk', 'markrel']
+                }
+            ]
     }
 
     public setupGame() {
@@ -63,29 +99,6 @@ export class FishGame {
         }
     }
 
-    private async handleBoatBuyEvent(event: EventData) {
-        if (!event.boat) return
-        const teamData = await this.store.getTeamData(event.teamName);
-
-        if (teamData.points >= event.boat.price * event.boat.amount) {
-            teamData.points -= event.boat.price * event.boat.amount
-            for (let i = 0; i < event.boat.amount; i++) {
-                const boat = await this.store.createBoat({ type: event.boat.type, teamId: event.teamName })
-                teamData.boats.push(boat.id);
-
-            }
-            await this.store.updateTeamData(event.teamName, teamData);
-        }
-    }
-
-    private async handleBoatSailEvent(event: EventData) {
-        // Create new sailingBoat instance with boatID
-        // call sailingBoat inUse function
-        // Push sailingBoat instance to sailing boats array
-        console.log('Boat is sailing')
-        console.log(event)
-    }
-
     private addFishSupply(fishName: string, amount: number) {
         this.fish.forEach((fish) => {
             if (fish.name === fishName) {
@@ -94,13 +107,50 @@ export class FishGame {
         })
     }
 
-    // public sailBoats(): {
-    //      this.sailingBoats.forEach
-    //          boat.move()
-    //          if (boat.isAtArea) {
-    //              this.fishArea = boat.catch(this.fishArea)
-    //          }
-    // }
+    private async handleBoatBuyEvent(event: EventData) {
+        if (event.boat) {
+            const teamData = await this.store.getTeamData(event.teamName);
+
+            if (teamData.points >= event.boat.price * event.boat.amount) {
+                teamData.points -= event.boat.price * event.boat.amount
+                for (let i = 0; i < event.boat.amount; i++) {
+                    const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boat!.type) 
+                    const boat = await this.store.createBoat({ type: event.boat.type, speed: typeBoat ? typeBoat.speed : 1, teamId: event.teamName })
+                    teamData.boats.push(boat.id);
+                }
+                await this.store.updateTeamData(event.teamName, teamData);
+            }
+        }
+    }
+
+    private async handleBoatSailEvent(event: EventData) {
+        if (event.boatId && event.fishAreaNumber && event.boatSpeed && event.startTime) {
+            const boat = new SailingBoat({
+                boatId: event.boatId,
+                boatSpeed: event.boatSpeed,
+                store: this.store,
+                destinationAreaNumber: event.fishAreaNumber,
+                startTime: event.startTime
+            })
+            this.sailingBoats.push(boat)
+        }
+    }
+
+    public async sailBoats() {
+        const updatedBoats = await Promise.all(
+            this.sailingBoats.map(async boat => {
+                const inUse = await boat.sail()
+                return {inUse, boat}
+            })
+        );
+
+        this.sailingBoats = updatedBoats.reduce<SailingBoat[]>((boatsArray, updatedBoat) => {
+            if (updatedBoat.inUse) {
+                boatsArray.push(updatedBoat.boat)
+            }
+            return boatsArray
+        }, [])
+    }
 
     public getGameData(): GameInfo {
         return {
@@ -111,36 +161,7 @@ export class FishGame {
             gameState: this.getGameState(),
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
-            boatMarketInfo: [
-                 {
-                    type: 'trawler',
-                    price: 25000,
-                    cargo: 7,
-                    speed: 4,
-                    availableFish: [ 'hornfisk', 'rødspætte']
-                },
-                 {
-                    type: 'fiskeskib',
-                    price: 100000,
-                    cargo: 10,
-                    speed: 3,
-                    availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
-                },
-                 {
-                    type: 'hummerskib',
-                    price: 50000,
-                    cargo: 4,
-                    speed: 6,
-                    availableFish: ['hummer']
-                },
-                 {
-                    type: 'kutter',
-                    price: 10000,
-                    cargo: 3,
-                    speed: 9,
-                    availableFish: ['torsk', 'markrel']
-                }
-            ]
+            boatMarketInfo: this.boatMarketInfo
         };
     }
 
