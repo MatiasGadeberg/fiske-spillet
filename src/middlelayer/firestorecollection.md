@@ -82,12 +82,12 @@ games (collection)
 
 ## Gameserver
 
--   [ ] Handles Game start
-    -   [ ] Start new FishGame
+-   [x] Handles Game start
+    -   [x] Start new FishGame
         -   [x] Set start time
         -   [x] Set end time
         -   [x] Create new fish market
-        -   [ ] Create new boat market
+        -   [x] Create new boat market
         -   [x] Create new fish area
     -   [x] Subscribes to events collection changes
 -   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
@@ -117,22 +117,22 @@ games (collection)
             -   [ ] Periodically updates boat document to track boat time to destination
                 -   [x] update boat time to destination based on old time to destination for boats with staus != docked
                 -   [x] if updated time to destination =< 0
-                    -   [ ] if boat status = outbound
-                        -   [ ] trigger fish catch event
+                    -   [x] if boat status = outbound
+                        -   [x] trigger fish catch event
                         -   [x] change boat status to inbound
                         -   [x] update boat time to destination
                     -   [ ] if boat status = inbound
                         -   [ ] trigger fish store event
                             -   [ ] On team document update fish collection with boat cargo
                         -   [x] update boat status to docked
-                        -   [ ] update boat cargo to be empty
-    -   [ ] On fish catch event
-        -   [ ] Check fish area for amount of fish available
-        -   [ ] Update boat with boatId field cargo with fish according to boat type, amount available
+                        -   [x] update boat cargo to be empty
+    -   [x] On fish catch event
+        -   [x] Check fish area for amount of fish available
+        -   [x] Update boat with boatId field cargo with fish according to boat type, amount available
 -   [x] Updates fishmarket info on fish sell event
     -   [x] Add fish to supply
--   [ ] Updates fish area info on fish catch event
-    -   [ ] Remove fish from amount in area
+-   [x] Updates fish area info on fish catch event
+    -   [x] Remove fish from amount in area
 
 ## User Browser
 
@@ -350,5 +350,54 @@ FishStock
             fishName
             percentAvailable: this.currentAmount / this.maxAmount * 100
         }
+```
+
+Handling fish catch event:
+Of the fish in the area - what fish can the boat catch?
+Of the fish that can be caught - what is the ration between the fish amounts?
+Using the ratios the boat cargo number - How many of each fish is caught?
+Create cargo object with fish and amount, remove amount from each stock in area
+
+```typescript
+
+// Fish Game function
+    if boat.caught
+        area = area.find(area.areaNumber === boat.destination)
+        fishRatios = area.getFishRatios(boat.canCatch)
+        cargo = boat.catch(fishRatios)
+        area.reduceStocks(cargo)
+
+// FishArea function
+fishToCatch = boat.canCatch.filter(fish => areaFishArray.includes(fish))
+
+// FishArea function
+fishData = area.stocks.map(stock => { 
+        currentAmount: stock.currentAmount
+        name: stock.name
+    }
+)
+
+// FishArea function
+totalFish = fishData.reduce((fish, total) => return total + fish.cureentAmount, 0)
+fishRatios = fishdata.map((fish) => {
+    ratio: fish.currentAmount / totalFish,
+    name: fish.name
+})
+
+// SailingBoat function
+cargo = fishRatios.map((fish) => {
+    name: fish.name,
+    amount: boat.cargoSize * fish.ratio
+})
+
+// FishArea function
+Stock.forEach(stock => {
+    cargo.forEach( cargo => {
+        Stock.name === cargo.name
+            Stock.remove(cargo.amount)
+    }
+}
+
+
 ```
 

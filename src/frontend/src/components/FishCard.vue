@@ -30,7 +30,7 @@
     </div>
     <div class="team-inventory text-center text-lg">
       <div>Jeres beholdning</div>
-      <div class="font-bold">{{ team.fishInventory[props.fish.name]?.amount }} Ton</div>
+      <div class="font-bold">{{ team.fishInventory[props.fish.name]?.amount}} Ton</div>
     </div>
     <div class="flex justify-between items-center p-4">
       <div>

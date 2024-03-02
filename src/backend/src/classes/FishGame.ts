@@ -54,7 +54,7 @@ export class FishGame {
                     price: 100000,
                     cargo: 10,
                     speed: 3,
-                    availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
+                    availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte', 'tun']
                 },
                  {
                     type: 'hummerkutter',
@@ -68,7 +68,7 @@ export class FishGame {
                     price: 10000,
                     cargo: 3,
                     speed: 9,
-                    availableFish: ['torsk', 'markrel']
+                    availableFish: ['torsk', 'markrel', 'tun']
                 }
             ]
     }
@@ -133,28 +133,40 @@ export class FishGame {
                     const boat = await this.store.createBoat({ type: event.boat.type, speed: typeBoat ? typeBoat.speed : 1, teamId: event.teamName })
                     teamData.boats.push(boat.id);
                 }
+
                 await this.store.updateTeamData(event.teamName, teamData);
             }
         }
     }
 
     private async handleBoatSailEvent(event: EventData) {
-        if (event.boatId && event.fishAreaNumber && event.boatSpeed && event.startTime) {
-            const boat = new SailingBoat({
-                boatId: event.boatId,
-                boatSpeed: event.boatSpeed,
-                store: this.store,
-                destinationAreaNumber: event.fishAreaNumber,
-                startTime: event.startTime
-            })
-            this.sailingBoats.push(boat)
+        if (event.boatId && event.fishAreaNumber && event.boatType && event.startTime) {
+            const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
+            if (marketBoat) {
+                const boat = new SailingBoat({
+                    boatId: event.boatId,
+                    teamName: event.teamName,
+                    destinationAreaNumber: event.fishAreaNumber,
+                    startTime: event.startTime,
+                    store: this.store,
+                    boatSpeed: marketBoat.speed,
+                    cargoLevel: marketBoat.cargo,
+                    availableFish: marketBoat.availableFish
+                })
+                this.sailingBoats.push(boat)
+            } else {
+                console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
+            }
         }
     }
 
     public async sailBoats() {
         const updatedBoats = await Promise.all(
             this.sailingBoats.map(async boat => {
-                const inUse = await boat.sail()
+                const {inUse, catchEvent} = await boat.sail()
+                if (catchEvent) {
+                    this.handleCatchEvent(boat)
+                }
                 return {inUse, boat}
             })
         );
@@ -166,6 +178,17 @@ export class FishGame {
             return boatsArray
         }, [])
 
+    }
+
+    private handleCatchEvent(boat: SailingBoat) {
+        const area = this.fishAreas.find((area) => area.areaNumber === boat.destination)
+        if (area) {
+            const fishRatios = area.getFishRatios(boat.availableFish)
+            const cargo = boat.catchFish(fishRatios)
+            area.removeStock(cargo)
+        } else {
+            console.warn('No fish area number matching boat destination number')
+        }
     }
 
     public updateState() {

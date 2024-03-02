@@ -5,10 +5,11 @@ export type FishStockProps = {
 }
 
 export class FishStock {
+    public currentAmount: number
+    public name: string; 
+
     private growthRate: number;
     private maxAmount: number;
-    private currentAmount: number
-    private name: string; 
     private baseGrowth: number 
 
 
@@ -32,5 +33,9 @@ export class FishStock {
             name: this.name,
             percentAvailable: this.currentAmount / this.maxAmount * 100
         }
+    }
+
+    public remove(amount: number) {
+        this.currentAmount -= amount;
     }
 }

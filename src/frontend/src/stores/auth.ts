@@ -46,14 +46,34 @@ export const useAuthStore = defineStore('auth', () => {
       loginError.value = true
       loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer allerede`
     } else {
-      const fishInventory: FishInventory = {}
+      const fishInventory: FishInventory = {
+          'tun': {
+              amount: 0
+          },
+          'rødspætte': {
+              amount: 0
+          },
+          'hornfisk': {
+              amount: 0
+          },
+          'markrel': {
+              amount: 0
+          },
+          'torsk': {
+              amount: 0
+          },
+          'hummer': {
+              amount: 0
+          },
+      }
       const boatInventory: BoatInventoryInfo[] = []
       await store.createTeam(teamName, {
         password,
-        points: 0,
+        points: 10000,
         fish: fishInventory,
         boats: boatInventory
       })
+    
       setLogin(teamName)
     }
   }

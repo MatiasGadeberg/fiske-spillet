@@ -27,7 +27,7 @@ export type EventData = {
         price: number;
     };
     boatId?: string;
-    boatSpeed?: number;
+    boatType?: Boats;
     fishAreaNumber?: number;
     startTime?: number;
 };
@@ -100,10 +100,9 @@ export type BoatInfo = {
     destination: string | null;
     status: 'inbound' | 'outbound' | 'docked';
     cargo: {
-        [fishName: string]: {
-            amount: number
-        }
-    }
+        name: string,
+        amount: number
+    }[];
 };
 
 type FishInventoryInfo = FishBaseInfo & {

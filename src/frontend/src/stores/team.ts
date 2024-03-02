@@ -27,7 +27,7 @@ export const useTeamStore = defineStore('team', () => {
   const sendBoat = (fishAreaNumber: number, startTime: number) => {
         const boat = boatInventory.value.find(boat => boat.boatId === selectedBoat.value);
       if (boat) {
-          store.sendBoat(boat.boatId, boat.speed, fishAreaNumber, startTime, teamId.value)
+          store.sendBoat(boat.boatId, boat.type, fishAreaNumber, startTime, teamId.value)
           selectedBoat.value = null
       }
   }

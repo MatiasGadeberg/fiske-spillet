@@ -7,9 +7,10 @@ export type FishAreaProps = {
 };
 
 export class FishArea {
-    private areaNumber: number;
+    public areaNumber: number;
+
     private color: number;
-    private fishStocks: FishStock[]
+    private fishStocks: FishStock[];
 
     constructor(props: FishAreaProps) {
         this.areaNumber = props.areaNumber
@@ -28,4 +29,27 @@ export class FishArea {
     public growStocks() {
         this.fishStocks.forEach((stock) => stock.grow())
     }
+
+    public getFishRatios(fishNames: string[]) {
+        const stocksToCatch = this.fishStocks.filter((stock) => fishNames.includes(stock.name))
+        const totalFish = stocksToCatch.reduce((total, stock) => total + stock.currentAmount, 0) 
+        return stocksToCatch.map((stock) => {
+            return {
+                name: stock.name,
+                ratio: stock.currentAmount/totalFish,
+                amountAvailable: stock.currentAmount
+            }
+        })
+    }
+
+    public removeStock(caughtFish: {name: string; amount: number}[]) {
+        this.fishStocks.forEach((stock) => {
+            caughtFish.forEach((fish) => {
+                if (stock.name === fish.name) {
+                    stock.remove(fish.amount)
+                }
+            })
+        })
+    }
+
 }

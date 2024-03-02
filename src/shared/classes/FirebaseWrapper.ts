@@ -75,7 +75,7 @@ export class FirebaseWrapper {
             timeToDestinationInMs: null,
             destination: null,
             status: 'docked',
-            cargo: {}
+            cargo: []
         }
 
         return await addDoc(collection(this.firestore, "boats"), boatData)

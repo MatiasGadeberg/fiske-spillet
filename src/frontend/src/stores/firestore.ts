@@ -84,7 +84,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   const sendBoat = async (
     boatId: string,
-    boatSpeed: number,
+    boatType: Boats,
     fishAreaNumber: number,
     startTime: number,
     teamName: string
@@ -95,7 +95,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
       eventTarget: 'boat',
       teamName,
       boatId,
-      boatSpeed,
+      boatType,
       fishAreaNumber,
       startTime
     })
