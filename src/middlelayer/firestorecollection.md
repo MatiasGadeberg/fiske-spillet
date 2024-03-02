@@ -88,17 +88,17 @@ games (collection)
         -   [x] Set end time
         -   [x] Create new fish market
         -   [ ] Create new boat market
-        -   [ ] Create new fish area
+        -   [x] Create new fish area
     -   [x] Subscribes to events collection changes
 -   [x] Sends periodic game data (periodic updates mostly for timer, fish area info and fish market info could be on a push basis on document update)
--   [ ] Periodically evaluates game data
+-   [x] Periodically evaluates game data
     -   [x] Update fish market
         -   [-] Optional - update demand based on game phase
         -   [x] Remove fish from supply based on demand
         -   [x] Update fish prices based on supply vs. demand
-    -   [ ] Update fish area
-        -   [ ] Add fish based on current amount and growth rate
-        -   [ ] Cannot go above max
+    -   [x] Update fish area
+        -   [x] Add fish based on current amount and growth rate
+        -   [x] Cannot go above max
 -   [ ] Updates team document on event
     -   [x] On boat buy event
         -   [x] Check that there is enough points to avoid using the same points multiple times
@@ -313,3 +313,42 @@ pro:
 
 con:
 - Each boat object on the frontend needs to subscribe to its own data updates? So no central store? Maybe not a con?
+
+Handling fish area growth:
+
+```typescript
+game.updateState
+
+
+updateState() {
+    updateFishArea()
+    update fish market
+}
+
+updateFishArea() {
+    for each fishArea
+        area.growFish
+}
+
+//FishArea
+growFish
+    for each stock in fishStocks 
+        stock.grow
+
+FishStock
+    maxAmount
+    currentAmount
+    fishName
+    growthRate
+    baseGrowth = maxAmount * 0.01
+
+    public grow
+        this.currentAmount = this.currentAmount * this.growthRate + this.baseGrowth
+
+    getStockInfo 
+        return {
+            fishName
+            percentAvailable: this.currentAmount / this.maxAmount * 100
+        }
+```
+

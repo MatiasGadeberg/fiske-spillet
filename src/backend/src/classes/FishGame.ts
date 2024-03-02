@@ -3,11 +3,14 @@ import type { EventData, GameInfo, GameState, BoatMarket } from "../../../shared
 import { Fish } from "./Fish.js";
 import { SailingBoat } from "./SailingBoat.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
+import { FishArea } from "./FishArea";
+import type { FishAreaConstructorProps } from "./fishAreaInput";
 
 export type FishGameProps = {
     startTime: number;
     store: FirebaseWrapper;
     fishInput: FishConstructorProps[];
+    areaInput: FishAreaConstructorProps[];
 };
 
 export class FishGame {
@@ -18,6 +21,7 @@ export class FishGame {
     private store: FirebaseWrapper;
     private sailingBoats: SailingBoat[];
     private boatMarketInfo: BoatMarket[];
+    private fishAreas: FishArea[];
 
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 2;
@@ -28,6 +32,13 @@ export class FishGame {
         this.store = props.store;
         this.fish = props.fishInput.map((fishInfo) => {
             return createFish(fishInfo)
+        })
+        this.fishAreas = props.areaInput.map((area) => {
+            return new FishArea({
+                areaNumber: area.areaNumber,
+                color: area.color,
+                fishStockInput: area.fishStocks
+            })
         })
 
         this.boatMarketInfo = [
@@ -46,7 +57,7 @@ export class FishGame {
                     availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte']
                 },
                  {
-                    type: 'hummerskib',
+                    type: 'hummerkutter',
                     price: 50000,
                     cargo: 4,
                     speed: 6,
@@ -111,6 +122,10 @@ export class FishGame {
         if (event.boat) {
             const teamData = await this.store.getTeamData(event.teamName);
 
+            if (!teamData.boats) {
+                teamData['boats'] = [];
+            }
+
             if (teamData.points >= event.boat.price * event.boat.amount) {
                 teamData.points -= event.boat.price * event.boat.amount
                 for (let i = 0; i < event.boat.amount; i++) {
@@ -153,25 +168,42 @@ export class FishGame {
 
     }
 
+    public updateState() {
+        this.sailBoats()
+        this.updateFishMarket()
+        this.updateFishAreas()
+    }
+
+    private updateFishMarket() {
+        this.fish.forEach((fish) => {
+            fish.updatePrice();
+            fish.decaySupply();
+        })
+    }
+
+    private updateFishAreas() {
+        this.fishAreas.forEach((area) => area.growStocks())
+    }
+
     public getGameData(): GameInfo {
         return {
             serverTime: Date.now(),
             currentNumberOfTeams: this.teams.length,
-            fishingAreaInfo: [],
+            fishingAreaInfo: this.createFishArea(),
             fishMarketInfo: this.createFishMarket(),
             gameState: this.getGameState(),
             timeToEndInMs: this.timeToEnd(),
             timeToStartInMs: this.timeToStart(),
-            boatMarketInfo: this.boatMarketInfo
+            boatMarketInfo: this.boatMarketInfo,
         };
     }
 
+    private createFishArea() {
+        return this.fishAreas.map(area => area.getAreaInfo())
+    }
+
     private createFishMarket() {
-        return this.fish.map((fish) => {
-            fish.updatePrice();
-            fish.decaySupply();
-            return fish.getFishData();
-        })
+        return this.fish.map((fish) => fish.getFishData())
     }
 
     public addTeam(teamName: string): void {

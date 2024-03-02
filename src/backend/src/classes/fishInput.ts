@@ -35,5 +35,12 @@ export const fishConstructionInfo: FishConstructorProps[] = [
         maxPrice: 100,
         startingSupply: 100,
         demand: 40
+    },
+    {
+        name: 'tun',
+        minPrice: 5,
+        maxPrice: 100,
+        startingSupply: 100,
+        demand: 40
     }
 ]

@@ -6,7 +6,7 @@ export type GameInfo = {
     timeToStartInMs: number;
     fishMarketInfo: FishMarketEntry[];
     boatMarketInfo: BoatMarket[];
-    fishingAreaInfo: FishingAreaFishInfo[];
+    fishingAreaInfo: FishAreaInfo[];
 };
 
 export type GameState = "not-started" | "active" | "ended";
@@ -32,11 +32,14 @@ export type EventData = {
     startTime?: number;
 };
 
-type FishingAreaInfo = {
-    name: string;
-    waterType: "shallow" | "semi-deep" | "deep";
-    distanceFromShore: number;
-};
+type FishAreaInfo = {
+    areaNumber: number;
+    color: number;
+    fishStocks: {
+        name: string;
+        percentAvailable: number;
+    }[];
+}
 
 type FishBaseInfo = {
     name: string;
@@ -84,7 +87,7 @@ export type TeamInfo = {
     fish: FishInventory;
 };
 
-export type Boats = 'kutter' | 'fiskeskib' | 'hummerskib' | 'trawler'
+export type Boats = 'kutter' | 'fiskeskib' | 'hummerkutter' | 'trawler'
 
 
 export type BoatInfo = {

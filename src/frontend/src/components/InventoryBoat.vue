@@ -10,7 +10,7 @@
         <img
             :src="getImageUrl().toString()"
             alt="Product Image"
-            class="object-fill w-28 h-20 mx-3 "
+            class="min-w-32 max-h-60 mx-3"
             :class="{ grayscale: props.boat.inUse, 'scale-x-[-1]': props.boat.status === 'outbound'}"
         />  
         <div v-if="props.boat.inUse" class="absolute inset-0 w-full flex items-center justify-center z-10">
@@ -35,7 +35,7 @@ const team = useTeamStore()
 function millisToMinutesAndSeconds(millis: number | null) {
     if (millis) {
           let minutes = Math.floor(millis / 60000);
-          let seconds = ((millis % 60000) / 1000);
+          let seconds = Math.floor((millis % 60000) / 1000);
           let secondsString = seconds.toFixed(0);
 
           return (
