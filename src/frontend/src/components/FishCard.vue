@@ -4,7 +4,7 @@
       {{ props.fish.name.charAt(0).toUpperCase() + props.fish.name.slice(1) }}
     </div>
     <img
-      :src="getImageUrl().toString()"
+      :src="game.getImageUrl('fish', props.fish.name)"
       alt="Product Image"
       class="card-image object-fill w-full h-40 rounded"
     />
@@ -71,12 +71,14 @@ import TrendingDown from 'vue-material-design-icons/TrendingDown.vue'
 import TrendingNeutral from 'vue-material-design-icons/TrendingNeutral.vue'
 import { useTeamStore } from '@/stores/team'
 import type { FishMarketEntry } from '../../../shared/types/GameTypes';
+import { useGameStore } from '@/stores/game'
 
 const props = defineProps<{
     fish: FishMarketEntry
 }>()
 
 const team = useTeamStore()
+const game = useGameStore()
 
 const toSell = ref(0)
 const loading = ref(false)
@@ -111,11 +113,6 @@ const sell = async () => {
     toSell.value = 0
     loading.value = false
   }
-}
-
-function getImageUrl() {
-    const path = `../assets/fishImages/${props.fish.name}.svg`
-    return new URL(path, import.meta.url)
 }
 
 </script>

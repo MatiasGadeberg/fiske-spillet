@@ -8,7 +8,7 @@
         }"
     >
         <img
-            :src="getImageUrl().toString()"
+            :src="game.getImageUrl('boat', props.boat.type)"
             alt="Product Image"
             class="min-w-32 max-h-60 mx-3"
             :class="{ grayscale: props.boat.inUse, 'scale-x-[-1]': props.boat.status === 'outbound'}"
@@ -25,12 +25,14 @@
 <script setup lang="ts">
 import { useTeamStore } from '@/stores/team';
 import type { BoatInfo } from '../../../shared/types/GameTypes';
+import { useGameStore } from '@/stores/game';
 
 const props = defineProps<{
     boat: BoatInfo
 }>()
 
 const team = useTeamStore()
+const game = useGameStore()
 
 function millisToMinutesAndSeconds(millis: number | null) {
     if (millis) {
@@ -46,11 +48,6 @@ function millisToMinutesAndSeconds(millis: number | null) {
     } else {
         return '0:00'
     }
-}
-
-function getImageUrl() {
-    const path = `../assets/boatImages/${props.boat.type}.svg`
-  return new URL(path , import.meta.url)
 }
 
 </script>

@@ -4,7 +4,7 @@
       {{ props.boat.type.charAt(0).toUpperCase() + props.boat.type.slice(1) }}
     </div>
     <img
-      :src="getImageUrl('boat').toString()"
+      :src="game.getImageUrl('boat', props.boat.type)"
       alt="Product Image"
       class="card-image object-fill w-full h-40 rounded" />
     <div class="current-price text-center text-lg">
@@ -30,7 +30,7 @@
           <div class="font-semibold">Kan fange:</div>
           <div class="flex space-x-2">
             <span v-for="fish in props.boat.availableFish" :key="fish" class="relative">
-              <img :src="getImageUrl('fish', fish).toString()" alt="Fish Icon" class="w-14 h-14" />
+              <img :src="game.getImageUrl('fish', fish)" alt="Fish Icon" class="w-14 h-14" />
             </span>
           </div>
         </div>
@@ -67,12 +67,14 @@
 import { ref, watchEffect } from 'vue'
 import { useTeamStore } from '@/stores/team'
 import type { BoatMarket } from '../../../shared/types/GameTypes';
+import { useGameStore } from '@/stores/game';
 
 const props = defineProps<{
     boat: BoatMarket
 }>()
 
 const team = useTeamStore()
+const game = useGameStore()
 
 const toBuy = ref(0)
 const loading = ref(false)
@@ -107,19 +109,6 @@ const buy = () => {
     }
 }
 
-
-function getImageUrl(type: string, fishName?: string) {
-     let name: string
-     if (fishName) {
-         name = fishName
-     } else {
-         name = props.boat.type
-     }
-
-     const path = `../assets/${type}Images/${name}.svg`
-
-  return new URL(path , import.meta.url)
-}
 </script>
 
 <style scoped>

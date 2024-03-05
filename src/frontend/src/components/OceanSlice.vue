@@ -14,7 +14,7 @@
         <div class="grow">
             <div class="flex flex-col items-center"> 
                     <div v-for="stock in props.area.fishStocks" :key="stock.name" class="flex">
-                        <img :src="getImageUrl(stock.name).toString()" class="w-min-32" />
+                        <img :src="game.getImageUrl('fish', stock.name)" class="w-min-32" />
                         <div>{{ stock.percentAvailable.toFixed(2) }}%</div>
                     </div>
             </div>
@@ -25,12 +25,14 @@
 <script setup lang="ts">
 import { useTeamStore } from '@/stores/team';
 import type { FishAreaInfo } from '../../../shared/types/GameTypes';
+import { useGameStore } from '@/stores/game';
 
 const props = defineProps<{
     area: FishAreaInfo,
 }>()
 
 const team = useTeamStore();
+const game = useGameStore();
 
 const sendBoat = () => {
     if ( team.selectedBoat ) {
@@ -38,8 +40,4 @@ const sendBoat = () => {
     }
 } 
 
-function getImageUrl(fish: string) {
-    const path = `../assets/fishImages/${fish}.svg`
-  return new URL(path , import.meta.url)
-}
 </script>

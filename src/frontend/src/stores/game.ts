@@ -38,11 +38,19 @@ export const useGameStore = defineStore('game', () => {
     })
   }
 
+  const getImageUrl = (type: 'boat' | 'fish', name: string) => {
+      const path = `../../${type}Images/${name}.svg`
+
+      return new URL(path , import.meta.url).toString()
+  }
+
+
   return {
     currentNumberOfTeams,
     timeToEndInMs,
     timeToStartInMs,
     gameState,
+    getImageUrl,
     timeToStartLocale,
     timeToEndLocale,
     servertime,
