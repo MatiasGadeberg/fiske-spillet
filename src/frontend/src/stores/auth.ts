@@ -78,17 +78,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function setLogin(teamName: string) {
+  function setLogin(teamName: string, refresh: boolean = false) {
     isLoggedIn.value = true
+    sessionStorage.setItem("loggedIn", "true")
+    sessionStorage.setItem("teamName", teamName)
     team.subscribeToTeamData(teamName)
     team.subscribeToTeamBoatData()
-    router.push('/game/fish')
+    if (!refresh) {
+        router.push('/game/fish')
+    }
   }
 
   const logout = () => {
     isLoggedIn.value = false
+    sessionStorage.removeItem("loggedIn")
+    sessionStorage.removeItem("teamName")
     router.push('/login')
   }
 
-  return { isLoggedIn, login, logout, createTeam, loginError, loginErrorMessage }
+  return { isLoggedIn, login, setLogin, logout, createTeam, loginError, loginErrorMessage }
 })

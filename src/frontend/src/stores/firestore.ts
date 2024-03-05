@@ -38,10 +38,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
     
   }
 
-  const joinGame = () => {
-    console.log('test')
-  }
-
   const sellFish = async (
     teamName: string,
     fishName: string,
@@ -103,7 +99,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   return {
     subscribe,
-    joinGame,
     getTeamData,
     getTeamBoatData,
     createTeam,

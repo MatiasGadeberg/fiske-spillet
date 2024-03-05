@@ -36,7 +36,9 @@ const router = createRouter({
 
 router.beforeEach((to, _) => {
   const auth = useAuthStore()
-  if (!auth.isLoggedIn && to.name !== 'login') {
+  const loginCookie = sessionStorage.getItem("loggedIn");
+  const loggedIn = auth.isLoggedIn || loginCookie
+  if (!loggedIn && to.name !== 'login') {
     return { name: 'login' }
   }
 })

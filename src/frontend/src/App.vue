@@ -2,9 +2,19 @@
 import { RouterView } from 'vue-router'
 import TheHeader from './components/TheHeader.vue'
 import { useGameStore } from './stores/game';
+import { useAuthStore } from './stores/auth';
 
 const game = useGameStore()
+const auth = useAuthStore()
+
 game.subscribeToGameData()
+
+const loggedIn = sessionStorage.getItem("loggedIn")
+const teamName = sessionStorage.getItem("teamName")
+
+if (loggedIn && teamName) {
+    auth.setLogin(teamName, true)
+}
 </script>
 
 <template>
