@@ -3,44 +3,44 @@ import type { FishConstructorProps } from "./FishFactory";
 export const fishConstructionInfo: FishConstructorProps[] = [
     {
         name: 'hummer',
-        minPrice: 5,
-        maxPrice: 40,
+        minPrice: 100,
+        maxPrice: 400,
         startingSupply: 0,
         demand: 300
     },
     {
         name: 'torsk',
-        minPrice: 5,
+        minPrice: 80,
         maxPrice: 100,
-        startingSupply: 100,
-        demand: 40
+        startingSupply: 0,
+        demand: 100
     },
     {
         name: 'hornfisk',
-        minPrice: 5,
-        maxPrice: 100,
-        startingSupply: 100,
-        demand: 40
+        minPrice: 20,
+        maxPrice: 150,
+        startingSupply: 0,
+        demand: 200
     },
     {
         name: 'rødspætte',
         minPrice: 5,
-        maxPrice: 100,
-        startingSupply: 100,
-        demand: 4
+        maxPrice: 150,
+        startingSupply: 0,
+        demand: 200
     },
     {
         name: 'markrel',
-        minPrice: 5,
-        maxPrice: 100,
-        startingSupply: 100,
-        demand: 40
+        minPrice: 50,
+        maxPrice: 175,
+        startingSupply: 0,
+        demand: 70
     },
     {
         name: 'tun',
-        minPrice: 40,
-        maxPrice: 150,
-        startingSupply: 100,
-        demand: 80
+        minPrice: 80,
+        maxPrice: 250,
+        startingSupply: 0,
+        demand: 150
     }
 ]

@@ -1,10 +1,10 @@
-import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper";
-import type { EventData, GameInfo, GameState, BoatMarket } from "../../../shared/types/GameTypes";
+import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper.js";
+import type { EventData, GameInfo, GameState, BoatMarket } from "../../../shared/types/GameTypes.js";
 import { Fish } from "./Fish.js";
 import { SailingBoat } from "./SailingBoat.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
-import { FishArea } from "./FishArea";
-import type { FishAreaConstructorProps } from "./fishAreaInput";
+import { FishArea } from "./FishArea.js";
+import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type FishGameProps = {
     startTime: number;

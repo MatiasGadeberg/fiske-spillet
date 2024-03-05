@@ -4,7 +4,7 @@ import router from '@/router'
 import { useFirestoreStore } from './firestore'
 import { useTeamStore } from './team'
 import type {
-  BoatInventoryInfo,
+  BoatMarket,
   FishInventory,
 } from '../../../shared/types/GameTypes'
 
@@ -66,7 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
               amount: 0
           },
       }
-      const boatInventory: BoatInventoryInfo[] = []
+      const boatInventory: BoatMarket[] = []
       await store.createTeam(teamName, {
         password,
         points: 10000,

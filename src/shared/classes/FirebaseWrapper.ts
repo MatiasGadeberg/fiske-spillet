@@ -2,7 +2,7 @@ import type { FirebaseApp } from "firebase/app";
 import { initializeApp } from "firebase/app";
 import {
     Firestore,
-    Unsubscribe,
+    type Unsubscribe,
     getFirestore,
     collection,
     CollectionReference,

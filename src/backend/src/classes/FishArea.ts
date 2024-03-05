@@ -1,4 +1,4 @@
-import { FishStock, FishStockProps } from "./FishStock";
+import { FishStock, FishStockProps } from "./FishStock.js";
 
 export type FishAreaProps = {
     areaNumber: number;

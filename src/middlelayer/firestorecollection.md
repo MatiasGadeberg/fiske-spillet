@@ -1,3 +1,55 @@
+# Critical bugs - must fix
+- [ ] Images not in frontend container
+- [ ] Ocean slice colors not working properly
+- [ ] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
+
+# Outstanding features - must fix
+- [ ] Pre-game welcome screen
+- [ ] Post-game overview page
+- [ ] Updating team to include senior/væbner category and teamName, login, password
+- [ ] Time till end visible to users
+- [ ] Actual thought through prices, growth rates, boat prices etc.
+- [ ] Dynamic Stock sizes, and demand
+
+# Recommended features - Nice to have
+- [ ] Sorting of owned boats based on status and type
+- [ ] Unique names for all boats in harbor
+- [ ] Distinct grafics on boats
+- [ ] Visualization of where a boat is currently heading
+- [ ] Price drop / raise dependant on difference between supply and demand
+- [ ] Dynamic boat pricing
+- [ ] Current ranking page during gameplay
+- [ ] Thousands seperator on Current amount
+
+# Reccomended features - If time allows
+- [ ] Visualize historic market prices
+- [ ] Max / Min visualization on fish card
+- [ ] Over fishing penalty
+- [ ] Limited boat slots but possibility to sell boats
+- [ ] Market is only open at certain times
+
+# Notes from playtest 
+Growth rates way to high / boats catch way to little
+Time left should be visible
+!! Handling boat sail events take to long 
+Både priser skal reguleres - måske dynamisk pris
+Fiskemarked - torsk, markrel, tun var ikke så dynamisk
+Fiskemarked - min/max pris
+pris afhængig af demand
+Rigtig mange skibe til hodle
+Mulighed for at sælge skibe?
+Bådene i havnen - det er svært at se forskel
+Hvor er skibet påvej hen ? 
+Sortere skibene efter docker/time to dock
+Historiske kurser?
+Længere opdatering i kurserne
+Børsen har åben i forskellige tider
+Vente lobby
+Slut skærm Stillingen
+Billeder kommer ikke med på containeren
+Område farverne
+Radioreje
+
 # Firestore collection data structure
 
 ```

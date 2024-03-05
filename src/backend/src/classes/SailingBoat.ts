@@ -18,7 +18,7 @@ export class SailingBoat {
 
     private baseAreaDistance = 120;
     private baseSpeed = 10;
-    private baseCargoSize = 10;
+    private baseCargoSize = 80;
 
     private store: FirebaseWrapper
     private boatId: string;
