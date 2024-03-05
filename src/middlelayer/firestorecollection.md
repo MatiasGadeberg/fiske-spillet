@@ -1,6 +1,6 @@
 # Critical bugs - must fix
+- [x] Ocean slice colors not working properly
 - [ ] Images not in frontend container
-- [ ] Ocean slice colors not working properly
 - [ ] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 
 # Outstanding features - must fix

@@ -1,5 +1,10 @@
 <template>
-      <div :class="'bg-sky-' + props.area.color" class="text-slate-200 text-2xl hover:text-3xl flex-1 justify-center hover:scale-x-110"
+      <div class="text-slate-200 text-2xl hover:text-3xl flex-1 justify-center hover:scale-x-110"
+        :class="{ 
+            'bg-sky-300': props.area.color === 300,
+            'bg-sky-500': props.area.color === 500,
+            'bg-sky-700': props.area.color === 700,
+        }"
            @click="sendBoat()"
       >
         <div class="flex justify-center">

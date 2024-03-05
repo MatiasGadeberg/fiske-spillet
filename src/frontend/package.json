@@ -15,7 +15,7 @@
     "format": "prettier --write src/",
     "build:container:dev": "docker build -f Dockerfile.dev -t fiskespil/frontend:latest ..",
     "build:container:prd": "docker build -f Dockerfile.prod -t fiskespil/frontend:latest ..",
-    "start:container": "docker run -it --rm -p 5173:5173 fiskespil/frontend:latest"
+    "start:container": "docker run -it --rm -p 80:80 -p 5173:5173 fiskespil/frontend:latest"
   },
   "dependencies": {
     "firebase": "^10.7.2",
