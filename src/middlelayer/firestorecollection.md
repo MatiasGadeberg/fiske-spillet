@@ -1,6 +1,6 @@
 # Critical bugs - must fix
 - [x] Ocean slice colors not working properly
-- [ ] Store login state in cookies
+- [x] Store login state in cookies
 - [x] Images not in frontend container
 - [ ] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 

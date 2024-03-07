@@ -8,7 +8,36 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+    },
+    {
+        path: '/pre-game',
+        name: 'pre-game',
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/PreGameView.vue'),
+    },
+    {
+        path: '/game',
+        name: 'game',
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/GameView.vue'),
+            children: [
+            { path: 'boat', component: () => import('../views/game-views/BoatMarketView.vue') },
+                { path: 'fish', component: () => import('../views/game-views/FishMarketView.vue') },
+                { path: 'ocean', component: () => import('../views/game-views/OceanView.vue') }
+        ]
+    },
+    {
+        path: '/post-game',
+        name: 'post-game',
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import('../views/PostGameView.vue'),
     },
     {
       path: '/login',
@@ -18,19 +47,6 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/LoginView.vue')
     },
-    {
-      path: '/game',
-      name: 'game',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/GameView.vue'),
-      children: [
-        { path: 'boat', component: () => import('../views/game-views/BoatMarketView.vue') },
-        { path: 'fish', component: () => import('../views/game-views/FishMarketView.vue') },
-        { path: 'ocean', component: () => import('../views/game-views/OceanView.vue') }
-      ]
-    }
   ]
 })
 
