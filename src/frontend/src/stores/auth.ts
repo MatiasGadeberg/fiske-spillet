@@ -15,17 +15,17 @@ export const useAuthStore = defineStore('auth', () => {
   const loginError = ref(false)
   const loginErrorMessage = ref('')
 
-  async function login(teamName: string, password: string = 'test') {
+  async function login(login: string, password: string = 'test') {
     loginError.value = false
     loginErrorMessage.value = ''
 
-    const teamData = await store.getTeamData(teamName)
+    const teamData = await store.getTeamData(login)
     if (!teamData) {
       loginError.value = true
-      loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer ikke`
+      loginErrorMessage.value = `Holdet med login ${login} eksisterer ikke`
     } else {
       if (password === teamData.password) {
-        setLogin(teamName)
+        setLogin(login)
       } else {
         loginError.value = true
         loginErrorMessage.value = 'Forkert kodeord'
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function createTeam(teamName: string, password: string, repeatPassword: string) {
+  async function createTeam(login: string, password: string, repeatPassword: string) {
     loginError.value = false
     loginErrorMessage.value = ''
     if (password !== repeatPassword) {
@@ -41,10 +41,10 @@ export const useAuthStore = defineStore('auth', () => {
       loginErrorMessage.value = 'Kodeordene er ikke ens'
     }
 
-    const teamData = await store.getTeamData(teamName)
+    const teamData = await store.getTeamData(login)
     if (teamData) {
       loginError.value = true
-      loginErrorMessage.value = `Holdet med navn ${teamName} eksisterer allerede`
+      loginErrorMessage.value = `Holdet med login ${login} eksisterer allerede`
     } else {
       const fishInventory: FishInventory = {
           'tun': {
@@ -67,22 +67,25 @@ export const useAuthStore = defineStore('auth', () => {
           },
       }
       const boatInventory: BoatMarket[] = []
-      await store.createTeam(teamName, {
-        password,
-        points: 10000,
-        fish: fishInventory,
-        boats: boatInventory
+      await store.createTeam(login, {
+          teamName: login,
+          password,
+          login,
+          category: 'senior',
+          points: 10000,
+          fish: fishInventory,
+          boats: boatInventory
       })
     
-      setLogin(teamName)
+      setLogin(login)
     }
   }
 
-  function setLogin(teamName: string, refresh: boolean = false) {
+  function setLogin(login: string, refresh: boolean = false) {
     isLoggedIn.value = true
     sessionStorage.setItem("loggedIn", "true")
-    sessionStorage.setItem("teamName", teamName)
-    team.subscribeToTeamData(teamName)
+    sessionStorage.setItem("teamName", login)
+    team.subscribeToTeamData(login)
     team.subscribeToTeamBoatData()
     if (!refresh) {
         router.push('/game')
