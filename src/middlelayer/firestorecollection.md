@@ -1,14 +1,14 @@
 # Critical bugs - must fix
 - [x] Ocean slice colors not working properly
-- [ ] Store login state in cookies
+- [x] Store login state in cookies
 - [x] Images not in frontend container
 - [ ] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 
 # Outstanding features - must fix
 - [ ] Pre-game welcome screen
-- [ ] Post-game overview page
 - [ ] Updating team to include senior/væbner category and teamName, login, password
 - [ ] Time till end visible to users
+- [ ] Post-game overview page
 - [ ] Actual thought through prices, growth rates, boat prices etc.
 - [ ] Dynamic Stock sizes, and demand
 

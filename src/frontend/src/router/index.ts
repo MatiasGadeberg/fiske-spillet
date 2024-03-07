@@ -30,6 +30,22 @@ const router = createRouter({
         { path: 'fish', component: () => import('../views/game-views/FishMarketView.vue') },
         { path: 'ocean', component: () => import('../views/game-views/OceanView.vue') }
       ]
+    },
+    {
+      path: '/pre-game',
+      name: 'pre-game',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/PreGameView.vue'),
+    },
+    {
+      path: '/post-game',
+      name: 'post-game',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/PostGameView.vue'),
     }
   ]
 })
