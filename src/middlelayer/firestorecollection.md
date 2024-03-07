@@ -6,9 +6,9 @@
 
 # Outstanding features - must fix
 - [ ] Pre-game welcome screen
-- [ ] Post-game overview page
 - [ ] Updating team to include senior/væbner category and teamName, login, password
 - [ ] Time till end visible to users
+- [ ] Post-game overview page
 - [ ] Actual thought through prices, growth rates, boat prices etc.
 - [ ] Dynamic Stock sizes, and demand
 

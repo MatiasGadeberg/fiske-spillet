@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { GameInfo, FishMarketEntry, BoatMarket, FishAreaInfo } from '../../../shared/types/GameTypes'
 import { useFirestoreStore } from './firestore'
+import router from '@/router'
 
 export const useGameStore = defineStore('game', () => {
   const currentNumberOfTeams = ref(0)
@@ -17,6 +18,17 @@ export const useGameStore = defineStore('game', () => {
   const firestore = useFirestoreStore()
 
   const updateGameData = (gameInfo: GameInfo): void => {
+      if (gameState.value !== gameInfo.gameState) {
+          if (gameInfo.gameState === "not-started") {
+              router.push('/pre-game')
+          }
+          if (gameInfo.gameState === "active") {
+              router.push('/game/fish')
+          }
+          if (gameInfo.gameState === "ended") {
+              router.push('/post-game')
+          }
+      }
     currentNumberOfTeams.value = gameInfo.currentNumberOfTeams
     timeToEndInMs.value = gameInfo.timeToEndInMs
     timeToStartInMs.value = gameInfo.timeToStartInMs
