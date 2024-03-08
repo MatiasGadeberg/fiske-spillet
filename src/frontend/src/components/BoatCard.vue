@@ -10,7 +10,7 @@
     <div class="current-price text-center text-lg">
       <div>Pris:</div>
       <div class="flex items-center justify-center">
-        <div class="font-bold">{{ props.boat.price.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$</div>
+        <div class="font-bold">{{ boatPrice.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$</div>
       </div>
     </div>
         <div class="flex flex-col space-y-4">
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { useTeamStore } from '@/stores/team'
 import type { BoatMarket } from '../../../shared/types/GameTypes';
 import { useGameStore } from '@/stores/game';
@@ -80,6 +80,10 @@ const toBuy = ref(0)
 const loading = ref(false)
 const expensive = ref(false)
 const disabled = ref(false)
+
+const boatPrice = computed(() => {
+    return props.boat.price * (1 + Math.floor(team.boatInventory.length / 5) * 0.05)
+})
 
 const decrement = () => {
   if (toBuy.value > 0) {
@@ -102,7 +106,7 @@ const handleInput = () => {
 const buy = () => {
     try {
         loading.value = true
-        team.buyBoat(props.boat.type, toBuy.value, props.boat.price)
+        team.buyBoat(props.boat.type, toBuy.value, boatPrice.value)
     } finally {
         loading.value = false
         toBuy.value = 0

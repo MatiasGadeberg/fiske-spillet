@@ -8,17 +8,17 @@
 - [x] Pre-game welcome screen
 - [ ] Updating team to include senior/væbner category and teamName, login, password
 - [x] Time till end visible to users
-- [ ] Post-game overview page
+- [-] Post-game overview page
 - [ ] Actual thought through prices, growth rates, boat prices etc.
 - [ ] Dynamic Stock sizes, and demand
+- [x] Dynamic boat pricing
 
 # Recommended features - Nice to have
 - [ ] Sorting of owned boats based on status and type
 - [ ] Unique names for all boats in harbor
-- [ ] Distinct grafics on boats
+- [x] Distinct grafics on boats
 - [ ] Visualization of where a boat is currently heading
 - [ ] Price drop / raise dependant on difference between supply and demand
-- [ ] Dynamic boat pricing
 - [ ] Current ranking page during gameplay
 - [x] Thousands seperator on Current amount
 
