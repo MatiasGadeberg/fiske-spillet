@@ -2,9 +2,9 @@
 - [x] Ocean slice colors not working properly
 - [x] Store login state in cookies
 - [x] Images not in frontend container
-- [ ] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
+- [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 
-# Outstanding features - must fix
+# Outstandingxfeatures - must fix
 - [-] Pre-game welcome screen
 - [ ] Updating team to include senior/væbner category and teamName, login, password
 - [ ] Time till end visible to users

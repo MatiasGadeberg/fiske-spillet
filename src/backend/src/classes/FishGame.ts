@@ -153,6 +153,7 @@ export class FishGame {
                     cargoLevel: marketBoat.cargo,
                     availableFish: marketBoat.availableFish
                 })
+                boat.sail()
                 this.sailingBoats.push(boat)
             } else {
                 console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)

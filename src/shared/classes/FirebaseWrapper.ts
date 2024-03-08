@@ -5,8 +5,6 @@ import {
     type Unsubscribe,
     getFirestore,
     collection,
-    CollectionReference,
-    DocumentReference,
     setDoc,
     doc,
     onSnapshot,
@@ -23,9 +21,8 @@ import type { BoatInfo, Boats, EventData, GameInfo, TeamInfo } from "../types/Ga
 export class FirebaseWrapper {
     private app: FirebaseApp;
     private firestore: Firestore;
-    private gameCollectionRef: CollectionReference;
-    private game: DocumentReference | null;
     private snapshots: Unsubscribe[];
+    private firstEventQuery: boolean;
 
     constructor() {
         const firebaseConfig = {
@@ -39,16 +36,15 @@ export class FirebaseWrapper {
 
         this.app = initializeApp(firebaseConfig);
         this.firestore = getFirestore(this.app);
-        this.gameCollectionRef = collection(this.firestore, "games");
-        this.game = null;
         this.snapshots = [];
+        this.firstEventQuery = true;
     }
 
     public async setGame(gameData: GameInfo) {
         await setDoc(doc(this.firestore, "games", `fiskespil`), gameData);
     }
 
-    public async setTeam(teamName: string, teamData: { points: number; password: string }) {
+    public async setTeam(teamName: string, teamData: TeamInfo) {
         await setDoc(doc(this.firestore, "teams", teamName), teamData);
     }
 
@@ -85,21 +81,24 @@ export class FirebaseWrapper {
         const boatRef = doc(this.firestore, "boats", boatId);
         await updateDoc(boatRef, boatData);
     }
-    
-
 
     public subscribeToEvents(callback: (events: EventData[]) => void) {
         const eventsRef = collection(this.firestore, "events");
         const q = query(eventsRef);
         const unsubscribe = onSnapshot(q, snapshot => {
-            const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
-                if (change.type === "added") {
-                    eventArr.push(change.doc.data() as EventData);
-                }
-                return eventArr;
-            }, []);
+            
+            if (this.firstEventQuery) {
+                this.firstEventQuery = false;
+            } else {
+                const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
+                   if (change.type === "added") {
+                       eventArr.push(change.doc.data() as EventData);
+                   }
+                   return eventArr;
+               }, []);
 
-            callback(events);
+               callback(events);
+            }
         });
         this.snapshots.push(unsubscribe);
     }

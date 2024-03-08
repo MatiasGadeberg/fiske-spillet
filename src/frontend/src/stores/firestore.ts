@@ -19,8 +19,8 @@ export const useFirestoreStore = defineStore('firestore', () => {
     return await firestore.getTeamData(teamName)
   }
 
-  const createTeam = async (teamName: string, teamdData: TeamInfo) => {
-    await firestore.setTeam(teamName, teamdData)
+  const createTeam = async (teamName: string, teamData: TeamInfo) => {
+    await firestore.setTeam(teamName, teamData)
   }
 
   const getTeamBoatData = (teamId: string, boatCallback: (boats: any[]) => void) => {
