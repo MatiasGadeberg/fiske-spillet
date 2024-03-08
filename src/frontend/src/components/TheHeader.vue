@@ -10,7 +10,7 @@
         <img :src="getImageUrl().toString()" class="card-image object-fill h-20 rounded" />
       </div>
       <div class="flex items-center justify-end basis-1/4"> 
-        <h1 class="text-slate-500 font-bold text-lg">Jeres hold har {{ team.points.toFixed(2) }} VM$</h1>
+        <h1 class="text-slate-500 font-bold text-lg">Jeres hold har {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
       </div>
   <!-- 
   <div class="bg-red-300 basis-1/4 flex items-start">

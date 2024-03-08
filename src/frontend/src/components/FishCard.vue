@@ -11,7 +11,7 @@
     <div class="current-price text-center text-lg">
       <div>Nuværende pris:</div>
       <div class="flex items-center justify-center">
-        <div class="font-bold">{{ props.fish.currentPrice.toFixed(2) }} VM$/Ton</div>
+        <div class="font-bold">{{ props.fish.currentPrice.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$/Ton</div>
         <div>
           <trending-up
             v-if="props.fish.growth === 'positive'"

@@ -20,7 +20,7 @@
 - [ ] Price drop / raise dependant on difference between supply and demand
 - [ ] Dynamic boat pricing
 - [ ] Current ranking page during gameplay
-- [ ] Thousands seperator on Current amount
+- [x] Thousands seperator on Current amount
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

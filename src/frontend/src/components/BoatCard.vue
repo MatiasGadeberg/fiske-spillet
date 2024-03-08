@@ -10,7 +10,7 @@
     <div class="current-price text-center text-lg">
       <div>Pris:</div>
       <div class="flex items-center justify-center">
-        <div class="font-bold">{{ props.boat.price }} VM$</div>
+        <div class="font-bold">{{ props.boat.price.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$</div>
       </div>
     </div>
         <div class="flex flex-col space-y-4">
