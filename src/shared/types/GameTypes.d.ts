@@ -81,8 +81,12 @@ type FishingAreaFishInfo = FishBaseInfo & {
 };
 
 export type TeamInfo = {
+    teamName: string;
+    dbId?: number;
     points: number;
+    login: string;
     password: string;
+    category: 'væbner' | 'senior';
     boats: BoatInventoryInfo[];
     fish: FishInventory;
 };

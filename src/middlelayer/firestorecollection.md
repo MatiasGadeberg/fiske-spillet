@@ -7,7 +7,7 @@
 # Outstandingxfeatures - must fix
 - [-] Pre-game welcome screen
 - [ ] Updating team to include senior/væbner category and teamName, login, password
-- [ ] Time till end visible to users
+- [x] Time till end visible to users
 - [ ] Post-game overview page
 - [ ] Actual thought through prices, growth rates, boat prices etc.
 - [ ] Dynamic Stock sizes, and demand

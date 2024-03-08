@@ -24,7 +24,7 @@ export class FishGame {
     private fishAreas: FishArea[];
 
     constructor(props: FishGameProps) {
-        const gameLenghtInHours = 2;
+        const gameLenghtInHours = 1;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
         this.teams = [];

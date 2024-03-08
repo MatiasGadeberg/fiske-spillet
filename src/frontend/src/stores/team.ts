@@ -5,13 +5,15 @@ import { useFirestoreStore } from './firestore'
 
 export const useTeamStore = defineStore('team', () => {
   const store = useFirestoreStore()
-  const teamId = ref('')
+  const teamName = ref('')
+  const teamLogin = ref('')
   const points = ref(0)
   const boatInventory: Ref<BoatInfo[]> = ref([])
   const fishInventory: Ref<FishInventory> = ref({})
   const selectedBoat: Ref<string | null> = ref(null)
 
   const updateTeamData = (teamInfo: TeamInfo): void => {
+    teamName.value = teamInfo.teamName
     fishInventory.value = teamInfo.fish
     points.value = teamInfo.points
   }
@@ -27,20 +29,20 @@ export const useTeamStore = defineStore('team', () => {
   const sendBoat = (fishAreaNumber: number, startTime: number) => {
         const boat = boatInventory.value.find(boat => boat.boatId === selectedBoat.value);
       if (boat) {
-          store.sendBoat(boat.boatId, boat.type, fishAreaNumber, startTime, teamId.value)
+          store.sendBoat(boat.boatId, boat.type, fishAreaNumber, startTime, teamLogin.value)
           selectedBoat.value = null
       }
   }
 
-  const subscribeToTeamData = (teamName: string): void => {
-    teamId.value = teamName
-    store.subscribe('teams', teamName, (doc) => {
+  const subscribeToTeamData = (login: string): void => {
+      teamLogin.value = login
+    store.subscribe('teams', login, (doc) => {
       updateTeamData(doc.data() as TeamInfo)
     })
   }
   
   const subscribeToTeamBoatData = (): void => {
-      store.getTeamBoatData(teamId.value, handleBoatData)
+      store.getTeamBoatData(teamLogin.value, handleBoatData)
   }
 
   const handleBoatData = (boats: BoatInfo[]) => {
@@ -49,11 +51,11 @@ export const useTeamStore = defineStore('team', () => {
   }
 
   const sellFish = async (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
-    await store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
+    await store.sellFish(teamLogin.value, fishName, sellingPrice, fishAmountToSell)
   }
   
   const buyBoat = async (type: Boats, amount: number, price: number) => {
-    await store.buyBoat(teamId.value, type, amount, price)
+    await store.buyBoat(teamLogin.value, type, amount, price)
   }
 
   return {
@@ -65,7 +67,8 @@ export const useTeamStore = defineStore('team', () => {
     buyBoat,
     sendBoat,
     points,
-    teamId,
+    teamName,
+    teamLogin,
     selectedBoat,
     boatInventory,
     fishInventory
