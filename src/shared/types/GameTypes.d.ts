@@ -59,6 +59,11 @@ export type FishMarketEntry = {
     supply: number;
 };
 
+export type ScoreInfo = {
+    teamName: string;
+    points: number
+}
+
 export type BoatMarket = {
         type: Boats;
         price: number;

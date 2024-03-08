@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { GameInfo, FishMarketEntry, BoatMarket, FishAreaInfo } from '../../../shared/types/GameTypes'
+import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo } from '../../../shared/types/GameTypes.js'
 import { useFirestoreStore } from './firestore'
 import router from '@/router'
 
@@ -16,6 +16,8 @@ export const useGameStore = defineStore('game', () => {
   const fishMarket = ref<FishMarketEntry[]>([])
   const boatMarket = ref<BoatMarket[]>([]) 
   const firestore = useFirestoreStore()
+  const vScore = ref<ScoreInfo[]>([])
+  const sScore = ref<ScoreInfo[]>([])
 
   const updateGameData = (gameInfo: GameInfo): void => {
       if (gameState.value !== gameInfo.gameState) {
