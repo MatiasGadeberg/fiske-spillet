@@ -5,7 +5,7 @@
 - [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 
 # Outstandingxfeatures - must fix
-- [-] Pre-game welcome screen
+- [x] Pre-game welcome screen
 - [ ] Updating team to include senior/væbner category and teamName, login, password
 - [x] Time till end visible to users
 - [ ] Post-game overview page
