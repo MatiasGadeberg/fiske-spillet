@@ -8,6 +8,7 @@ const game = useGameStore()
 const auth = useAuthStore()
 
 game.subscribeToGameData()
+game.subscribeToScores()
 
 const loggedIn = sessionStorage.getItem("loggedIn")
 const teamName = sessionStorage.getItem("teamName")

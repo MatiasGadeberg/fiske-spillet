@@ -5,20 +5,26 @@
             <h1>Tak fordi I spillede med!</h1>
             <h1>Herunder kan I se stillingen</h1>
         </div>
-        <div class="flex justify-around items-start w-full">
+        <div class="flex justify-around items-start w-full text-xl font-bold" >
             <div>
-                <h1>Væbner rækken:</h1>
-                <ol class="list-decimal">
+                <h1 class="text-2xl font-normal">Væbner-rækken:</h1>
+                <br/>
+                <ol class="list-decimal text-start">
                     <li v-for="score in game.vScores" :key="score.teamName">
-                            {{score.teamName }} : {{ score.points }} VM$
+                            {{score.teamName }} 
+                            <br/>
+                            {{ score.points.toLocaleString('da-DK', {maximumFractionDigits: 0, minimumFractionDigits: 0}) }} VM$
                     </li>
                 </ol>
             </div>
             <div>
-                <h1>Senior rækken:</h1>
-                <ol class="list-decimal">
+                <h1 class="text-2xl font-normal">Senior-rækken:</h1>
+                <br/>
+                <ol class="list-decimal text-start">
                     <li v-for="score in game.sScores" :key="score.teamName">
-                            {{score.teamName }} : {{ score.points }} VM$
+                            {{score.teamName }} 
+                            <br/>
+                            {{ score.points.toLocaleString('da-DK', {maximumFractionDigits: 0, minimumFractionDigits: 0}) }} VM$
                     </li>
                 </ol>
             </div>

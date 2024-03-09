@@ -4,7 +4,7 @@
   class="bg-neutral-100 flex items-center justify-around h-16 px-2" 
 >
       <div class="flex items-center basis-1/4"> 
-        <h1 class="text-slate-500 font-bold text-lg">Logget på som :{{ team.teamName }}</h1>
+        <h1 class="text-slate-500 font-bold text-lg">Logget på som: {{ team.teamName }}</h1>
       </div>
       <div class="flex items-center justify-center basis-1/2"> 
         <img :src="getImageUrl().toString()" class="card-image object-fill h-20 rounded" />
@@ -12,14 +12,6 @@
       <div class="flex items-center justify-end basis-1/4"> 
         <h1 class="text-slate-500 font-bold text-lg">Jeres hold har {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
       </div>
-  <!-- 
-  <div class="bg-red-300 basis-1/4 flex items-start">
-  </div>
-  <div class="bg-blue-300 basis-1/2 h-full">
-  </div>
-  <div class="bg-green-300 basis-1/4 h-full">
-  </div>
-  -->
 </div>
   <div v-else class="bg-indigo-500 flex justify-between h-16 items-center px-4 sm:px-6 lg:px-8">
     <img :src="getImageUrl().toString()" class="card-image object-fill w-full h-20 rounded" />

@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { BoatInfo, Boats, EventData, TeamInfo } from '../../../shared/types/GameTypes'
-import type { QuerySnapshot } from 'firebase/firestore/lite'
+import type { BoatInfo, Boats, EventData, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
+import { Query, QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -23,7 +23,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     await firestore.setTeam(teamName, teamData)
   }
 
-  const getTeamBoatData = (teamId: string, boatCallback: (boats: any[]) => void) => {
+  const getTeamBoatData = (teamId: string, boatCallback: (boats: BoatInfo[]) => void) => {
       
       const callback = (snapshot: QuerySnapshot) => {
           const boats = snapshot.docs.map(doc => {
@@ -36,6 +36,31 @@ export const useFirestoreStore = defineStore('firestore', () => {
           
       firestore.subscribeToTeamsBoatData(teamId, callback) 
     
+  }
+
+  const subscribeToScores = (callback: (scores: {vScore: ScoreInfo[]; sScore: ScoreInfo[]}) => void) => {
+      firestore.subscribeToTeamsData((snapshot: QuerySnapshot) => {
+          const vScore: ScoreInfo[] = []
+          const sScore: ScoreInfo[] = []
+          snapshot.forEach((doc) => {
+              if (doc.data().category === 'senior') {
+                  sScore.push({
+                      teamName: doc.data().teamName,
+                      points: doc.data().points
+                  })
+              }
+              if (doc.data().category === 'væbner') {
+                  vScore.push({
+                      teamName: doc.data().teamName,
+                      points: doc.data().points
+                  })
+              }
+          })
+          callback( {
+                vScore,
+                sScore
+          })
+      })
   }
 
   const sellFish = async (
@@ -102,6 +127,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     getTeamData,
     getTeamBoatData,
     createTeam,
+    subscribeToScores,
     sellFish,
     buyBoat,
     sendBoat

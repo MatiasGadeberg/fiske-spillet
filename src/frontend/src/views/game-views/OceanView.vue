@@ -38,7 +38,6 @@ const updateSelected = (e: any, inUse: boolean) => {
             } else {
                 sourceId = e.srcElement.offsetParent.id
             }
-
         team.updateSelectedBoat(sourceId)
     }
 }

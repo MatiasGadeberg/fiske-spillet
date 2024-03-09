@@ -88,7 +88,7 @@ export const useAuthStore = defineStore('auth', () => {
     team.subscribeToTeamData(login)
     team.subscribeToTeamBoatData()
     if (!refresh) {
-        router.push('/game')
+        router.push('/game/fish')
     }
   }
 

@@ -86,19 +86,14 @@ export class FirebaseWrapper {
         const eventsRef = collection(this.firestore, "events");
         const q = query(eventsRef);
         const unsubscribe = onSnapshot(q, snapshot => {
-            
-            if (this.firstEventQuery) {
-                this.firstEventQuery = false;
-            } else {
-                const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
-                   if (change.type === "added") {
-                       eventArr.push(change.doc.data() as EventData);
-                   }
-                   return eventArr;
-               }, []);
+            const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
+               if (change.type === "added") {
+                   eventArr.push(change.doc.data() as EventData);
+               }
+               return eventArr;
+           }, []);
 
-               callback(events);
-            }
+           callback(events);
         });
         this.snapshots.push(unsubscribe);
     }
