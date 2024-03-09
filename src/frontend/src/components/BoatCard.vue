@@ -92,7 +92,7 @@ const decrement = () => {
 }
 
 watchEffect(() => {
-    expensive.value = toBuy.value * props.boat.price > team.points
+    expensive.value = toBuy.value * boatPrice.value > team.points
     let isString = typeof(toBuy.value) === 'string'
     disabled.value = expensive.value || isString || loading.value || toBuy.value === 0
 })

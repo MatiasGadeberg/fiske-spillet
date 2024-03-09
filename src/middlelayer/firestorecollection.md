@@ -13,6 +13,7 @@
 - [ ] Dynamic Stock sizes, and demand
 - [x] Dynamic boat pricing
 - [ ] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
+- [x] Boat buy button disable not using updated prices
 
 # Recommended features - Nice to have
 - [ ] Sorting of owned boats based on status and type
