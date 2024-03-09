@@ -6,7 +6,7 @@ import { useFirestoreStore } from './firestore'
 export const useTeamStore = defineStore('team', () => {
   const store = useFirestoreStore()
   const teamName = ref('')
-  const teamLogin = ref('')
+  const teamId = ref('')
   const points = ref(0)
   const boatInventory: Ref<BoatInfo[]> = ref([])
   const fishInventory: Ref<FishInventory> = ref({})
@@ -29,20 +29,20 @@ export const useTeamStore = defineStore('team', () => {
   const sendBoat = (fishAreaNumber: number, startTime: number) => {
         const boat = boatInventory.value.find(boat => boat.boatId === selectedBoat.value);
       if (boat) {
-          store.sendBoat(boat.boatId, boat.type, fishAreaNumber, startTime, teamLogin.value)
+          store.sendBoat(boat.boatId, boat.type, fishAreaNumber, startTime, teamId.value)
           selectedBoat.value = null
       }
   }
 
   const subscribeToTeamData = (login: string): void => {
-      teamLogin.value = login
+      teamId.value = login
     store.subscribe('teams', login, (doc) => {
       updateTeamData(doc.data() as TeamInfo)
     })
   }
   
   const subscribeToTeamBoatData = (): void => {
-      store.getTeamBoatData(teamLogin.value, handleBoatData)
+      store.getTeamBoatData(teamId.value, handleBoatData)
   }
 
   const handleBoatData = (boats: BoatInfo[]) => {
@@ -51,11 +51,11 @@ export const useTeamStore = defineStore('team', () => {
   }
 
   const sellFish = async (fishName: string, sellingPrice: number, fishAmountToSell: number) => {
-    await store.sellFish(teamLogin.value, fishName, sellingPrice, fishAmountToSell)
+    await store.sellFish(teamId.value, fishName, sellingPrice, fishAmountToSell)
   }
   
   const buyBoat = async (type: Boats, amount: number, price: number) => {
-    await store.buyBoat(teamLogin.value, type, amount, price)
+    await store.buyBoat(teamId.value, type, amount, price)
   }
 
   return {
@@ -68,7 +68,7 @@ export const useTeamStore = defineStore('team', () => {
     sendBoat,
     points,
     teamName,
-    teamLogin,
+    teamId,
     selectedBoat,
     boatInventory,
     fishInventory

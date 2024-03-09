@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
 import type { BoatInfo, Boats, EventData, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
-import { Query, QuerySnapshot } from 'firebase/firestore/lite'
+import { QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
   const firestore = new FirebaseWrapper()
@@ -15,16 +15,15 @@ export const useFirestoreStore = defineStore('firestore', () => {
     firestore.subscribe(collection, document, callback)
   }
 
-  const getTeamData = async (teamName: string) => {
-    return await firestore.getTeamData(teamName)
+  const getTeamData = async (teamId: string) => {
+    return await firestore.getTeamData(teamId)
   }
 
-  const createTeam = async (teamName: string, teamData: TeamInfo) => {
-    await firestore.setTeam(teamName, teamData)
+  const createTeam = async (teamId: string, teamData: TeamInfo) => {
+    await firestore.setTeam(teamId, teamData)
   }
 
   const getTeamBoatData = (teamId: string, boatCallback: (boats: BoatInfo[]) => void) => {
-      
       const callback = (snapshot: QuerySnapshot) => {
           const boats = snapshot.docs.map(doc => {
               const data = doc.data() as BoatInfo;
@@ -33,9 +32,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
           })
           boatCallback(boats)
       }
-          
       firestore.subscribeToTeamsBoatData(teamId, callback) 
-    
   }
 
   const subscribeToScores = (callback: (scores: {vScore: ScoreInfo[]; sScore: ScoreInfo[]}) => void) => {
@@ -64,7 +61,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
   }
 
   const sellFish = async (
-    teamName: string,
+    teamId: string,
     fishName: string,
     sellingPrice: number,
     fishAmountToSell: number
@@ -79,13 +76,13 @@ export const useFirestoreStore = defineStore('firestore', () => {
     await firestore.sendEvent({
       type: 'sell',
       eventTarget: 'fish',
-      teamName,
+      teamId,
       fish
     })
   }
 
   const buyBoat = async (
-    teamName: string,
+    teamId: string,
     type: Boats,
     amount: number,
     price: number
@@ -94,7 +91,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     await firestore.sendEvent({
       type: 'buy',
       eventTarget: 'boat',
-      teamName,
+      teamId,
       boat: {
         amount,
         price,
@@ -108,13 +105,13 @@ export const useFirestoreStore = defineStore('firestore', () => {
     boatType: Boats,
     fishAreaNumber: number,
     startTime: number,
-    teamName: string
+    teamId: string
   ) => {
 
     await firestore.sendEvent({
       type: 'sail',
       eventTarget: 'boat',
-      teamName,
+      teamId,
       boatId,
       boatType,
       fishAreaNumber,

@@ -22,7 +22,6 @@ export class FirebaseWrapper {
     private app: FirebaseApp;
     private firestore: Firestore;
     private snapshots: Unsubscribe[];
-    private firstEventQuery: boolean;
 
     constructor() {
         const firebaseConfig = {
@@ -44,12 +43,12 @@ export class FirebaseWrapper {
         await setDoc(doc(this.firestore, "games", `fiskespil`), gameData);
     }
 
-    public async setTeam(teamName: string, teamData: TeamInfo) {
-        await setDoc(doc(this.firestore, "teams", teamName), teamData);
+    public async setTeam(teamId: string, teamData: TeamInfo) {
+        await setDoc(doc(this.firestore, "teams", teamId), teamData);
     }
 
-    public async updateTeamData(teamName: string, teamData: Partial<TeamInfo>) {
-        const teamRef = doc(this.firestore, "teams", teamName);
+    public async updateTeamData(teamId: string, teamData: Partial<TeamInfo>) {
+        const teamRef = doc(this.firestore, "teams", teamId);
         await updateDoc(teamRef, teamData);
     }
 

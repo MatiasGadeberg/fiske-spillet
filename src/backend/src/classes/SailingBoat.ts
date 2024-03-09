@@ -3,7 +3,7 @@ import type { BoatInfo } from "../../../shared/types/GameTypes";
 
 export type SailingBoatProps = {
     boatId: string;
-    teamName: string;
+    teamId: string;
     boatSpeed: number;
     cargoLevel: number;
     availableFish: string[];
@@ -22,7 +22,7 @@ export class SailingBoat {
 
     private store: FirebaseWrapper
     private boatId: string;
-    private teamName: string;
+    private teamId: string;
     private arrivalTime: number;
     private travelTimeInMs: number;
     private status: BoatInfo['status']
@@ -32,7 +32,7 @@ export class SailingBoat {
 
     constructor(props: SailingBoatProps) {
         this.boatId = props.boatId;
-        this.teamName = props.teamName;
+        this.teamId = props.teamId;
         this.store = props.store;
         this.destination = props.destinationAreaNumber;
         this.availableFish = props.availableFish;
@@ -83,8 +83,8 @@ export class SailingBoat {
     }
 
     private async handleStoreFishEvent() {
-        const teamData = await this.store.getTeamData(this.teamName);
+        const teamData = await this.store.getTeamData(this.teamId);
         this.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
-        await this.store.updateTeamData(this.teamName, teamData);
+        await this.store.updateTeamData(this.teamId, teamData);
     }
 }

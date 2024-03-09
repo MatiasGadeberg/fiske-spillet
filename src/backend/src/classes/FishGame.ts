@@ -79,7 +79,7 @@ export class FishGame {
 
     private handleEvents(events: EventData[]) {
         events.forEach(event => {
-            if (event.teamName) {
+            if (event.teamId) {
                 if (event.type === "sell" && event.eventTarget === "fish") {
                     this.handleFishSellEvent(event);
                 }
@@ -95,7 +95,7 @@ export class FishGame {
 
     private async handleFishSellEvent(event: EventData) {
         if (!event.fish) return;
-        const teamData = await this.store.getTeamData(event.teamName);
+        const teamData = await this.store.getTeamData(event.teamId);
 
         const fishToSell = Object.keys(event.fish)[0];
         const fishSellAmount = event.fish[fishToSell].fishAmount;
@@ -106,7 +106,7 @@ export class FishGame {
             teamData.fish[fishToSell].amount -= fishSellAmount;
             teamData.points += fishSellAmount * fishSellPrice
             this.addFishSupply(fishToSell, fishSellAmount);
-            await this.store.updateTeamData(event.teamName, teamData);
+            await this.store.updateTeamData(event.teamId, teamData);
         }
     }
 
@@ -120,7 +120,7 @@ export class FishGame {
 
     private async handleBoatBuyEvent(event: EventData) {
         if (event.boat) {
-            const teamData = await this.store.getTeamData(event.teamName);
+            const teamData = await this.store.getTeamData(event.teamId);
 
             if (!teamData.boats) {
                 teamData['boats'] = [];
@@ -130,11 +130,11 @@ export class FishGame {
                 teamData.points -= event.boat.price * event.boat.amount
                 for (let i = 0; i < event.boat.amount; i++) {
                     const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boat!.type) 
-                    const boat = await this.store.createBoat({ type: event.boat.type, speed: typeBoat ? typeBoat.speed : 1, teamId: event.teamName })
+                    const boat = await this.store.createBoat({ type: event.boat.type, speed: typeBoat ? typeBoat.speed : 1, teamId: event.teamId })
                     teamData.boats.push(boat.id);
                 }
 
-                await this.store.updateTeamData(event.teamName, teamData);
+                await this.store.updateTeamData(event.teamId, teamData);
             }
         }
     }
@@ -145,7 +145,7 @@ export class FishGame {
             if (marketBoat) {
                 const boat = new SailingBoat({
                     boatId: event.boatId,
-                    teamName: event.teamName,
+                    teamId: event.teamId,
                     destinationAreaNumber: event.fishAreaNumber,
                     startTime: event.startTime,
                     store: this.store,
@@ -228,17 +228,6 @@ export class FishGame {
 
     private createFishMarket() {
         return this.fish.map((fish) => fish.getFishData())
-    }
-
-    public addTeam(teamName: string): void {
-        this.teams.push(teamName);
-    }
-
-    public removeTeam(teamName: string): void {
-        const idx = this.teams.indexOf(teamName);
-        if (idx !== -1) {
-            this.teams.splice(idx, 1);
-        }
     }
 
     private getGameState(): GameState {

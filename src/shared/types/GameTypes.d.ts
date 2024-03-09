@@ -14,7 +14,7 @@ export type GameState = "not-started" | "active" | "ended";
 export type EventData = {
     type: "sell" | "buy" | "catch" | "sail"; 
     eventTarget: "fish" | "boat";
-    teamName: string;
+    teamId: string;
     fish?: {
         [fishName: string]: {
             fishAmount: number;
