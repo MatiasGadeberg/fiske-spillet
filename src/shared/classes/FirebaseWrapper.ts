@@ -61,13 +61,14 @@ export class FirebaseWrapper {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
 
-    public async createBoat(data: { type: Boats; teamId: string; speed: number}) {
+    public async createBoat(data: { type: Boats; teamId: string; speed: number, name: string}) {
         const boatData: Omit<BoatInfo, 'boatId'> = {
             teamId: data.teamId,
             type: data.type,
             speed: data.speed,
+            name: data.name,
             inUse: false,
-            timeToDestinationInMs: null,
+            timeToDestinationInMs: 0,
             destination: null,
             status: 'docked',
             cargo: []

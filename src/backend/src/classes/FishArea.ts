@@ -3,7 +3,8 @@ import { FishStock, FishStockProps } from "./FishStock.js";
 export type FishAreaProps = {
     areaNumber: number;
     color: number;
-    fishStockInput: FishStockProps[]
+    baseAreaMax: number;
+    fishStockInput: Omit<FishStockProps, 'areaMax'>[]
 };
 
 export class FishArea {
@@ -13,9 +14,9 @@ export class FishArea {
     private fishStocks: FishStock[];
 
     constructor(props: FishAreaProps) {
-        this.areaNumber = props.areaNumber
+        this.areaNumber = props.areaNumber;
         this.color = props.color
-        this.fishStocks = props.fishStockInput.map((input) => new FishStock(input));
+        this.fishStocks = props.fishStockInput.map((input) => new FishStock({...input, areaMax: props.baseAreaMax}));
     }
 
     public getAreaInfo() {
@@ -49,6 +50,12 @@ export class FishArea {
                     stock.remove(fish.amount)
                 }
             })
+        })
+    }
+
+    public updateMaxStocks(numberOfTeams: number) {
+        this.fishStocks.forEach((stock) => {
+            stock.updateMax(numberOfTeams)
         })
     }
 

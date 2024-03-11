@@ -3,26 +3,39 @@
 - [x] Store login state in cookies
 - [x] Images not in frontend container
 - [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
+- [ ] Some ships get 'caught at sea'
 
 # Outstandingxfeatures - must fix
 - [x] Pre-game welcome screen
-- [x] Updating team to include senior/væbner category and teamName, login, passwordcoll
+- [x] Updating team to include senior/væbner category and teamName, login, password
 - [x] Time till end visible to users
 - [x] Post-game overview page
-- [ ] Actual thought through prices, growth rates, boat prices etc.
-- [ ] Dynamic Stock sizes, and demand
 - [x] Dynamic boat pricing
-- [ ] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
 - [x] Boat buy button disable not using updated prices
+- [-] Actual thought through prices, growth rates, boat prices etc.
+    - [x] Boat Prices
+    - [x] Boat price increase
+    - [ ] Fish Prices
+    - [ ] Fish Growth Rates
+    - [x] Cargo size
+    - [x] Area base size
+    - [x] Stock percentages
+    - [x] Boat catch list
+    - [ ] Demand
+- [x] Dynamic Stock sizes
+- [ ] Dynamic demand
+- [ ] Tracking active teams to update stock size and demand
+- [ ] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
+- [ ] Max 4 logins per team
 
 # Recommended features - Nice to have
-- [ ] Sorting of owned boats based on status and type
-- [ ] Unique names for all boats in harbor
 - [x] Distinct grafics on boats
-- [ ] Visualization of where a boat is currently heading
+- [x] Thousands seperator on Current amount
+- [x] Sorting of owned boats based on status
+- [x] Unique names for all boats in harbor
+- [x] Visualization of where a boat is currently heading
 - [ ] Price drop / raise dependant on difference between supply and demand
 - [ ] Current ranking page during gameplay
-- [x] Thousands seperator on Current amount
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

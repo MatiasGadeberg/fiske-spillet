@@ -103,10 +103,11 @@ export type BoatInfo = {
     boatId: string;
     teamId: string;
     type: Boats; 
+    name: string;
     inUse: boolean;
     speed: number;
-    timeToDestinationInMs: number | null; 
-    destination: string | null;
+    timeToDestinationInMs: number;
+    destination: number | null;
     status: 'inbound' | 'outbound' | 'docked';
     cargo: {
         name: string,

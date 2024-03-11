@@ -46,8 +46,7 @@ export const useTeamStore = defineStore('team', () => {
   }
 
   const handleBoatData = (boats: BoatInfo[]) => {
-      boatInventory.value = boats
-
+      boatInventory.value = boats.sort((a, b) => b.type.localeCompare(a.type))
   }
 
   const sellFish = async (fishName: string, sellingPrice: number, fishAmountToSell: number) => {

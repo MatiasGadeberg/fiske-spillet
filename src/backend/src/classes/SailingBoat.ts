@@ -13,12 +13,12 @@ export type SailingBoatProps = {
 }
 
 export class SailingBoat {
-    public destination: number;
+    public destination: number | null;
     public availableFish: string[];
 
     private baseAreaDistance = 120;
     private baseSpeed = 10;
-    private baseCargoSize = 80;
+    private baseCargoSize = 50;
 
     private store: FirebaseWrapper
     private boatId: string;
@@ -48,7 +48,7 @@ export class SailingBoat {
     }
 
     public async sail(){
-        let timeToDestination: number | null = this.arrivalTime - Date.now()
+        let timeToDestination: number = this.arrivalTime - Date.now()
         let catchEvent = false
         if (timeToDestination <= this.travelTimeInMs/2 && this.status == "outbound") { 
             this.status = 'inbound'
@@ -58,15 +58,17 @@ export class SailingBoat {
             await this.handleStoreFishEvent();
             this.inUse = false;
             this.status = 'docked';
-            timeToDestination = null
+            timeToDestination = 0;
             this.cargo = []
+            this.destination = null;
         }
 
         await this.store.updateBoatData(this.boatId, {
             inUse: this.inUse,
             timeToDestinationInMs: timeToDestination,
             status: this.status,
-            cargo: this.cargo
+            cargo: this.cargo,
+            destination: this.destination
         })
 
         return { inUse: this.inUse, catchEvent}

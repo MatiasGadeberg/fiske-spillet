@@ -1,7 +1,8 @@
 export type FishStockProps = {
-    maxAmount: number;
+    percentInArea: number;
     fishName: string;
     growthRate: number;
+    areaMax: number;
 }
 
 export class FishStock {
@@ -10,14 +11,17 @@ export class FishStock {
 
     private growthRate: number;
     private maxAmount: number;
-    private baseGrowth: number 
+    private baseMaxAmount: number;
+    private baseGrowth: number;
 
+    private baseGrowthRate: number = 0.01
 
     constructor(props: FishStockProps) {
         this.growthRate = props.growthRate;
-        this.maxAmount = props.maxAmount;
+        this.baseMaxAmount = props.areaMax * props.percentInArea;
+        this.maxAmount = this.baseMaxAmount;
         this.name = props.fishName;
-        this.baseGrowth = this.maxAmount * 0.01;
+        this.baseGrowth = this.maxAmount * this.baseGrowthRate;
         this.currentAmount = 0 //this.maxAmount;
     }
 
@@ -37,5 +41,12 @@ export class FishStock {
 
     public remove(amount: number) {
         this.currentAmount -= amount;
+    }
+
+    public updateMax(numberOfTeams: number) {
+        const currentAmountPercent = this.currentAmount / this.maxAmount;
+        this.maxAmount = this.baseMaxAmount * numberOfTeams;
+        this.baseGrowth = this.maxAmount * this.baseGrowthRate;
+        this.currentAmount = this.maxAmount * currentAmountPercent;
     }
 }

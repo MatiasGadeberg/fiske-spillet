@@ -23,6 +23,41 @@ export class FishGame {
     private boatMarketInfo: BoatMarket[];
     private fishAreas: FishArea[];
 
+    private boatNameAdjectives: string[] = [
+        'Skummende',
+        'Salte',
+        'Drivende',
+        'Blæsende',
+        'Strømmende',
+        'Skumsprøjtende',
+        'Våde',
+        'Tidevands',
+        'Skvulpende',
+        'Søfarende',
+        'Brusende',
+        'Fyldte',
+        'Mørke',
+        'Lystige',
+        'Lynhurtig'
+    ]
+    private boatNameNouns: string[] = [
+        'Anker',
+        'Reje',
+        'Søhest',
+        'Kaptajn',
+        'Krabbe',
+        'Fyrtårn',
+        'Kompas',
+        'Skibsklokke',
+        'Sejl',
+        'Kyst',
+        'Hav',
+        'Ror',
+        'Matros',
+        'Havn',
+        'Mole'
+    ]
+
     constructor(props: FishGameProps) {
         const gameLenghtInHours = 1;
         this.startTime = props.startTime;
@@ -37,6 +72,7 @@ export class FishGame {
             return new FishArea({
                 areaNumber: area.areaNumber,
                 color: area.color,
+                baseAreaMax: area.baseAreaMax,
                 fishStockInput: area.fishStocks
             })
         })
@@ -44,28 +80,28 @@ export class FishGame {
         this.boatMarketInfo = [
                  {
                     type: 'trawler',
-                    price: 25000,
+                    price: 70000,
                     cargo: 7,
                     speed: 4,
-                    availableFish: [ 'hornfisk', 'rødspætte']
+                    availableFish: ['markrel', 'hornfisk', 'rødspætte']
                 },
                  {
                     type: 'fiskeskib',
-                    price: 100000,
+                    price: 300000,
                     cargo: 10,
                     speed: 3,
                     availableFish: ['torsk', 'markrel', 'hornfisk', 'rødspætte', 'tun']
                 },
                  {
                     type: 'hummerkutter',
-                    price: 50000,
+                    price: 120000,
                     cargo: 4,
                     speed: 6,
                     availableFish: ['hummer']
                 },
                  {
                     type: 'kutter',
-                    price: 10000,
+                    price: 20000,
                     cargo: 3,
                     speed: 9,
                     availableFish: ['torsk', 'markrel', 'tun']
@@ -130,7 +166,15 @@ export class FishGame {
                 teamData.points -= event.boat.price * event.boat.amount
                 for (let i = 0; i < event.boat.amount; i++) {
                     const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boat!.type) 
-                    const boat = await this.store.createBoat({ type: event.boat.type, speed: typeBoat ? typeBoat.speed : 1, teamId: event.teamId })
+                    const adjective = this.boatNameAdjectives[Math.floor(Math.random()*10)] ?? this.boatNameAdjectives[9];
+                    const noun = this.boatNameNouns[Math.floor(Math.random()*10)] ?? this.boatNameNouns[9];
+                    const name =  `${teamData.boats.length + 1}: ${adjective} ${noun}`
+                    const boat = await this.store.createBoat({ 
+                        type: event.boat.type, 
+                        speed: typeBoat ? typeBoat.speed : 1, 
+                        teamId: event.teamId,
+                        name
+                    })
                     teamData.boats.push(boat.id);
                 }
 

@@ -1,5 +1,5 @@
 <template>
-      <div class="text-slate-200 text-2xl hover:text-3xl flex-1 justify-center hover:scale-x-110"
+      <div class="text-slate-200 text-2xl hover:text-3xl flex-1 overflow-auto justify-center hover:scale-x-110"
         :class="{ 
             'bg-sky-300': props.area.color === 300,
             'bg-sky-500': props.area.color === 500,
@@ -12,23 +12,36 @@
         </div>
 
         <div class="grow">
-            <div class="flex flex-col items-center"> 
-                    <div v-for="stock in props.area.fishStocks" :key="stock.name" class="flex">
+            <div class="flex flex-col items-center justify-center"> 
+                    <div v-for="stock in props.area.fishStocks" :key="stock.name" class="flex justify-center">
                         <img :src="game.getImageUrl('fish', stock.name)" class="w-min-32" />
-                        <div>{{ stock.percentAvailable.toFixed(2) }}%</div>
+                        <div>{{ stock.percentAvailable.toFixed(1) }}%</div>
                     </div>
             </div>
         </div>
+
+        <div class="flex justify-center flex-col items-center">
+            <InventoryBoat v-for="boat in props.boats" 
+                class="max-h-fit"
+                :key="boat.boatId" 
+                :id="boat.boatId"
+                :boat="boat"
+            />
+        </div>
+        
       </div>
 </template>
 
 <script setup lang="ts">
 import { useTeamStore } from '@/stores/team';
-import type { FishAreaInfo } from '../../../shared/types/GameTypes';
+import type { FishAreaInfo, BoatInfo } from '../../../shared/types/GameTypes';
 import { useGameStore } from '@/stores/game';
+
+import InventoryBoat from './InventoryBoat.vue'
 
 const props = defineProps<{
     area: FishAreaInfo,
+    boats: BoatInfo[],
 }>()
 
 const team = useTeamStore();
