@@ -15,19 +15,19 @@ export type SailingBoatProps = {
 export class SailingBoat {
     public destination: number | null;
     public availableFish: string[];
+    public inUse: boolean
+    public boatId: string;
 
     private baseAreaDistance = 120;
     private baseSpeed = 10;
     private baseCargoSize = 50;
 
     private store: FirebaseWrapper
-    private boatId: string;
     private teamId: string;
     private arrivalTime: number;
     private travelTimeInMs: number;
     private status: BoatInfo['status']
     private cargo: BoatInfo['cargo']
-    private inUse: boolean
     private cargoSize: number;
 
     constructor(props: SailingBoatProps) {
@@ -71,7 +71,7 @@ export class SailingBoat {
             destination: this.destination
         })
 
-        return { inUse: this.inUse, catchEvent}
+        return catchEvent
     }
 
     public catchFish(fishRatios: {name: string; ratio: number, amountAvailable: number}[]) {

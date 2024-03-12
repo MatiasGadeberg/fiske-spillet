@@ -197,7 +197,7 @@ export class FishGame {
                     cargoLevel: marketBoat.cargo,
                     availableFish: marketBoat.availableFish
                 })
-                boat.sail()
+                await boat.sail()
                 this.sailingBoats.push(boat)
             } else {
                 console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
@@ -206,23 +206,16 @@ export class FishGame {
     }
 
     public async sailBoats() {
-        const updatedBoats = await Promise.all(
+        await Promise.all(
             this.sailingBoats.map(async boat => {
-                const {inUse, catchEvent} = await boat.sail()
+                const catchEvent = await boat.sail()
                 if (catchEvent) {
                     this.handleCatchEvent(boat)
                 }
-                return {inUse, boat}
             })
         );
 
-        this.sailingBoats = updatedBoats.reduce<SailingBoat[]>((boatsArray, updatedBoat) => {
-            if (updatedBoat.inUse) {
-                boatsArray.push(updatedBoat.boat)
-            }
-            return boatsArray
-        }, [])
-
+        this.sailingBoats = this.sailingBoats.filter((boat) => boat.inUse)
     }
 
     private handleCatchEvent(boat: SailingBoat) {
@@ -232,7 +225,7 @@ export class FishGame {
             const cargo = boat.catchFish(fishRatios)
             area.removeStock(cargo)
         } else {
-            console.warn('No fish area number matching boat destination number')
+            console.warn(`No fish area number matching boat destination number. BoatId: ${boat.boatId} destination: ${boat.destination}`)
         }
     }
 
