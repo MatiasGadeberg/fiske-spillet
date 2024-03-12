@@ -36,7 +36,6 @@ export class FirebaseWrapper {
         this.app = initializeApp(firebaseConfig);
         this.firestore = getFirestore(this.app);
         this.snapshots = [];
-        this.firstEventQuery = true;
     }
 
     public async setGame(gameData: GameInfo) {

@@ -12,8 +12,8 @@ export type GameInfo = {
 export type GameState = "not-started" | "active" | "ended";
 
 export type EventData = {
-    type: "sell" | "buy" | "catch" | "sail"; 
-    eventTarget: "fish" | "boat";
+    type: "sell" | "buy" | "catch" | "sail" | "login" | "logout"; 
+    eventTarget: "fish" | "boat" | "team" ;
     teamId: string;
     fish?: {
         [fishName: string]: {
@@ -87,6 +87,7 @@ type FishingAreaFishInfo = FishBaseInfo & {
 
 export type TeamInfo = {
     teamName: string;
+    activeLogins: number;
     dbId?: number;
     points: number;
     login: string;

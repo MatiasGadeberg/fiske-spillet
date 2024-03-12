@@ -3,8 +3,9 @@
   v-if="auth.isLoggedIn"
   class="bg-neutral-100 flex items-center justify-around h-16 px-2" 
 >
-      <div class="flex items-center basis-1/4"> 
-        <h1 class="text-slate-500 font-bold text-lg">Logget på som: {{ team.teamName }}</h1>
+      <div class="flex flex-col justify-center items-center basis-1/4 text-slate-500 font-bold"> 
+        <h1 class="text-lg">Logget på som: {{ team.teamName }}</h1>
+        <button @click="auth.logout">Log ud</button>
       </div>
       <div class="flex items-center justify-center basis-1/2"> 
         <img :src="getImageUrl().toString()" class="card-image object-fill h-20 rounded" />

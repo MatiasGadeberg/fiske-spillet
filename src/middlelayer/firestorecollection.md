@@ -3,7 +3,7 @@
 - [x] Store login state in cookies
 - [x] Images not in frontend container
 - [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
-- [ ] Some ships get 'caught at sea'
+- [x] Some ships get 'caught at sea'
 
 # Outstandingxfeatures - must fix
 - [x] Pre-game welcome screen
@@ -24,7 +24,7 @@
     - [ ] Demand
 - [x] Dynamic Stock sizes
 - [ ] Dynamic demand
-- [ ] Tracking active teams to update stock size and demand
+- [x] Tracking active teams to update stock size and demand
 - [ ] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
 - [ ] Max 4 logins per team
 

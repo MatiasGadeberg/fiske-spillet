@@ -69,6 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
       const boatInventory: BoatMarket[] = []
       await store.createTeam(login, {
           teamName: login,
+          activeLogins: 0,
           password,
           login,
           category: 'senior',
@@ -88,12 +89,15 @@ export const useAuthStore = defineStore('auth', () => {
     team.subscribeToTeamData(login)
     team.subscribeToTeamBoatData()
     if (!refresh) {
+        store.login(login);
         router.push('/game/fish')
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
     isLoggedIn.value = false
+    const teamId = sessionStorage.getItem("teamName")
+    if (teamId) await store.logout(teamId)
     sessionStorage.removeItem("loggedIn")
     sessionStorage.removeItem("teamName")
     router.push('/login')

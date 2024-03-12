@@ -35,7 +35,7 @@ export class FishStock {
     public getStockInfo() {
         return {
             name: this.name,
-            percentAvailable: this.currentAmount / this.maxAmount * 100
+            percentAvailable: this.currentAmount / this.maxAmount * 100,
         }
     }
 
@@ -44,8 +44,9 @@ export class FishStock {
     }
 
     public updateMax(numberOfTeams: number) {
+        const multiplier = numberOfTeams === 0 ? 1 : numberOfTeams;
         const currentAmountPercent = this.currentAmount / this.maxAmount;
-        this.maxAmount = this.baseMaxAmount * numberOfTeams;
+        this.maxAmount = this.baseMaxAmount * multiplier;
         this.baseGrowth = this.maxAmount * this.baseGrowthRate;
         this.currentAmount = this.maxAmount * currentAmountPercent;
     }

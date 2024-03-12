@@ -16,7 +16,7 @@ export type FishGameProps = {
 export class FishGame {
     private startTime: number;
     private endTime: number;
-    private teams: string[];
+    private teams: { [teamId: string]: number}
     private fish: Fish[];
     private store: FirebaseWrapper;
     private sailingBoats: SailingBoat[];
@@ -62,7 +62,7 @@ export class FishGame {
         const gameLenghtInHours = 1;
         this.startTime = props.startTime;
         this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
-        this.teams = [];
+        this.teams = {};
         this.sailingBoats = [];
         this.store = props.store;
         this.fish = props.fishInput.map((fishInfo) => {
@@ -125,8 +125,42 @@ export class FishGame {
                 if (event.type === "sail") {
                     this.handleBoatSailEvent(event);
                 }
+                if (event.type === "login") {
+                    this.handleLoginEvent(event);
+                }
+                if (event.type === "logout") {
+                    this.handleLogoutEvent(event);
+                }
             }
         });
+    }
+
+    private async handleLoginEvent(event: EventData) {
+        if (Object.keys(this.teams).includes(event.teamId)) {
+            this.teams[event.teamId]++
+        } else {
+            this.teams[event.teamId] = 1
+            this.fishAreas.forEach((area) => {
+                area.updateMaxStocks(Object.keys(this.teams).length)
+            })
+        }
+        this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
+    }
+
+    private async handleLogoutEvent(event: EventData) {
+        if (Object.keys(this.teams).includes(event.teamId)) {
+            if (this.teams[event.teamId] === 1) {
+                delete this.teams[event.teamId]
+                this.fishAreas.forEach((area) => {
+                    area.updateMaxStocks(Object.keys(this.teams).length)
+                })
+                this.store.updateTeamData(event.teamId, {activeLogins: 0})
+
+            } else {
+                this.teams[event.teamId]--
+                this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
+            }
+        }
     }
 
     private async handleFishSellEvent(event: EventData) {
@@ -249,7 +283,7 @@ export class FishGame {
     public getGameData(): GameInfo {
         return {
             serverTime: Date.now(),
-            currentNumberOfTeams: this.teams.length,
+            currentNumberOfTeams: Object.keys(this.teams).length,
             fishingAreaInfo: this.createFishArea(),
             fishMarketInfo: this.createFishMarket(),
             gameState: this.getGameState(),

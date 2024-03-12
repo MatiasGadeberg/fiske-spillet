@@ -15,6 +15,22 @@ export const useFirestoreStore = defineStore('firestore', () => {
     firestore.subscribe(collection, document, callback)
   }
 
+  const login = async (teamId: string) => {
+      await firestore.sendEvent({
+          type: "login",
+          teamId,
+          eventTarget: "team"
+      })
+  }
+
+  const logout = async (teamId: string) => {
+      await firestore.sendEvent({
+          type: "logout",
+          teamId,
+          eventTarget: "team"
+      })
+  }
+
   const getTeamData = async (teamId: string) => {
     return await firestore.getTeamData(teamId)
   }
@@ -121,6 +137,8 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   return {
     subscribe,
+    login,
+    logout,
     getTeamData,
     getTeamBoatData,
     createTeam,
