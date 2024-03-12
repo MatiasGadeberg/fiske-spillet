@@ -200,8 +200,8 @@ export class FishGame {
                 teamData.points -= event.boat.price * event.boat.amount
                 for (let i = 0; i < event.boat.amount; i++) {
                     const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boat!.type) 
-                    const adjective = this.boatNameAdjectives[Math.floor(Math.random()*10)] ?? this.boatNameAdjectives[9];
-                    const noun = this.boatNameNouns[Math.floor(Math.random()*10)] ?? this.boatNameNouns[9];
+                    const adjective = this.boatNameAdjectives[Math.floor(Math.random()*this.boatNameAdjectives.length)] ?? this.boatNameAdjectives[14];
+                    const noun = this.boatNameNouns[Math.floor(Math.random()*this.boatNameNouns.length)] ?? this.boatNameNouns[14]
                     const name =  `${teamData.boats.length + 1}: ${adjective} ${noun}`
                     const boat = await this.store.createBoat({ 
                         type: event.boat.type, 
