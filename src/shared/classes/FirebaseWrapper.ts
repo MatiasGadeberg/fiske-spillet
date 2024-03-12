@@ -116,6 +116,14 @@ export class FirebaseWrapper {
     public subscribeToTeamsBoatData(teamId: string, callback: (snapshot: QuerySnapshot) => void) {
         this.subscribeToCollection("boats", callback, where("teamId", "==", teamId))
     }
+    
+    public subscribeToAreaBoatData(areaNumber: number, callback: (snapshot: QuerySnapshot) => void) {
+        this.subscribeToCollection("boats", callback, where("destination", "==", areaNumber))
+    }
+
+    public subscribeToAllBoatData(callback: (snapshot: QuerySnapshot) => void) {
+        this.subscribeToCollection("boats", callback)
+    }
 
 
     public dropConnections(): void {

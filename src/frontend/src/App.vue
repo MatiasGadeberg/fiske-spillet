@@ -9,6 +9,8 @@ const auth = useAuthStore()
 
 game.subscribeToGameData()
 game.subscribeToScores()
+game.subscribeToAllBoatData()
+
 
 const loggedIn = sessionStorage.getItem("loggedIn")
 const teamName = sessionStorage.getItem("teamName")

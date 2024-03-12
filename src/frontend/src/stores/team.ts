@@ -6,6 +6,7 @@ import { useFirestoreStore } from './firestore'
 export const useTeamStore = defineStore('team', () => {
   const store = useFirestoreStore()
   const teamName = ref('')
+  const teamCategory = ref('')
   const teamId = ref('')
   const points = ref(0)
   const boatInventory: Ref<BoatInfo[]> = ref([])
@@ -16,6 +17,7 @@ export const useTeamStore = defineStore('team', () => {
     teamName.value = teamInfo.teamName
     fishInventory.value = teamInfo.fish
     points.value = teamInfo.points
+    teamCategory.value = teamInfo.category
   }
 
   const updateSelectedBoat = (boatId: string) => {
@@ -67,6 +69,7 @@ export const useTeamStore = defineStore('team', () => {
     sendBoat,
     points,
     teamName,
+    teamCategory,
     teamId,
     selectedBoat,
     boatInventory,

@@ -15,7 +15,7 @@
 - [-] Actual thought through prices, growth rates, boat prices etc.
     - [x] Boat Prices
     - [x] Boat price increase
-    - [ ] Fish Prices
+    - [x] Fish Prices
     - [ ] Fish Growth Rates
     - [x] Cargo size
     - [x] Area base size
@@ -25,7 +25,7 @@
 - [x] Dynamic Stock sizes
 - [ ] Dynamic demand
 - [x] Tracking active teams to update stock size and demand
-- [ ] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
+- [x] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
 - [ ] Max 4 logins per team
 
 # Recommended features - Nice to have
