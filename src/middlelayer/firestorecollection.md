@@ -23,7 +23,7 @@
     - [x] Boat catch list
     - [x] Demand
 - [x] Dynamic Stock sizes
-- [ ] Update Boat catch logic to not be dependant on fish ratio
+- [x] Update Boat catch logic to not be dependant on fish ratio
 - [x] Dynamic demand
 - [x] Tracking active teams to update stock size and demand
 - [x] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
@@ -470,3 +470,40 @@ Stock.forEach(stock => {
 
 ```
 
+Fish catch updated code doodles
+
+```
+cathcFish(input: {name: string, availableAmount: number }[], cargoSize)
+
+catchAmount = Math.floor(cargoSize/input.length)
+
+caught = input.map((fish) => {
+    return {
+        name: fish.name,
+        amount: Math.min(catchAmount, fish.availableAmount)
+    }
+})
+
+totalCaught = caught.reduce((acc, fish) => acc += fish.amount, 0)
+if totalCaught === cargoSize
+    end
+else 
+    remaining = input.filter((fish) => fish.availableAmount > catchAmount)
+    if (remaining) {
+        reducedAmount = remaining.map((fish) => 
+            return {
+                name: fish.name
+                availableAmount: fish.availableAmount - catchAmount
+            }
+        })
+        reducedCargo = cargosize - totalCaught
+        catchFish(reducedAmount, reducedCargo)
+    } else {
+        return
+    }
+
+
+output: {name: string, amount: number}
+    
+
+```

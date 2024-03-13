@@ -74,14 +74,40 @@ export class SailingBoat {
         return catchEvent
     }
 
-    public catchFish(fishRatios: {name: string; ratio: number, amountAvailable: number}[]) {
-        this.cargo = fishRatios.map((fish) => {
+    public catchFish(inputFish: {name: string; amountAvailable: number}[]) {
+        this.cargo = this.catch(inputFish, this.cargoSize)
+        return this.cargo
+    }
+
+    private catch(inputFish: {name: string; amountAvailable: number}[], cargoSize: number): {name: string, amount: number}[] {
+
+        const catchAmount = Math.floor(cargoSize/inputFish.length)
+
+        const caught = inputFish.map((fish) => {
             return {
                 name: fish.name,
-                amount: Math.floor(Math.min(fish.ratio * this.cargoSize, fish.amountAvailable)),
+                amount: Math.min(catchAmount, fish.amountAvailable)
             }
         })
-        return this.cargo
+
+        const totalCaught = caught.reduce((acc, fish) => acc += fish.amount, 0)
+        if (totalCaught === cargoSize)
+            return caught
+        else {
+            const remaining = inputFish.filter((fish) => fish.amountAvailable > catchAmount)
+            if (remaining.length > 0) {
+                const reducedAmount = remaining.map((fish) => {
+                    return {
+                        name: fish.name,
+                        amountAvailable: fish.amountAvailable - catchAmount
+                    }
+                })
+                const reducedCargo = cargoSize - totalCaught
+                return [...caught, ...this.catch(reducedAmount, reducedCargo)]
+            } else {
+                return caught
+            }
+        }
     }
 
     private async handleStoreFishEvent() {
