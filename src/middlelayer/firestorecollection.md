@@ -21,9 +21,10 @@
     - [x] Area base size
     - [x] Stock percentages
     - [x] Boat catch list
-    - [ ] Demand
+    - [x] Demand
 - [x] Dynamic Stock sizes
-- [ ] Dynamic demand
+- [ ] Update Boat catch logic to not be dependant on fish ratio
+- [x] Dynamic demand
 - [x] Tracking active teams to update stock size and demand
 - [x] Viualization of what other teams are doing i.e how many total boats, how many boats toward each area
 - [ ] Max 4 logins per team

@@ -140,9 +140,7 @@ export class FishGame {
             this.teams[event.teamId]++
         } else {
             this.teams[event.teamId] = 1
-            this.fishAreas.forEach((area) => {
-                area.updateMaxStocks(Object.keys(this.teams).length)
-            })
+            this.updateNumberOfTeams(Object.keys(this.teams).length)
         }
         this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
     }
@@ -151,9 +149,7 @@ export class FishGame {
         if (Object.keys(this.teams).includes(event.teamId)) {
             if (this.teams[event.teamId] === 1) {
                 delete this.teams[event.teamId]
-                this.fishAreas.forEach((area) => {
-                    area.updateMaxStocks(Object.keys(this.teams).length)
-                })
+                this.updateNumberOfTeams(Object.keys(this.teams).length)
                 this.store.updateTeamData(event.teamId, {activeLogins: 0})
 
             } else {
@@ -161,6 +157,15 @@ export class FishGame {
                 this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
             }
         }
+    }
+
+    private updateNumberOfTeams(numberOfTeams: number) {
+                this.fishAreas.forEach((area) => {
+                    area.updateMaxStocks(numberOfTeams)
+                })
+                this.fish.forEach((fish) => {
+                    fish.updateNumberOfTeams(numberOfTeams)
+                })
     }
 
     private async handleFishSellEvent(event: EventData) {

@@ -9,6 +9,7 @@ services:
     volumes:
       - './src/shared:/app/shared'
       - './src/frontend/src:/app/frontend/src'
+      - './src/frontend/public:/app/frontend/public'
   gameserver:
     build:
       context: ./src

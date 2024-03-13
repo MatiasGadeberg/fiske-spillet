@@ -33,11 +33,9 @@ export class FishArea {
 
     public getFishRatios(fishNames: string[]) {
         const stocksToCatch = this.fishStocks.filter((stock) => fishNames.includes(stock.name))
-        const totalFish = stocksToCatch.reduce((total, stock) => total + stock.currentAmount, 0) 
         return stocksToCatch.map((stock) => {
             return {
                 name: stock.name,
-                ratio: stock.currentAmount/totalFish,
                 amountAvailable: stock.currentAmount
             }
         })

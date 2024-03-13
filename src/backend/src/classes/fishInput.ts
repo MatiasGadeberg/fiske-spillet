@@ -6,41 +6,47 @@ export const fishConstructionInfo: FishConstructorProps[] = [
         minPrice: 100,
         maxPrice: 400,
         startingSupply: 0,
-        demand: 300
+        baseDemand: 23,
+        priceChangeRate: 0.2
     },
     {
         name: 'torsk',
-        minPrice: 80,
-        maxPrice: 100,
+        minPrice: 30,
+        maxPrice: 60,
         startingSupply: 0,
-        demand: 100
+        baseDemand: 10,
+        priceChangeRate: 1.5
     },
     {
         name: 'hornfisk',
-        minPrice: 20,
-        maxPrice: 150,
+        minPrice: 40,
+        maxPrice: 120,
         startingSupply: 0,
-        demand: 200
+        baseDemand: 30,
+        priceChangeRate: 1
     },
     {
         name: 'rødspætte',
         minPrice: 5,
-        maxPrice: 150,
+        maxPrice: 130,
         startingSupply: 0,
-        demand: 200
+        baseDemand: 15,
+        priceChangeRate: 0.8
     },
     {
         name: 'markrel',
-        minPrice: 50,
-        maxPrice: 175,
+        minPrice: 30,
+        maxPrice: 100,
         startingSupply: 0,
-        demand: 70
+        baseDemand: 30,
+        priceChangeRate: 1
     },
     {
         name: 'tun',
         minPrice: 80,
-        maxPrice: 250,
+        maxPrice: 200,
         startingSupply: 0,
-        demand: 150
+        baseDemand: 35,
+        priceChangeRate: 0.5
     }
 ]

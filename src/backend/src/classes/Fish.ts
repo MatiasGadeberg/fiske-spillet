@@ -4,8 +4,8 @@ export type FishProps = {
     name: string;
     startingSupply: number;
     startingPrice: number;
-    decayFunction: (supply: number) => number;
-    priceCalculator: (supply: number, currentPrice: number) => number
+    decayFunction: (supply: number, numberOfTeams: number) => number;
+    priceCalculator: (supply: number, currentPrice: number, numberOfTeams: number) => number
 }
 
 export class Fish {
@@ -13,17 +13,23 @@ export class Fish {
     
     private supply: number;
     private price: number;
-    private decayFunction: (supply: number) => number
-    private priceCalculator: (supply: number, currentPrice: number) => number
+    private decayFunction: (supply: number, numberOfTeams: number) => number
+    private priceCalculator: (supply: number, currentPrice: number, numberOfTeams: number) => number
     private growth: 'positive' | 'negative' | 'neutral'
+    private numberOfTeams: number
 
     constructor(props: FishProps) {
         this.name = props.name;
         this.supply = props.startingSupply;
         this.price = props.startingPrice;
         this.growth = 'neutral'
+        this.numberOfTeams = 0;
         this.decayFunction = props.decayFunction;
         this.priceCalculator = props.priceCalculator;
+    }
+
+    public updateNumberOfTeams(numberOfTeams: number) {
+        this.numberOfTeams = numberOfTeams;
     }
 
     public addToSupply(amount: number) {
@@ -40,16 +46,13 @@ export class Fish {
     }
 
     public updatePrice() {
-        const updatedPrice = this.priceCalculator(this.supply, this.price);
+        const updatedPrice = this.priceCalculator(this.supply, this.price, this.numberOfTeams);
         this.growth = this.determineGrowth(updatedPrice, this.price);
         this.price = updatedPrice 
     }
 
     public decaySupply() {
-        this.supply = this.decayFunction(this.supply)
-    }
-
-    private calculatePrice(supply: number) {
+        this.supply = this.decayFunction(this.supply, this.numberOfTeams)
     }
 
     private determineGrowth(newPrice: number, oldPrice: number) {
