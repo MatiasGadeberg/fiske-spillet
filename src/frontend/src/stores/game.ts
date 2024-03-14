@@ -9,7 +9,6 @@ export const useGameStore = defineStore('game', () => {
   const timeToEndInMs = ref(0)
   const timeToStartInMs = ref(0)
   const gameState = ref('')
-  const servertime = ref(0)
   const timeToStartLocale = ref('')
   const timeToEndLocale = ref('')
   const fishAreas = ref<FishAreaInfo[]>([])
@@ -37,7 +36,6 @@ export const useGameStore = defineStore('game', () => {
     timeToEndInMs.value = gameInfo.timeToEndInMs
     timeToStartInMs.value = gameInfo.timeToStartInMs
     gameState.value = gameInfo.gameState
-    servertime.value = gameInfo.serverTime
     timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
     timeToEndLocale.value = new Date(timeToEndInMs.value).toISOString().slice(11, 19)
     fishMarket.value = gameInfo.fishMarketInfo
@@ -83,7 +81,6 @@ export const useGameStore = defineStore('game', () => {
     getImageUrl,
     timeToStartLocale,
     timeToEndLocale,
-    servertime,
     fishAreas,
     fishMarket,
     boatMarket,
