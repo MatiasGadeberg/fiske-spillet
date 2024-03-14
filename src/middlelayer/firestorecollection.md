@@ -36,8 +36,8 @@
 - [x] Unique names for all boats in harbor
 - [x] Visualization of where a boat is currently heading
 - [x] Current rank displayed during gameplay
+- [x] Setup items in database
 - [ ] Price drop / raise dependant on difference between supply and demand
-- [ ] Setup items in database
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

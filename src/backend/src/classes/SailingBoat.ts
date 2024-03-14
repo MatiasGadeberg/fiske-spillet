@@ -83,6 +83,8 @@ export class SailingBoat {
 
         const catchAmount = Math.floor(cargoSize/inputFish.length)
 
+        if (catchAmount === 0) return []
+
         const caught = inputFish.map((fish) => {
             return {
                 name: fish.name,

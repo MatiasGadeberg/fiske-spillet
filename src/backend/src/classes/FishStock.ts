@@ -22,7 +22,7 @@ export class FishStock {
         this.maxAmount = this.baseMaxAmount;
         this.name = props.fishName;
         this.baseGrowth = this.maxAmount * this.baseGrowthRate/100;
-        this.currentAmount = 0 //this.maxAmount;
+        this.currentAmount = this.maxAmount;
     }
 
     public grow() {

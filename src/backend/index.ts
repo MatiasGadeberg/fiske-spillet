@@ -5,11 +5,7 @@ import { areas } from './src/classes/fishAreaInput.js'
 
 const firebase = new FirebaseWrapper();
 
-const startTime = Date.now() + 2 * 1000; 
-// const startTime = Date.parse('03 Mar 2024 11:35:00 GMT')
-
 const game = new FishGame({
-    startTime,
     store: firebase,
     fishInput: fishConstructionInfo,
     areaInput: areas,

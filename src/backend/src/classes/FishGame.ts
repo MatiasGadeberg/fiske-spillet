@@ -7,7 +7,6 @@ import { FishArea } from "./FishArea.js";
 import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type FishGameProps = {
-    startTime: number;
     store: FirebaseWrapper;
     fishInput: FishConstructorProps[];
     areaInput: FishAreaConstructorProps[];
@@ -22,6 +21,7 @@ export class FishGame {
     private sailingBoats: SailingBoat[];
     private boatMarketInfo: BoatMarket[];
     private fishAreas: FishArea[];
+    private gameLenghtInHours: number;
 
     private boatNameAdjectives: string[] = [
         'Skummende',
@@ -59,9 +59,9 @@ export class FishGame {
     ]
 
     constructor(props: FishGameProps) {
-        const gameLenghtInHours = 1;
-        this.startTime = props.startTime;
-        this.endTime = this.startTime + gameLenghtInHours * 60 * 60 * 1000;
+        this.gameLenghtInHours = 1;
+        this.startTime = 0;
+        this.endTime = this.startTime + this.gameLenghtInHours * 60 * 60 * 1000;
         this.teams = {};
         this.sailingBoats = [];
         this.store = props.store;
@@ -111,6 +111,10 @@ export class FishGame {
 
     public setupGame() {
         this.store.subscribeToEvents(events => this.handleEvents(events));
+        this.store.subscribeToGameStart((gameStart: string) => {
+            this.startTime = Date.parse(gameStart)
+            this.endTime = this.startTime + this.gameLenghtInHours * 60 * 60 * 1000;
+        })
     }
 
     private handleEvents(events: EventData[]) {

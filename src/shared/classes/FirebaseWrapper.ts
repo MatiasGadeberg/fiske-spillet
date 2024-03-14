@@ -102,6 +102,15 @@ export class FirebaseWrapper {
         this.snapshots.push(snap);
     }
 
+    public subscribeToGameStart(callback: (gameStart: string) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'setupItems', 'startTime'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data().start)
+            }
+        });
+        this.snapshots.push(snap);
+    }
+
     private subscribeToCollection(collectionName: string, callback: (snapshot: QuerySnapshot) => void, filter: any = null) {
         const collectionRef = collection(this.firestore, collectionName);
         const q = query(collectionRef, filter);
