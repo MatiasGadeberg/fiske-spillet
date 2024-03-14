@@ -12,11 +12,11 @@
 - [x] Post-game overview page
 - [x] Dynamic boat pricing
 - [x] Boat buy button disable not using updated prices
-- [-] Actual thought through prices, growth rates, boat prices etc.
+- [x] Actual thought through prices, growth rates, boat prices etc.
     - [x] Boat Prices
     - [x] Boat price increase
     - [x] Fish Prices
-    - [ ] Fish Growth Rates
+    - [x] Fish Growth Rates
     - [x] Cargo size
     - [x] Area base size
     - [x] Stock percentages
@@ -35,8 +35,9 @@
 - [x] Sorting of owned boats based on status
 - [x] Unique names for all boats in harbor
 - [x] Visualization of where a boat is currently heading
+- [x] Current rank displayed during gameplay
 - [ ] Price drop / raise dependant on difference between supply and demand
-- [ ] Current ranking page during gameplay
+- [ ] Setup items in database
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

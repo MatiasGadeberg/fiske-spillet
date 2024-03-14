@@ -7,11 +7,13 @@ import type {
   BoatMarket,
   FishInventory,
 } from '../../../shared/types/GameTypes'
+import { useGameStore } from './game'
 
 export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = ref(false)
   const store = useFirestoreStore()
-  const team = useTeamStore()
+  const team = useTeamStore();
+  const game = useGameStore();
   const loginError = ref(false)
   const loginErrorMessage = ref('')
 
@@ -73,7 +75,7 @@ export const useAuthStore = defineStore('auth', () => {
           password,
           login,
           category: 'senior',
-          points: 10000,
+          points: 20000,
           fish: fishInventory,
           boats: boatInventory
       })
@@ -90,7 +92,13 @@ export const useAuthStore = defineStore('auth', () => {
     team.subscribeToTeamBoatData()
     if (!refresh) {
         store.login(login);
-        router.push('/game/fish')
+        if (game.gameState === 'active') {
+            router.push('/game/fish')
+        } else if ( game.gameState === 'not-started') {
+            router.push('/pre-game')
+        } else {
+            router.push('/post-game')
+        }
     }
   }
 

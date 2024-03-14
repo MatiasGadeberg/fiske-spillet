@@ -15,17 +15,17 @@ export const areas: FishAreaConstructorProps[] = [
         fishStocks : [
             {
                 fishName: 'torsk',
-                growthRate: 0.0015,
+                growthRate: 3.5,
                 percentInArea: 0.2,
             },
             {
                 fishName: 'markrel',
-                growthRate: 0.002,
+                growthRate: 3.5,
                 percentInArea: 0.4,
             },
             {
                 fishName: 'rødspætte',
-                growthRate: 0.001,
+                growthRate: 2.5,
                 percentInArea: 0.4,
             },
         ]
@@ -37,25 +37,25 @@ export const areas: FishAreaConstructorProps[] = [
         fishStocks : [
             {
                 fishName: 'torsk',
-                growthRate: 0.0005,
+                growthRate: 3.5,
                 percentInArea: 0.3,
 
             },
             {
                 fishName: 'hornfisk',
-                growthRate: 0.0012,
+                growthRate: 2.5,
                 percentInArea: 0.2,
 
             },
             {
                 fishName: 'tun',
-                growthRate: 0.0015,
+                growthRate: 3,
                 percentInArea: 0.2,
 
             },
             {
                 fishName: 'markrel',
-                growthRate: 0.0008,
+                growthRate: 3.5,
                 percentInArea: 0.3,
 
             },
@@ -68,19 +68,19 @@ export const areas: FishAreaConstructorProps[] = [
         fishStocks :  [
             {
                 fishName: 'hummer',
-                growthRate: 0.0005,
+                growthRate: 3,
                 percentInArea: 0.2,
 
             },
             {
                 fishName: 'tun',
-                growthRate: 0.001,
+                growthRate: 3,
                 percentInArea: 0.4,
 
             },
             {
                 fishName: 'hornfisk',
-                growthRate: 0.0015,
+                growthRate: 2.5,
                 percentInArea: 0.4,
 
             },

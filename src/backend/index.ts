@@ -23,6 +23,7 @@ setInterval(() => {
     const gamedata = game.getGameData();
 
     if (gamedata.gameState === "ended") {
+        firebase.setGame(game.getGameData());
         firebase.dropConnections();
     } else {
         game.updateState()

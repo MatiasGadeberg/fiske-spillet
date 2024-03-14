@@ -287,7 +287,6 @@ export class FishGame {
 
     public getGameData(): GameInfo {
         return {
-            serverTime: Date.now(),
             currentNumberOfTeams: Object.keys(this.teams).length,
             fishingAreaInfo: this.createFishArea(),
             fishMarketInfo: this.createFishMarket(),

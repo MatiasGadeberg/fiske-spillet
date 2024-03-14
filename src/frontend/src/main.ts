@@ -16,17 +16,25 @@ app.use(router)
 
 const auth = useAuthStore();
 let tabClosing = false;
+let isTabHidden = false;
 
 app.mixin({
     beforeMount() {
         window.addEventListener('beforeunload', this.handleTabClose)
+        window.addEventListener('visibilitychange', this.handleVisibilityChange)
     },
     beforeUnmount() {
         window.removeEventListener('beforeunload', this.handleTabClose)
+        window.removeEventListener('visibilitychange', this.handleVisibilityChange)
     },
     methods: {
+        handleVisibilityChange() {
+            if (document.visibilityState === 'hidden') {
+                isTabHidden = true
+            }
+        },
         handleTabClose(event: BeforeUnloadEvent) {
-            if (tabClosing) {
+            if (tabClosing || isTabHidden) {
                 return
             }
             tabClosing = true;

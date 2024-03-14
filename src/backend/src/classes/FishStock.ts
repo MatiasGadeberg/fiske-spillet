@@ -14,14 +14,14 @@ export class FishStock {
     private baseMaxAmount: number;
     private baseGrowth: number;
 
-    private baseGrowthRate: number = 0.01
+    private baseGrowthRate: number = 0.25;
 
     constructor(props: FishStockProps) {
-        this.growthRate = props.growthRate;
+        this.growthRate = props.growthRate/100;
         this.baseMaxAmount = props.areaMax * props.percentInArea;
         this.maxAmount = this.baseMaxAmount;
         this.name = props.fishName;
-        this.baseGrowth = this.maxAmount * this.baseGrowthRate;
+        this.baseGrowth = this.maxAmount * this.baseGrowthRate/100;
         this.currentAmount = 0 //this.maxAmount;
     }
 
@@ -47,7 +47,7 @@ export class FishStock {
         const multiplier = numberOfTeams === 0 ? 1 : numberOfTeams;
         const currentAmountPercent = this.currentAmount / this.maxAmount;
         this.maxAmount = this.baseMaxAmount * multiplier;
-        this.baseGrowth = this.maxAmount * this.baseGrowthRate;
+        this.baseGrowth = this.maxAmount * this.baseGrowthRate/100;
         this.currentAmount = this.maxAmount * currentAmountPercent;
     }
 }

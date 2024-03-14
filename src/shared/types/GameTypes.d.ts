@@ -1,5 +1,4 @@
 export type GameInfo = {
-    serverTime: number;
     currentNumberOfTeams: number;
     gameState: GameState;
     timeToEndInMs: number;

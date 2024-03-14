@@ -65,6 +65,7 @@ describe('SailingBoat', () => {
             const actual = boat.catchFish(input)
             expect(actual).toStrictEqual(expected)
         })
+
         it('should fill cargo with available fish, fish not not full', () => {
             const input = [
                 { name: 'torsk', amountAvailable: 30, },
@@ -78,6 +79,22 @@ describe('SailingBoat', () => {
                 { name: 'markrel', amount: 5 },
                 { name: 'rødspætte', amount: 10},
                 { name: 'rødspætte', amount: 5}
+            ]
+            const actual = boat.catchFish(input)
+            expect(actual).toStrictEqual(expected)
+        })
+
+        it('Should take all available fish if cargo cannot be filled', () => {
+            const input = [
+                { name: 'torsk', amountAvailable: 30, },
+                { name: 'markrel', amountAvailable: 55, },
+                { name: 'rødspætte', amountAvailable: 50, },
+            ]
+            const expected = [
+                { name: 'torsk', amount: 30 },
+                { name: 'markrel', amount: 50 },
+                { name: 'rødspætte', amount: 50 },
+                { name: 'markrel', amount: 5 },
             ]
             const actual = boat.catchFish(input)
             expect(actual).toStrictEqual(expected)

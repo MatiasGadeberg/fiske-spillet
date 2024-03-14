@@ -13,9 +13,11 @@
                 Spillet slutter om : {{ game.timeToEndLocale }} 
             </h1>
       </div>
-      <div v-if="game.gameState === 'active'" class="flex flex-col items-center justify-end basis-1/4"> 
-        <h1 class="text-slate-500 font-bold text-lg">Placering: {{ teamRanking }}</h1>
-        <h1 class="text-slate-500 font-bold text-lg">Point: {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
+      <div  class="flex flex-col items-center justify-end basis-1/4"> 
+        <div v-if="game.gameState === 'active'">
+            <h1 class="text-slate-500 font-bold text-lg">Placering: {{ teamRanking }}</h1>
+            <h1 class="text-slate-500 font-bold text-lg">Point: {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
+        </div>
       </div>
 </div>
   <div v-else class="bg-indigo-500 flex justify-between h-16 items-center px-4 sm:px-6 lg:px-8">
