@@ -20,15 +20,19 @@ export class InfrastructureStack extends cdk.Stack {
             vpc,
         });
 
-        const backendService = new FiskeService(this, "fiske-backed", {
+        new FiskeService(this, "fiske-backed", {
             cluster,
             infrastructureElemet: "backend",
             portMappings: [],
+            taskCpu: 16384,
+            taskMemory: 32768
         });
 
         const frontendService = new FiskeService(this, "fiske-frontend", {
             cluster,
             infrastructureElemet: "frontend",
+            taskCpu: 1024,
+            taskMemory: 2048,
             portMappings: [
                 {
                     containerPort: 80,

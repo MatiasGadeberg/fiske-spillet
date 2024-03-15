@@ -7,6 +7,8 @@ export type FiskeServiceProps = {
     cluster: ecs.Cluster;
     infrastructureElemet: "frontend" | "backend";
     portMappings: ecs.PortMapping[];
+    taskCpu: number;
+    taskMemory: number;
 };
 
 export class FiskeService extends Construct {
@@ -17,7 +19,10 @@ export class FiskeService extends Construct {
 
         const infraElement = props.infrastructureElemet;
 
-        const taskDefinition = new ecs.FargateTaskDefinition(this, `fiskespil-${infraElement}-taks-definition`);
+        const taskDefinition = new ecs.FargateTaskDefinition(this, `fiskespil-${infraElement}-taks-definition`, {
+            cpu: props.taskCpu,
+            memoryLimitMiB: props.taskMemory
+        });
 
         const Image = new ecs.AssetImage(path.join(__dirname, "../../.."), {
             file: `${infraElement}/Dockerfile.prod`,
