@@ -3,12 +3,15 @@ export type GameInfo = {
     gameState: GameState;
     timeToEndInMs: number;
     timeToStartInMs: number;
-    boatMarketInfo: BoatMarket[];
-    fishingAreaInfo: FishAreaInfo[];
 };
 
 export type FishMarket = {
     market: FishMarketEntry[];
+}
+
+export type BoatAndAreaInfo = {
+    boatMarketInfo: BoatMarket[];
+    fishingAreaInfo: FishAreaInfo[];
 }
 
 export type NumberOfTeams = {

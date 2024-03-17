@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo, FishMarket } from '../../../shared/types/GameTypes.js'
+import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo, FishMarket, BoatAndAreaInfo } from '../../../shared/types/GameTypes.js'
 import { useFirestoreStore } from './firestore.js'
 import router from '@/router'
 
@@ -38,8 +38,6 @@ export const useGameStore = defineStore('game', () => {
     gameState.value = gameInfo.gameState
     timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
     timeToEndLocale.value = new Date(timeToEndInMs.value).toISOString().slice(11, 19)
-    boatMarket.value = gameInfo.boatMarketInfo
-    fishAreas.value = gameInfo.fishingAreaInfo
   }
 
   const subscribeToGameData = (): void => {
@@ -51,6 +49,13 @@ export const useGameStore = defineStore('game', () => {
   const subscribeToFishMarket = (): void => {
       store.firestore.subscribeToFishMarket((market: FishMarket) => {
           fishMarket.value = market.market
+      })
+  }
+
+  const subscribeToAreaInfo = (): void => {
+      store.firestore.subscribeToAreaInfo((data: BoatAndAreaInfo) => {
+          boatMarket.value = data.boatMarketInfo
+          fishAreas.value = data.fishingAreaInfo
       })
   }
 
@@ -76,6 +81,11 @@ export const useGameStore = defineStore('game', () => {
 
 
   return {
+    subscribeToScores,
+    subscribeToAllBoatData,
+    subscribeToGameData,
+    subscribeToFishMarket,
+    subscribeToAreaInfo,
     currentNumberOfTeams,
     timeToEndInMs,
     timeToStartInMs,
@@ -86,13 +96,9 @@ export const useGameStore = defineStore('game', () => {
     fishAreas,
     fishMarket,
     boatMarket,
-    subscribeToScores,
-    subscribeToAllBoatData,
     totalBoats,
     vScores,
     sScores,
-    subscribeToGameData,
-    subscribeToFishMarket,
     boatPriceIncreaseFactor
   }
 })

@@ -6,12 +6,19 @@
     "type": "module",
     "scripts": {
         "start": "tsx watch --ignore ../frontend ../*",
-        "start:processor:fish": "tsx watch ./src/fish-sell-processor/index.ts",
+        "start:processor:fish": "tsx watch ./src/fish-processor/index.ts",
+        "start:processor:boat": "tsx watch ./src/boat-processor/index.ts",
         "test": "vitest",
         "build": "tsc",
         "build:container:dev": "docker build -f Dockerfile.dev -t fiskespil/backend:latest ..",
         "build:container:prd": "docker build -f Dockerfile.prod -t fiskespil/backend:latest ..",
-        "start:container": "docker run -it --rm fiskespil/backend:latest"
+        "start:container": "docker run -it --rm fiskespil/backend:latest",
+        "build:container:processor:fish:dev": "docker build -f ./src/fish-processor/Dockerfile.dev -t fiskespil/backend/fish-processor:latest ..",
+        "build:container:processor:fish:prd": "docker build -f ./src/fish-processor/Dockerfile.prod -t fiskespil/backend/fish-processor:latest ..",
+        "start:container:processor:fish": "docker run -it --rm fiskespil/backend/fish-processor:latest",
+        "build:container:processor:boat:dev": "docker build -f ./src/boat-processor/Dockerfile.dev -t fiskespil/backend/boat-processor:latest ..",
+        "build:container:processor:boat:prd": "docker build -f ./src/boat-processor/Dockerfile.prod -t fiskespil/backend/boat-processor:latest ..",
+        "start:container:processor:boat": "docker run -it --rm fiskespil/backend/boat-processor:latest"
     },
     "keywords": [],
     "author": "",

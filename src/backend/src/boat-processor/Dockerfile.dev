@@ -1,0 +1,20 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY ./shared/package.json ./shared/
+RUN cd shared && npm install
+
+COPY ./backend/package.json ./backend/
+RUN cd backend && npm install
+
+COPY ./shared ./shared
+
+COPY ./backend ./backend
+
+VOLUME [ "/app/shared/node_modules" ]
+VOLUME [ "/app/backend/node_modules" ]
+
+WORKDIR /app/backend
+
+CMD [ "npm", "run", "start:processor:boat" ]

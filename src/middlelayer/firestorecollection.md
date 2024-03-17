@@ -5,14 +5,17 @@
 - [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 - [x] Some ships get 'caught at sea'
 - [x] Fish market prices should only calculate if gamestate = active
-- [x] Fish sell processor
-- [ ] Boat buy processor
-- [ ] Boat sail processor
-- [ ] Containerize prossesor setup
+- [x] Fish processor
+- [x] Boat processor
+- [-] Containerize prossesor setup
+    - [x] Fish processor dev
+    - [x] Fish processor prod
+    - [x] Boat processor dev
+    - [ ] Boat processor prod
 - [ ] Update CDK deployment with processors
 - [ ] await Promise.all() on event proccesing
 
-# Outstandingxfeatures - must fix
+# Outstanding features - must fix
 - [x] Pre-game welcome screen
 - [x] Updating team to include senior/væbner category and teamName, login, password
 - [x] Time till end visible to users
@@ -45,10 +48,10 @@
 - [x] Current rank displayed during gameplay
 - [x] Setup items in database
 - [ ] Price drop / raise dependant on difference between supply and demand
+- [ ] Max / Min visualization on fish card
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices
-- [ ] Max / Min visualization on fish card
 - [ ] Over fishing penalty
 - [ ] Limited boat slots but possibility to sell boats
 - [ ] Market is only open at certain times

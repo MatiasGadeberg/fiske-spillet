@@ -19,3 +19,21 @@ services:
     volumes:
       - './src/backend:/app/backend'
       - './src/shared:/app/shared'
+  fish-processor:
+    build:
+      context: ./src
+      dockerfile: backend/src/fish-processor/Dockerfile.dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - './src/backend:/app/backend'
+      - './src/shared:/app/shared'
+  boat-processor:
+    build:
+      context: ./src
+      dockerfile: backend/src/boat-processor/Dockerfile.dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - './src/backend:/app/backend'
+      - './src/shared:/app/shared'

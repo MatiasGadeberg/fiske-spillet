@@ -3,15 +3,15 @@ import type { FishSellEvent } from "../../../shared/types/GameTypes.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
 import { Fish } from "./Fish.js";
 
-export type FishSellEventProcessorProps = {
+export type FishEventProcessorProps = {
     store: FirebaseWrapper;
     fishInput: FishConstructorProps[];
 }
-export class FishSellEventProcessor{
+export class FishEventProcessor{
     private store: FirebaseWrapper
     private fish: Fish[];
 
-    constructor(props: FishSellEventProcessorProps) {
+    constructor(props: FishEventProcessorProps) {
         this.store = props.store;
         this.fish = props.fishInput.map((fishInfo) => {
             return createFish(fishInfo)

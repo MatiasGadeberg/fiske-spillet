@@ -1,9 +1,10 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper.js";
 import { GameInfo } from "../../../shared/types/GameTypes.js";
-import { FishSellEventProcessor } from "../classes/FishSellEventProcessor.js";
+import { FishEventProcessor } from "../classes/FishEventProcessor.js";
 import { fishConstructionInfo } from '../classes/fishInput.js'
 
 const firebase = new FirebaseWrapper();
+
 
 let gameState: GameInfo['gameState'] = 'not-started'
 
@@ -11,7 +12,7 @@ firebase.subscribeToGameData((data: GameInfo) => {
     gameState = data.gameState;
 })
 
-const processor = new FishSellEventProcessor({
+const processor = new FishEventProcessor({
     store: firebase,
     fishInput: fishConstructionInfo,
 });

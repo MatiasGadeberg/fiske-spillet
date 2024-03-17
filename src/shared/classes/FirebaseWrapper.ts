@@ -16,7 +16,7 @@ import {
     addDoc,
     where,
 } from "firebase/firestore";
-import type { BoatBuyEvent, BoatInfo, BoatSailEvent, Boats, EventData, FishMarket, FishSellEvent, GameInfo, LoginEvent, LogoutEvent, NumberOfTeams, TeamInfo } from "../types/GameTypes";
+import type { BoatAndAreaInfo, BoatBuyEvent, BoatInfo, BoatSailEvent, Boats, EventData, FishMarket, FishSellEvent, GameInfo, LoginEvent, LogoutEvent, NumberOfTeams, TeamInfo } from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
@@ -59,6 +59,19 @@ export class FirebaseWrapper {
         const snap = onSnapshot(doc(this.firestore, 'game', 'fishMarket'), (doc: DocumentSnapshot) => {
             if (doc.exists()) {
                 callback(doc.data() as FishMarket)
+            }
+        });
+        this.snapshots.push(snap);
+    }
+
+    public async setAreaInfo(areaInfo: BoatAndAreaInfo) {
+        await setDoc(doc(this.firestore, "game", "boatAndAreaInfo"), areaInfo);
+    }
+
+    public subscribeToAreaInfo(callback: (data: BoatAndAreaInfo) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'game', 'boatAndAreaInfo'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data() as BoatAndAreaInfo)
             }
         });
         this.snapshots.push(snap);
