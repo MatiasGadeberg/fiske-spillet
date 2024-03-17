@@ -16,7 +16,7 @@ import {
     addDoc,
     where,
 } from "firebase/firestore";
-import type { BoatInfo, Boats, EventData, GameInfo, TeamInfo } from "../types/GameTypes";
+import type { BoatBuyEvent, BoatInfo, BoatSailEvent, Boats, EventData, FishMarket, FishSellEvent, GameInfo, LoginEvent, LogoutEvent, NumberOfTeams, TeamInfo } from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
@@ -39,7 +39,42 @@ export class FirebaseWrapper {
     }
 
     public async setGame(gameData: GameInfo) {
-        await setDoc(doc(this.firestore, "games", `fiskespil`), gameData);
+        await setDoc(doc(this.firestore, "game", `fiskespil`), gameData);
+    }
+
+    public subscribeToGameData(callback: (data: GameInfo) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'game', 'fiskespil'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data() as GameInfo)
+            }
+        });
+        this.snapshots.push(snap);
+    }
+
+    public async setFishMarket(marketInfo: FishMarket) {
+        await setDoc(doc(this.firestore, "game", "fishMarket"), marketInfo);
+    }
+
+    public subscribeToFishMarket(callback: (data: FishMarket) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'game', 'fishMarket'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data() as FishMarket)
+            }
+        });
+        this.snapshots.push(snap);
+    }
+    
+    public async setNumberOfTeams(numberOfTeams: NumberOfTeams) {
+        await setDoc(doc(this.firestore, "game", "numberOfTeams"), numberOfTeams);
+    }
+
+    public subscribeToNumberOfTeams(callback: (data: NumberOfTeams) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'game', 'numberOfTeams'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data() as NumberOfTeams)
+            }
+        });
+        this.snapshots.push(snap);
     }
 
     public async setTeam(teamId: string, teamData: TeamInfo) {
@@ -81,13 +116,13 @@ export class FirebaseWrapper {
         await updateDoc(boatRef, boatData);
     }
 
-    public subscribeToEvents(callback: (events: EventData[]) => void) {
+    public subscribeToEvents<T extends EventData>(callback: (events: T[]) => void, eventType: string = '') {
         const eventsRef = collection(this.firestore, "events");
-        const q = query(eventsRef);
+        const q = query(eventsRef, where('type', '==', eventType));
         const unsubscribe = onSnapshot(q, snapshot => {
-            const events = snapshot.docChanges().reduce<EventData[]>((eventArr, change) => {
+            const events = snapshot.docChanges().reduce<T[]>((eventArr, change) => {
                if (change.type === "added") {
-                   eventArr.push(change.doc.data() as EventData);
+                   eventArr.push(change.doc.data() as T);
                }
                return eventArr;
            }, []);
@@ -95,6 +130,26 @@ export class FirebaseWrapper {
            callback(events);
         });
         this.snapshots.push(unsubscribe);
+    }
+
+    public subscribeToFishSellEvents(callback: (events: FishSellEvent[]) => void) {
+        this.subscribeToEvents<FishSellEvent>(callback, 'sell')
+    }
+
+    public subscribeToBoatBuyEvents(callback: (events: BoatBuyEvent[]) => void) {
+        this.subscribeToEvents<BoatBuyEvent>(callback, 'buy')
+    }
+
+    public subscribeToBoatSailEvents(callback: (events: BoatSailEvent[]) => void) {
+        this.subscribeToEvents<BoatSailEvent>(callback, 'sail')
+    }
+
+    public subscribeToLoginEvents(callback: (events: LoginEvent[]) => void) {
+        this.subscribeToEvents<LoginEvent>(callback, 'login')
+    }
+
+    public subscribeToLogoutEvents(callback: (events: LogoutEvent[]) => void) {
+        this.subscribeToEvents<LogoutEvent>(callback, 'logout')
     }
 
     public subscribe(collection: string, document: string, callback: (doc: DocumentSnapshot) => void) {

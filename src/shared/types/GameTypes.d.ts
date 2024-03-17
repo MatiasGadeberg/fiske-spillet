@@ -3,34 +3,68 @@ export type GameInfo = {
     gameState: GameState;
     timeToEndInMs: number;
     timeToStartInMs: number;
-    fishMarketInfo: FishMarketEntry[];
     boatMarketInfo: BoatMarket[];
     fishingAreaInfo: FishAreaInfo[];
 };
 
+export type FishMarket = {
+    market: FishMarketEntry[];
+}
+
+export type NumberOfTeams = {
+    teams: number
+}
+
 export type GameState = "not-started" | "active" | "ended";
 
-export type EventData = {
-    type: "sell" | "buy" | "catch" | "sail" | "login" | "logout"; 
-    eventTarget: "fish" | "boat" | "team" ;
+export type EventData = 
+    | FishSellEvent 
+    | BoatBuyEvent
+    | BoatSailEvent
+    | LoginEvent
+    | LogoutEvent
+
+export type FishSellEvent = {
+    type: "sell";
+    eventTarget: "fish";
     teamId: string;
-    fish?: {
+    fish: {
         [fishName: string]: {
             fishAmount: number;
             fishPrice: number;
         };
     };
-    boat?: {
-        type: Boats;
-        amount: number;
-        price: number;
-    };
-    boatId?: string;
-    boatType?: Boats;
-    fishAreaNumber?: number;
-    startTime?: number;
-};
+}
 
+export type BoatBuyEvent = {
+    type: "buy"
+    eventTarget: "boat"
+    teamId: string;
+    amount: number;
+    price: number;
+    boatType: Boats;
+}
+
+export type BoatSailEvent = {
+    type: "sail";
+    eventTarget: "boat";
+    teamId: string;
+    boatId: string;
+    boatType: Boats;
+    fishAreaNumber: number;
+    startTime: number;
+}
+
+export type LoginEvent = {
+    type: "login"
+    teamId: string;
+}
+
+export type LogoutEvent = {
+    type: "logout"
+    teamId: string;
+}
+    
 type FishAreaInfo = {
     areaNumber: number;
     color: number;

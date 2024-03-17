@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo } from '../../../shared/types/GameTypes.js'
-import { useFirestoreStore } from './firestore'
+import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo, FishMarket } from '../../../shared/types/GameTypes.js'
+import { useFirestoreStore } from './firestore.js'
 import router from '@/router'
 
 export const useGameStore = defineStore('game', () => {
@@ -14,7 +14,7 @@ export const useGameStore = defineStore('game', () => {
   const fishAreas = ref<FishAreaInfo[]>([])
   const fishMarket = ref<FishMarketEntry[]>([])
   const boatMarket = ref<BoatMarket[]>([]) 
-  const firestore = useFirestoreStore()
+  const store = useFirestoreStore()
   const vScores = ref<ScoreInfo[]>([])
   const sScores = ref<ScoreInfo[]>([])
   const totalBoats = ref(0)
@@ -38,22 +38,24 @@ export const useGameStore = defineStore('game', () => {
     gameState.value = gameInfo.gameState
     timeToStartLocale.value = new Date(timeToStartInMs.value).toISOString().slice(11, 19)
     timeToEndLocale.value = new Date(timeToEndInMs.value).toISOString().slice(11, 19)
-    fishMarket.value = gameInfo.fishMarketInfo
     boatMarket.value = gameInfo.boatMarketInfo
     fishAreas.value = gameInfo.fishingAreaInfo
   }
 
   const subscribeToGameData = (): void => {
-    firestore.subscribe('games', 'fiskespil', (doc) => {
-      const data = doc.data() as GameInfo | undefined
-      if (data) {
-        updateGameData(data)
-      }
-    })
+      store.firestore.subscribeToGameData((data: GameInfo) => {
+          updateGameData(data)
+      })
+  }
+
+  const subscribeToFishMarket = (): void => {
+      store.firestore.subscribeToFishMarket((market: FishMarket) => {
+          fishMarket.value = market.market
+      })
   }
 
   const subscribeToScores = (): void => {
-      firestore.subscribeToScores((scores) => {
+      store.subscribeToScores((scores) => {
           vScores.value = scores.vScore.sort((a, b) => b.points - a.points)
           sScores.value = scores.sScore.sort((a, b) => b.points - a.points)
 
@@ -61,7 +63,7 @@ export const useGameStore = defineStore('game', () => {
   }
 
   const subscribeToAllBoatData = () => {
-      firestore.getAllBoatData((boats) => {
+      store.getAllBoatData((boats) => {
           totalBoats.value = boats.length
       })
   }
@@ -90,6 +92,7 @@ export const useGameStore = defineStore('game', () => {
     vScores,
     sScores,
     subscribeToGameData,
+    subscribeToFishMarket,
     boatPriceIncreaseFactor
   }
 })

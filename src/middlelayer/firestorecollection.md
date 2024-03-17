@@ -4,6 +4,13 @@
 - [x] Images not in frontend container
 - [x] Sending ships sailing does not work properly in a lot of cases - users try to send without luck
 - [x] Some ships get 'caught at sea'
+- [x] Fish market prices should only calculate if gamestate = active
+- [x] Fish sell processor
+- [ ] Boat buy processor
+- [ ] Boat sail processor
+- [ ] Containerize prossesor setup
+- [ ] Update CDK deployment with processors
+- [ ] await Promise.all() on event proccesing
 
 # Outstandingxfeatures - must fix
 - [x] Pre-game welcome screen

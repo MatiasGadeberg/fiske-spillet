@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { BoatInfo, Boats, EventData, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
+import type { BoatInfo, Boats, EventData, FishSellEvent, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
 import { QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
@@ -19,7 +19,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
       await firestore.sendEvent({
           type: "login",
           teamId,
-          eventTarget: "team"
       })
   }
 
@@ -27,7 +26,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
       await firestore.sendEvent({
           type: "logout",
           teamId,
-          eventTarget: "team"
       })
   }
 
@@ -106,7 +104,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
     fishAmountToSell: number
   ) => {
     // firestore sendevent
-    const fish: EventData['fish'] = {}
+    const fish: FishSellEvent['fish'] = {}
     fish[fishName] = {
       fishAmount: fishAmountToSell,
       fishPrice: sellingPrice
@@ -131,11 +129,9 @@ export const useFirestoreStore = defineStore('firestore', () => {
       type: 'buy',
       eventTarget: 'boat',
       teamId,
-      boat: {
-        amount,
-        price,
-        type,
-      }
+      boatType: type,
+      amount,
+      price
     })
   }
 
@@ -160,6 +156,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   return {
     subscribe,
+    firestore,
     login,
     logout,
     getTeamData,

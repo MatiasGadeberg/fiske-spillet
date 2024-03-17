@@ -5,6 +5,7 @@ import { areas } from './src/classes/fishAreaInput.js'
 
 const firebase = new FirebaseWrapper();
 
+
 const game = new FishGame({
     store: firebase,
     fishInput: fishConstructionInfo,

@@ -8,6 +8,7 @@ const game = useGameStore()
 const auth = useAuthStore()
 
 game.subscribeToGameData()
+game.subscribeToFishMarket()
 game.subscribeToScores()
 game.subscribeToAllBoatData()
 

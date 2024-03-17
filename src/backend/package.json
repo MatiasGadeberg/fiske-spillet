@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "start": "tsx watch --ignore ../frontend ../*",
+        "start:processor:fish": "tsx watch ./src/fish-sell-processor/index.ts",
         "test": "vitest",
         "build": "tsc",
         "build:container:dev": "docker build -f Dockerfile.dev -t fiskespil/backend:latest ..",
