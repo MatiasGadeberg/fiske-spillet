@@ -20,9 +20,28 @@ export class InfrastructureStack extends cdk.Stack {
             vpc,
         });
 
-        new FiskeService(this, "fiske-backed", {
+        new FiskeService(this, "fiske-backend", {
             cluster,
             infrastructureElemet: "backend",
+            dockerFileRelativePath: "backend",
+            portMappings: [],
+            taskCpu: 16384,
+            taskMemory: 32768
+        });
+
+        new FiskeService(this, "fish-processor", {
+            cluster,
+            infrastructureElemet: "fish-processor",
+            dockerFileRelativePath: "backend/src/fish-processor",
+            portMappings: [],
+            taskCpu: 16384,
+            taskMemory: 32768
+        });
+
+        new FiskeService(this, "boat-processor", {
+            cluster,
+            infrastructureElemet: "boat-processor",
+            dockerFileRelativePath: "backend/src/boat-processor",
             portMappings: [],
             taskCpu: 16384,
             taskMemory: 32768
@@ -31,6 +50,7 @@ export class InfrastructureStack extends cdk.Stack {
         const frontendService = new FiskeService(this, "fiske-frontend", {
             cluster,
             infrastructureElemet: "frontend",
+            dockerFileRelativePath: "frontend",
             taskCpu: 1024,
             taskMemory: 2048,
             portMappings: [

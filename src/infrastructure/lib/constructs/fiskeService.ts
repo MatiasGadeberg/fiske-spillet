@@ -5,7 +5,8 @@ import path = require("path");
 
 export type FiskeServiceProps = {
     cluster: ecs.Cluster;
-    infrastructureElemet: "frontend" | "backend";
+    infrastructureElemet: "frontend" | "backend" | "fish-processor" |  "boat-processor";
+    dockerFileRelativePath: string;
     portMappings: ecs.PortMapping[];
     taskCpu: number;
     taskMemory: number;
@@ -25,7 +26,7 @@ export class FiskeService extends Construct {
         });
 
         const Image = new ecs.AssetImage(path.join(__dirname, "../../.."), {
-            file: `${infraElement}/Dockerfile.prod`,
+            file: `${props.dockerFileRelativePath}/Dockerfile.prod`,
             assetName: `fiskespil/${infraElement}`,
             exclude: ["infrastructure"],
         });

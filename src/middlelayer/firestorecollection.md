@@ -7,13 +7,14 @@
 - [x] Fish market prices should only calculate if gamestate = active
 - [x] Fish processor
 - [x] Boat processor
-- [-] Containerize prossesor setup
+- [x] Containerize prossesor setup
     - [x] Fish processor dev
     - [x] Fish processor prod
     - [x] Boat processor dev
-    - [ ] Boat processor prod
+    - [x] Boat processor prod
 - [ ] Update CDK deployment with processors
 - [ ] await Promise.all() on event proccesing
+- [ ] Case in-sensitive passwords
 
 # Outstanding features - must fix
 - [x] Pre-game welcome screen
