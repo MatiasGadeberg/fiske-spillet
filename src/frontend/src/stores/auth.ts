@@ -18,15 +18,17 @@ export const useAuthStore = defineStore('auth', () => {
   const loginErrorMessage = ref('')
 
   async function login(login: string, password: string = 'test') {
+    const cleanedLogin = login.trim().toLowerCase()
+    const cleanedPassword = password.trim().toLowerCase()
     loginError.value = false
     loginErrorMessage.value = ''
 
-    const teamData = await store.getTeamData(login)
+    const teamData = await store.getTeamData(cleanedLogin)
     if (!teamData) {
       loginError.value = true
       loginErrorMessage.value = `Holdet med login ${login} eksisterer ikke`
     } else {
-      if (password === teamData.password) {
+      if (cleanedPassword === teamData.password) {
         setLogin(login)
       } else {
         loginError.value = true
@@ -36,17 +38,20 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function createTeam(login: string, password: string, repeatPassword: string) {
+    const cleanedLogin = login.trim().toLowerCase()
+    const cleanedPassword = password.trim().toLowerCase()
+    const cleanedRepeatPassword = repeatPassword.trim().toLowerCase()
     loginError.value = false
     loginErrorMessage.value = ''
-    if (password !== repeatPassword) {
+    if (cleanedPassword !== cleanedRepeatPassword) {
       loginError.value = true
       loginErrorMessage.value = 'Kodeordene er ikke ens'
     }
 
-    const teamData = await store.getTeamData(login)
+    const teamData = await store.getTeamData(cleanedLogin)
     if (teamData) {
       loginError.value = true
-      loginErrorMessage.value = `Holdet med login ${login} eksisterer allerede`
+      loginErrorMessage.value = `Holdet med login ${cleanedLogin} eksisterer allerede`
     } else {
       const fishInventory: FishInventory = {
           'tun': {
@@ -69,29 +74,30 @@ export const useAuthStore = defineStore('auth', () => {
           },
       }
       const boatInventory: BoatMarket[] = []
-      await store.createTeam(login, {
+      await store.createTeam(cleanedLogin, {
           teamName: login,
           activeLogins: 0,
-          password,
-          login,
+          password: cleanedPassword,
+          login: cleanedLogin,
           category: 'senior',
           points: 20000,
           fish: fishInventory,
           boats: boatInventory
       })
     
-      setLogin(login)
+      setLogin(cleanedLogin)
     }
   }
 
   function setLogin(login: string, refresh: boolean = false) {
+    const cleanedLogin = login.trim().toLowerCase()
     isLoggedIn.value = true
     sessionStorage.setItem("loggedIn", "true")
-    sessionStorage.setItem("teamName", login)
-    team.subscribeToTeamData(login)
+    sessionStorage.setItem("teamName", cleanedLogin)
+    team.subscribeToTeamData(cleanedLogin)
     team.subscribeToTeamBoatData()
     if (!refresh) {
-        store.login(login);
+        store.login(cleanedLogin);
         if (game.gameState === 'active') {
             router.push('/game/fish')
         } else if ( game.gameState === 'not-started') {

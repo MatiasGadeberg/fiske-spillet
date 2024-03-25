@@ -14,7 +14,8 @@
     - [x] Boat processor prod
 - [x] Update CDK deployment with processors
 - [x] await Promise.all() on event proccesing
-- [ ] Case in-sensitive passwords
+- [x] Case in-sensitive passwords
+- [x] Case in-sensitive logins
 
 # Outstanding features - must fix
 - [x] Pre-game welcome screen
