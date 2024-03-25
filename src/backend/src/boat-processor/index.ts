@@ -24,6 +24,6 @@ setInterval(() => {
     }
     if (gameState === "active") {
         processor.updateState()
+        firebase.setAreaInfo(processor.getBoatAndAreaInfo())
     }
-    firebase.setAreaInfo(processor.getBoatAndAreaInfo())
 }, 1000);
