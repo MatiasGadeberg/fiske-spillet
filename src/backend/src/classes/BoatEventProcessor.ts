@@ -123,7 +123,7 @@ export class BoatEventProcessor {
 
 
     private async handleBoatBuyEvents(events: BoatBuyEvent[]) {
-        events.forEach(async (event) => {
+        await Promise.all(events.map(async (event) => {
             const teamData = await this.store.getTeamData(event.teamId);
             if (!teamData.boats) {
                 teamData['boats'] = [];
@@ -145,11 +145,11 @@ export class BoatEventProcessor {
                 }
                 await this.store.updateTeamData(event.teamId, teamData);
             }
-        })
+        }))
     }
 
     private async handleBoatSailEvents(events: BoatSailEvent[]) {
-        events.forEach(async (event) => {
+        await Promise.all(events.map(async (event) => {
             const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
             if (marketBoat) {
                 const boat = new SailingBoat({
@@ -167,7 +167,7 @@ export class BoatEventProcessor {
             } else {
                 console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
             }
-        })
+        }))
     }
 
     public async sailBoats() {
