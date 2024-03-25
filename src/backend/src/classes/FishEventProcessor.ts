@@ -19,7 +19,7 @@ export class FishEventProcessor{
     }
 
     public setup() {
-        this.store.subscribeToFishSellEvents(events => this.handleEvents(events));
+        this.store.subscribeToFishSellEvents(events => this.handleFishSellEvents(events));
         this.store.subscribeToNumberOfTeams((numberOfTeams) => {
             this.fish.forEach((fish) => {
                 fish.updateNumberOfTeams(numberOfTeams.teams)
@@ -40,26 +40,24 @@ export class FishEventProcessor{
         }
     }
 
-    private handleEvents(events: FishSellEvent[]) {
-        events.forEach(event => {
-             this.handleFishSellEvent(event);
-        });
-    }
+    private async handleFishSellEvents(events: FishSellEvent[]) {
+        await Promise.all(
+            events.map(async (event) => {
+                const teamData = await this.store.getTeamData(event.teamId);
 
-    private async handleFishSellEvent(event: FishSellEvent) {
-        const teamData = await this.store.getTeamData(event.teamId);
+                const fishToSell = Object.keys(event.fish)[0];
+                const fishSellAmount = event.fish[fishToSell].fishAmount;
+                const fishSellPrice = event.fish[fishToSell].fishPrice;
+                const fishAvailable = teamData.fish[fishToSell].amount; 
 
-        const fishToSell = Object.keys(event.fish)[0];
-        const fishSellAmount = event.fish[fishToSell].fishAmount;
-        const fishSellPrice = event.fish[fishToSell].fishPrice;
-        const fishAvailable = teamData.fish[fishToSell].amount; 
-
-        if (fishAvailable >= fishSellAmount) {
-            teamData.fish[fishToSell].amount -= fishSellAmount;
-            teamData.points += fishSellAmount * fishSellPrice
-            this.addFishSupply(fishToSell, fishSellAmount);
-            await this.store.updateTeamData(event.teamId, teamData);
-        }
+                if (fishAvailable >= fishSellAmount) {
+                    teamData.fish[fishToSell].amount -= fishSellAmount;
+                    teamData.points += fishSellAmount * fishSellPrice
+                    this.addFishSupply(fishToSell, fishSellAmount);
+                    await this.store.updateTeamData(event.teamId, teamData);
+                }
+            })
+        )
     }
 
     private addFishSupply(fishName: string, amount: number) {

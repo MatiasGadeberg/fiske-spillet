@@ -12,8 +12,8 @@
     - [x] Fish processor prod
     - [x] Boat processor dev
     - [x] Boat processor prod
-- [ ] Update CDK deployment with processors
-- [ ] await Promise.all() on event proccesing
+- [x] Update CDK deployment with processors
+- [x] await Promise.all() on event proccesing
 - [ ] Case in-sensitive passwords
 
 # Outstanding features - must fix

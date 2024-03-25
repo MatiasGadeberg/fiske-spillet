@@ -149,25 +149,27 @@ export class BoatEventProcessor {
     }
 
     private async handleBoatSailEvents(events: BoatSailEvent[]) {
-        await Promise.all(events.map(async (event) => {
-            const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
-            if (marketBoat) {
-                const boat = new SailingBoat({
-                    boatId: event.boatId,
-                    teamId: event.teamId,
-                    destinationAreaNumber: event.fishAreaNumber,
-                    startTime: event.startTime,
-                    store: this.store,
-                    boatSpeed: marketBoat.speed,
-                    cargoLevel: marketBoat.cargo,
-                    availableFish: marketBoat.availableFish
-                })
-                await boat.sail()
-                this.sailingBoats.push(boat)
-            } else {
-                console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
-            }
-        }))
+        await Promise.all(
+            events.map(async (event) => {
+                const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
+                if (marketBoat) {
+                    const boat = new SailingBoat({
+                        boatId: event.boatId,
+                        teamId: event.teamId,
+                        destinationAreaNumber: event.fishAreaNumber,
+                        startTime: event.startTime,
+                        store: this.store,
+                        boatSpeed: marketBoat.speed,
+                        cargoLevel: marketBoat.cargo,
+                        availableFish: marketBoat.availableFish
+                    })
+                    await boat.sail()
+                    this.sailingBoats.push(boat)
+                } else {
+                    console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
+                }
+            })
+        )
     }
 
     public async sailBoats() {
