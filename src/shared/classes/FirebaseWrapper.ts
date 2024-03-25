@@ -198,11 +198,6 @@ export class FirebaseWrapper {
         this.subscribeToCollection("boats", callback, where("destination", "==", areaNumber))
     }
 
-    public subscribeToAllBoatData(callback: (snapshot: QuerySnapshot) => void) {
-        this.subscribeToCollection("boats", callback)
-    }
-
-
     public dropConnections(): void {
         this.snapshots.forEach(snapshot => {
             snapshot();

@@ -17,7 +17,6 @@ export const useGameStore = defineStore('game', () => {
   const store = useFirestoreStore()
   const vScores = ref<ScoreInfo[]>([])
   const sScores = ref<ScoreInfo[]>([])
-  const totalBoats = ref(0)
   const boatPriceIncreaseFactor = 0.2;
 
   const updateGameData = (gameInfo: GameInfo): void => {
@@ -67,12 +66,6 @@ export const useGameStore = defineStore('game', () => {
       })
   }
 
-  const subscribeToAllBoatData = () => {
-      store.getAllBoatData((boats) => {
-          totalBoats.value = boats.length
-      })
-  }
-
   const getImageUrl = (type: 'boat' | 'fish', name: string) => {
       const path = `../../${type}Images/${name}.svg`
 
@@ -82,7 +75,6 @@ export const useGameStore = defineStore('game', () => {
 
   return {
     subscribeToScores,
-    subscribeToAllBoatData,
     subscribeToGameData,
     subscribeToFishMarket,
     subscribeToAreaInfo,
@@ -96,7 +88,6 @@ export const useGameStore = defineStore('game', () => {
     fishAreas,
     fishMarket,
     boatMarket,
-    totalBoats,
     vScores,
     sScores,
     boatPriceIncreaseFactor

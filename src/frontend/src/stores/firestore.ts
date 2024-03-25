@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { BoatInfo, Boats, EventData, FishSellEvent, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
+import type { BoatInfo, Boats, FishSellEvent, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
 import { QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
@@ -49,29 +49,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
       firestore.subscribeToTeamsBoatData(teamId, callback) 
   }
 
-  const getAreaBoatData = (areaNumber: number, boatCallback: (boats: BoatInfo[]) => void) => {
-      const callback = (snapshot: QuerySnapshot) => {
-          const boats = snapshot.docs.map(doc => {
-              const data = doc.data() as BoatInfo;
-              data.boatId = doc.id
-              return data
-          })
-          boatCallback(boats)
-      }
-      firestore.subscribeToAreaBoatData(areaNumber, callback) 
-  }
-
-  const getAllBoatData = (boatCallback: (boats: BoatInfo[]) => void) => {
-      const callback = (snapshot: QuerySnapshot) => {
-          const boats = snapshot.docs.map(doc => {
-              const data = doc.data() as BoatInfo;
-              data.boatId = doc.id
-              return data
-          })
-          boatCallback(boats)
-      }
-      firestore.subscribeToAllBoatData(callback) 
-  }
   const subscribeToScores = (callback: (scores: {vScore: ScoreInfo[]; sScore: ScoreInfo[]}) => void) => {
       firestore.subscribeToTeamsData((snapshot: QuerySnapshot) => {
           const vScore: ScoreInfo[] = []
@@ -161,8 +138,6 @@ export const useFirestoreStore = defineStore('firestore', () => {
     logout,
     getTeamData,
     getTeamBoatData,
-    getAreaBoatData,
-    getAllBoatData,
     createTeam,
     subscribeToScores,
     sellFish,

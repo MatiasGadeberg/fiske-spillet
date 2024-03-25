@@ -9,8 +9,6 @@
       >
         <div class="flex items-center justify-center flex-col text-base m-4">
             <h1 class="p-2 ">Område {{ area.areaNumber }}</h1>
-            <h2>I har {{ props.boats.length }} båd{{ props.boats.length !== 1 ? 'e' : '' }} i dette område</h2>
-            <h2>Der er i alt {{ areaBoats }} både i dette område</h2>
         </div>
 
         <div class="grow">
@@ -40,7 +38,6 @@ import type { FishAreaInfo, BoatInfo } from '../../../shared/types/GameTypes';
 import { useGameStore } from '@/stores/game';
 
 import InventoryBoat from './InventoryBoat.vue'
-import { useFirestoreStore } from '@/stores/firestore';
 
 const props = defineProps<{
     area: FishAreaInfo,
@@ -49,13 +46,6 @@ const props = defineProps<{
 
 const team = useTeamStore();
 const game = useGameStore();
-const store = useFirestoreStore();
-
-let areaBoats = 0;
-
-store.getAreaBoatData(props.area.areaNumber, (boats) => {
-    areaBoats = boats.length
-})
 
 const sendBoat = () => {
     if ( team.selectedBoat ) {
