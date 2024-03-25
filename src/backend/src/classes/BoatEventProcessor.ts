@@ -21,7 +21,6 @@ export class BoatEventProcessor {
         'Drivende',
         'Blæsende',
         'Strømmende',
-        'Skumsprøjtende',
         'Våde',
         'Tidevands',
         'Skvulpende',
@@ -30,7 +29,8 @@ export class BoatEventProcessor {
         'Fyldte',
         'Mørke',
         'Lystige',
-        'Lynhurtig'
+        'Lynhurtig',
+        'Tusmørke'
     ]
 
     private boatNameNouns: string[] = [
