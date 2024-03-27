@@ -12,8 +12,6 @@
                 <ol class="list-decimal text-start">
                     <li v-for="score in game.vScores" :key="score.teamName">
                             {{score.teamName }} 
-                            <br/>
-                            {{ score.points.toLocaleString('da-DK', {maximumFractionDigits: 0, minimumFractionDigits: 0}) }} VM$
                     </li>
                 </ol>
             </div>
@@ -23,9 +21,7 @@
                 <ol class="list-decimal text-start">
                     <li v-for="score in game.sScores" :key="score.teamName">
                             {{score.teamName }} 
-                            <br/>
-                            {{ score.points.toLocaleString('da-DK', {maximumFractionDigits: 0, minimumFractionDigits: 0}) }} VM$
-                    </li>
+                   </li>
                 </ol>
             </div>
         </div>

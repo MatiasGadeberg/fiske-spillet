@@ -60,7 +60,7 @@ export const useFirestoreStore = defineStore('firestore', () => {
                       points: doc.data().points
                   })
               }
-              if (doc.data().category === 'væbner') {
+              if (doc.data().category === 'vaebner') {
                   vScore.push({
                       teamName: doc.data().teamName,
                       points: doc.data().points

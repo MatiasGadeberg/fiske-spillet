@@ -14,9 +14,9 @@
             </h1>
       </div>
       <div  class="flex flex-col items-center justify-end basis-1/4"> 
-        <div v-if="game.gameState === 'active'">
+        <div v-if="game.gameState !== 'not-started'">
             <h1 class="text-slate-500 font-bold text-lg">Placering: {{ teamRanking }}</h1>
-            <h1 class="text-slate-500 font-bold text-lg">Point: {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
+            <h1 class="text-slate-500 font-bold text-lg">Score: {{ team.points.toLocaleString('da-DK', {maximumFractionDigits: 2})}} VM$</h1>
         </div>
       </div>
 </div>
@@ -36,7 +36,7 @@ const auth = useAuthStore()
 const game = useGameStore()
 
 const teamRanking = computed(() => {
-    return team.teamCategory === 'væbner' 
+    return team.teamCategory === 'vaebner' 
         ? game.vScores.findIndex((teamRanking) => teamRanking.teamName === team.teamName) + 1
         : game.sScores.findIndex((teamRanking) => teamRanking.teamName === team.teamName) + 1
 })
