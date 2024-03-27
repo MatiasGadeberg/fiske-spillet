@@ -16,7 +16,7 @@
         <h1 class="mx-2" :class="{'text-sm': props.boat.inUse}">{{ props.boat.name }}</h1>
         <div v-if="props.boat.inUse" class="absolute inset-0 w-full flex items-center justify-center z-10">
             <div class="bg-slate-100 opacity-70 rounded px-2 h-min-fit text-black text-sm font-bold">
-                <p>{{ millisToMinutesAndSeconds(props.boat.timeToDestinationInMs) }}</p>
+                <p>{{ formattedTime }}</p>
             </div>
         </div>
     </div>
@@ -24,9 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { useTeamStore } from '@/stores/team';
+import { ref, watch, onMounted } from 'vue'
 import type { BoatInfo } from '../../../shared/types/GameTypes';
 import { useGameStore } from '@/stores/game';
+import { useTeamStore } from '@/stores/team';
 
 const props = defineProps<{
     boat: BoatInfo
@@ -50,5 +51,33 @@ function millisToMinutesAndSeconds(millis: number | null) {
         return '0:00'
     }
 }
+
+const endTime = props.boat.endTime
+
+const timeLeft = ref(getTimeLeft())
+
+function getTimeLeft() {
+    if (endTime) {
+        const diff = endTime - Date.now()
+        return diff < 0 ? 0 : diff
+    } else {
+        return 0 
+    }
+}
+
+const formattedTime = ref('')
+
+watch(timeLeft, () => {
+  formattedTime.value = millisToMinutesAndSeconds(timeLeft.value)
+})
+
+onMounted(() => {
+  const intervalId = setInterval(() => {
+    timeLeft.value = getTimeLeft()
+  }, 1000)
+
+  // Clear interval on component unmount
+  return () => clearInterval(intervalId)
+})
 
 </script>

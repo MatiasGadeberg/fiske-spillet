@@ -44,12 +44,10 @@ export class FishEventProcessor{
         await Promise.all(
             events.map(async (event) => {
                 const teamData = await this.store.getTeamData(event.teamId);
-
                 const fishToSell = Object.keys(event.fish)[0];
                 const fishSellAmount = event.fish[fishToSell].fishAmount;
                 const fishSellPrice = event.fish[fishToSell].fishPrice;
                 const fishAvailable = teamData.fish[fishToSell].amount; 
-
                 if (fishAvailable >= fishSellAmount) {
                     teamData.fish[fishToSell].amount -= fishSellAmount;
                     teamData.points += fishSellAmount * fishSellPrice
