@@ -16,7 +16,7 @@
 - [x] await Promise.all() on event proccesing
 - [x] Case in-sensitive passwords
 - [x] Case in-sensitive logins
-- [-] Update Sailing Boat Logic
+- [x] Update Sailing Boat Logic
     - [x] Add to boat type: status, starttime, catchtime and endtime
     - [x] When processing Boat buy event add status = docked, start, catch and endtime = null
     - [x] When processing Boat sail event update boat document with:
@@ -32,11 +32,11 @@
         - [x] All boats with state = inbound and endtime < Date.now() = Boat has arrived
             - [x] Store fish = update team data with fish
             - [x] clear destination, starttime, catchtime, endtime, status = docked
-    - [ ] Refactor Inventory boat:
-        - [ ] Calcualte time left
-        - [ ] Use staus outbound/inbound to flip image
-    - [ ] Refactor team store boat logic
-        - [ ] Query snapshots for boats in each area and for docked boats
+    - [x] Refactor Inventory boat:
+        - [x] Calcualte time left
+        - [x] Use staus outbound/inbound to flip image
+    - [x] Refactor team store boat logic
+        - [x] Query snapshots for boats in each area and for docked boats
 
 
 

@@ -105,8 +105,8 @@ export class BoatEventProcessor {
 
     public updateState() {
         this.updateFishAreas()
-        this.store.queryCatchBoats((boats: BoatInfo[]) => this.processCatchBoats(boats))
         this.store.queryArrivedBoats((boats: BoatInfo[]) => this.processArrivedBoats(boats))
+        this.store.queryCatchBoats((boats: BoatInfo[]) => this.processCatchBoats(boats))
     }
 
     private async processArrivedBoats(boats: BoatInfo[]) {
@@ -155,18 +155,14 @@ export class BoatEventProcessor {
     }
 
     private catch(inputFish: {name: string; amountAvailable: number}[], cargoSize: number): {name: string, amount: number}[] {
-
         const catchAmount = Math.floor(cargoSize/inputFish.length)
-
         if (catchAmount === 0) return []
-
         const caught = inputFish.map((fish) => {
             return {
                 name: fish.name,
                 amount: Math.min(catchAmount, Math.floor(fish.amountAvailable))
             }
         })
-
         const totalCaught = caught.reduce((acc, fish) => acc += fish.amount, 0)
         if (totalCaught === cargoSize)
             return caught
