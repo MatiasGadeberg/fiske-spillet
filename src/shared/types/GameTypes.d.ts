@@ -93,6 +93,8 @@ export type FishMarketEntry = {
     currentPrice: number;
     growth: "positive" | "negative" | "neutral";
     supply: number;
+    minPrice: number;
+    maxPrice: number;
 };
 
 export type ScoreInfo = {

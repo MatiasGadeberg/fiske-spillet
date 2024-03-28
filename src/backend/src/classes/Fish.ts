@@ -4,6 +4,8 @@ export type FishProps = {
     name: string;
     startingSupply: number;
     startingPrice: number;
+    minPrice: number;
+    maxPrice: number;
     decayFunction: (supply: number, numberOfTeams: number) => number;
     priceCalculator: (supply: number, currentPrice: number, numberOfTeams: number) => number
 }
@@ -17,6 +19,9 @@ export class Fish {
     private priceCalculator: (supply: number, currentPrice: number, numberOfTeams: number) => number
     private growth: 'positive' | 'negative' | 'neutral'
     private numberOfTeams: number
+    private minPrice: number;
+    private maxPrice: number;
+    
 
     constructor(props: FishProps) {
         this.name = props.name;
@@ -26,6 +31,8 @@ export class Fish {
         this.numberOfTeams = 0;
         this.decayFunction = props.decayFunction;
         this.priceCalculator = props.priceCalculator;
+        this.minPrice = props.minPrice;
+        this.maxPrice = props.maxPrice;
     }
 
     public updateNumberOfTeams(numberOfTeams: number) {
@@ -41,7 +48,9 @@ export class Fish {
             name: this.name,
             currentPrice: this.price,
             growth: this.growth,
-            supply: this.supply
+            supply: this.supply,
+            maxPrice: this.maxPrice,
+            minPrice: this.minPrice
         }
     }
 
