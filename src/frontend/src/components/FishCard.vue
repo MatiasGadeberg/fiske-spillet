@@ -8,39 +8,25 @@
       alt="Product Image"
       class="card-image object-fill w-full h-40 rounded"
     />
-    <div class="prices flex justify-between mx-4 text-lg"> 
-        <div class="min-price flex flex-col items-center justify-center">
-          <div>Min pris:</div>
-          <div class="flex items-center justify-center">
-            <div class="font-bold">{{props.fish.minPrice}}</div>
-          </div>
+    <div class="current-price text-center text-lg">
+      <div>Nuværende pris:</div>
+      <div class="flex items-center justify-center">
+        <div class="font-bold">{{ props.fish.currentPrice.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$/Ton</div>
+        <div>
+          <trending-up
+            v-if="props.fish.growth === 'positive'"
+            class="text-green-500"
+          />
+          <trending-down
+            v-if="props.fish.growth === 'negative'"
+            class="text-red-500"
+          />
+          <trending-neutral
+            v-if="props.fish.growth === 'neutral'"
+            class="text-yellow-500"
+          />
         </div>
-        <div class="current-price text-center ">
-          <div>Nuværende pris:</div>
-          <div class="flex items-center justify-center">
-            <div class="font-bold">{{ props.fish.currentPrice.toLocaleString('da-DK', {maximumFractionDigits: 2, minimumFractionDigits: 2}) }} VM$/Ton</div>
-            <div>
-              <trending-up
-                v-if="props.fish.growth === 'positive'"
-                class="text-green-500"
-              />
-              <trending-down
-                v-if="props.fish.growth === 'negative'"
-                class="text-red-500"
-              />
-              <trending-neutral
-                v-if="props.fish.growth === 'neutral'"
-                class="text-yellow-500"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="max-price flex flex-col items-center justify-center">
-          <div>Max pris:</div>
-          <div class="flex items-center justify-center">
-            <div class="font-bold">{{props.fish.maxPrice}}</div>
-          </div>
-        </div>
+      </div>
     </div>
     <div class="team-inventory text-center text-lg">
       <div>Jeres beholdning</div>
