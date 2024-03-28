@@ -90,7 +90,7 @@ export class SailingBoat {
 
         await this.store.updateBoatData(this.boatId, {
             inUse: this.inUse,
-            timeToDestinationInMs: timeToDestination,
+            startTime: timeToDestination,
             status: this.status,
             cargo: this.cargo,
             destination: this.destination
