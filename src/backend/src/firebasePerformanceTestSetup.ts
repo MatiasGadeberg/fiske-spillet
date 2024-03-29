@@ -45,6 +45,8 @@ async function createTeams(count: number): Promise<string[]> {
         teamIds.push(`team${i}`);
     }
 
+    store.setNumberOfTeams({ teams: count })
+
     return teamIds;
 }
 

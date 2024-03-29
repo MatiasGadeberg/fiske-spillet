@@ -115,6 +115,11 @@ export class FirebaseWrapper {
         return querySnapshot;
     }
 
+    public async getDockedBoatsData() {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("status", "==", 'docked')));
+        return querySnapshot;
+    }
+
     public async sendEvent(eventData: EventData) {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
