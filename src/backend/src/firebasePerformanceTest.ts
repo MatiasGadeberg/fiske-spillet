@@ -6,6 +6,23 @@ const store = new FirebaseWrapper()
 const teamIds: string[] = await store.getTeamsData().then(teams => teams.map(team => team.teamName));
 
 const work = async () => {
+    await store.getDockedBoatsData().then(snapshot => {
+        console.log(`getDockedBoatsData`)
+        snapshot.forEach(doc => {
+            const boatId = doc.id
+            const boat = doc.data() as BoatInfo;
+            store.sendEvent({
+                type: 'sail',
+                eventTarget: 'boat',
+                teamId: boat.teamId,
+                boatId: boatId,
+                boatType: boat.type,
+                fishAreaNumber: [1, 1, 1, 1, 1, 1, 2, 2, 2, 3][Math.floor(Math.random() * 10)], // This is to assign a random area with 1 being most likely, then 2 and then 3
+                startTime: Date.now()
+            })
+            console.log(`${boat.teamId} - sail ${boatId}`)
+        })
+    })
     await Promise.all(
         teamIds.map(async (teamId) => {
             const teamData = await store.getTeamData(teamId);
@@ -34,25 +51,6 @@ const work = async () => {
                     fish: fish
                 })
                 console.log(`${teamId} - sellFish - ${fishName} ${fish[fishName]['fishAmount']}`)
-            })
-            await store.getTeamBoatsData(teamId).then(snapshot => {
-                console.log(`${teamId} getTeamBoatsData`)
-                snapshot.forEach(doc => {
-                    const boatId = doc.id
-                    const boat = doc.data() as BoatInfo;
-                    if (boat.status == 'docked') {
-                        store.sendEvent({
-                            type: 'sail',
-                            eventTarget: 'boat',
-                            teamId: teamId,
-                            boatId: boatId,
-                            boatType: boat.type,
-                            fishAreaNumber: [1, 1, 1, 2, 2, 3][Math.floor(Math.random() * 6)], // This is to assign a random area with 1 being most likely, then 2 and then 3
-                            startTime: Date.now()
-                        })
-                        console.log(`${teamId} - sail ${boatId}`)
-                    }
-                })
             })
         })
     )
