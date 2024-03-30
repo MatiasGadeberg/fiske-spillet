@@ -5,6 +5,12 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { FiskeService } from "./constructs/fiskeService";
 
+const deploymentType: string = 'prd'
+const backendCPU = deploymentType === 'dev' ? 256 : 16384;
+const backendMemory = deploymentType === 'dev' ? 512 : 32768;
+const frontendCPU = deploymentType === 'dev' ? 256 : 1024;
+const frontendMemory = deploymentType === 'dev' ? 512 : 2048;
+
 export class InfrastructureStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
@@ -25,8 +31,8 @@ export class InfrastructureStack extends cdk.Stack {
             infrastructureElemet: "backend",
             dockerFileRelativePath: "backend",
             portMappings: [],
-            taskCpu: 16384,
-            taskMemory: 32768
+            taskCpu: backendCPU,
+            taskMemory: backendMemory
         });
 
         new FiskeService(this, "fish-processor", {
@@ -34,8 +40,8 @@ export class InfrastructureStack extends cdk.Stack {
             infrastructureElemet: "fish-processor",
             dockerFileRelativePath: "backend/src/fish-processor",
             portMappings: [],
-            taskCpu: 16384,
-            taskMemory: 32768
+            taskCpu: backendCPU,
+            taskMemory: backendMemory
         });
 
         new FiskeService(this, "boat-processor", {
@@ -43,16 +49,16 @@ export class InfrastructureStack extends cdk.Stack {
             infrastructureElemet: "boat-processor",
             dockerFileRelativePath: "backend/src/boat-processor",
             portMappings: [],
-            taskCpu: 16384,
-            taskMemory: 32768
+            taskCpu: backendCPU,
+            taskMemory: backendMemory
         });
 
         const frontendService = new FiskeService(this, "fiske-frontend", {
             cluster,
             infrastructureElemet: "frontend",
             dockerFileRelativePath: "frontend",
-            taskCpu: 1024,
-            taskMemory: 2048,
+            taskCpu: frontendCPU,
+            taskMemory: frontendMemory,
             portMappings: [
                 {
                     containerPort: 80,
