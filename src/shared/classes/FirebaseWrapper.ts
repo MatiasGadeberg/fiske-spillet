@@ -7,6 +7,7 @@ import {
     collection,
     setDoc,
     doc,
+    deleteDoc,
     onSnapshot,
     DocumentSnapshot,
     query,
@@ -163,6 +164,7 @@ export class FirebaseWrapper {
             const events = snapshot.docChanges().reduce<T[]>((eventArr, change) => {
                 if (change.type === "added") {
                     eventArr.push(change.doc.data() as T);
+                    deleteDoc(doc(this.firestore, "events", change.doc.id));
                 }
                 return eventArr;
             }, []);
