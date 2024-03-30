@@ -5,7 +5,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import { FiskeService } from "./constructs/fiskeService";
 
-const deploymentType: string = 'prd'
+const deploymentType: string = 'dev'
 const backendCPU = deploymentType === 'dev' ? 256 : 16384;
 const backendMemory = deploymentType === 'dev' ? 512 : 32768;
 const frontendCPU = deploymentType === 'dev' ? 256 : 1024;
