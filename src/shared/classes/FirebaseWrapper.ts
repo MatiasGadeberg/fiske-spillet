@@ -77,7 +77,7 @@ export class FirebaseWrapper {
         });
         this.snapshots.push(snap);
     }
-    
+
     public async setNumberOfTeams(numberOfTeams: NumberOfTeams) {
         await setDoc(doc(this.firestore, "game", "numberOfTeams"), numberOfTeams);
     }
@@ -105,15 +105,25 @@ export class FirebaseWrapper {
         return document.data() as TeamInfo;
     }
 
+    public async getTeamsData() {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "teams")));
+        return querySnapshot.docs.map((doc) => doc.data());
+    }
+
+    public async getTeamBoatsData(teamId: string) {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("teamId", "==", teamId)));
+        return querySnapshot;
+    }
+
     public async sendEvent(eventData: EventData) {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
 
-    public async createBoat(data: { 
-        type: Boats; 
-        teamId: string; 
-        speed: number; 
-        cargoSize: number; 
+    public async createBoat(data: {
+        type: Boats;
+        teamId: string;
+        speed: number;
+        cargoSize: number;
         name: string;
         availableFish: string[];
     }) {
@@ -146,13 +156,13 @@ export class FirebaseWrapper {
         const q = query(eventsRef, where('type', '==', eventType));
         const unsubscribe = onSnapshot(q, snapshot => {
             const events = snapshot.docChanges().reduce<T[]>((eventArr, change) => {
-               if (change.type === "added") {
-                   eventArr.push(change.doc.data() as T);
-               }
-               return eventArr;
-           }, []);
+                if (change.type === "added") {
+                    eventArr.push(change.doc.data() as T);
+                }
+                return eventArr;
+            }, []);
 
-           callback(events);
+            callback(events);
         });
         this.snapshots.push(unsubscribe);
     }
@@ -205,7 +215,7 @@ export class FirebaseWrapper {
     public subscribeToTeamsBoatData(teamId: string, callback: (snapshot: QuerySnapshot) => void) {
         this.subscribeToCollection("boats", callback, where("teamId", "==", teamId))
     }
-    
+
     public subscribeToAreaBoatData(areaNumber: number, callback: (snapshot: QuerySnapshot) => void) {
         this.subscribeToCollection("boats", callback, where("destination", "==", areaNumber))
     }
