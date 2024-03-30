@@ -46,35 +46,40 @@
       <div>Jeres beholdning</div>
       <div class="font-bold">{{ team.fishInventory[props.fish.name]?.amount.toFixed()}} Ton</div>
     </div>
-    <div class="flex justify-between items-center p-4">
-      <div>
-        <button @click="toSell = 0" class="amount-button">--</button>
-        <button @click="decrement" class="amount-button">-</button>
+    <div v-if="team.fishInventory[props.fish.name]?.amount > 0" style="height: 130px">
+      <div class="flex justify-between items-center p-4">
+        <div>
+          <button @click="toSell = 0" class="amount-button">--</button>
+          <button @click="decrement" class="amount-button">-</button>
+        </div>
+        <input
+          v-model="toSell"
+          type="number"
+          class="amount-input text-center w-16 flex-grow appearance-none"
+          :max="team.fishInventory[props.fish.name]?.amount"
+          :min="0"
+          @input="handleInput()"
+        />
+        <div>
+          <button @click="increment" class="amount-button">+</button>
+          <button @click="toSell = team.fishInventory[props.fish.name]?.amount" class="amount-button">
+            ++
+          </button>
+        </div>
       </div>
-      <input
-        v-model="toSell"
-        type="number"
-        class="amount-input text-center w-16 flex-grow appearance-none"
-        :max="team.fishInventory[props.fish.name]?.amount"
-        :min="0"
-        @input="handleInput()"
-      />
-      <div>
-        <button @click="increment" class="amount-button">+</button>
-        <button @click="toSell = team.fishInventory[props.fish.name]?.amount" class="amount-button">
-          ++
-        </button>
-      </div>
+      <button
+        @click="sell"
+        :disabled="toSell === 0 || loading"
+        :class="{ 'bg-gray-300': toSell === 0 || loading }"
+        class="card-button bg-blue-500 text-white py-2 px-4 mt-2 rounded-md w-full"
+      >
+        <span v-if="!loading">Sælg</span>
+        <span v-else> Sælger... </span>
+      </button>
     </div>
-    <button
-      @click="sell"
-      :disabled="toSell === 0 || loading"
-      :class="{ 'bg-gray-300': toSell === 0 || loading }"
-      class="card-button bg-blue-500 text-white py-2 px-4 mt-2 rounded-md w-full"
-    >
-      <span v-if="!loading">Sælg</span>
-      <span v-else> Sælger... </span>
-    </button>
+    <div v-else style="height: 130px">
+
+    </div>
   </div>
 </template>
 
