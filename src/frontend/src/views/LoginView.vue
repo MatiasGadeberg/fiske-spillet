@@ -7,6 +7,9 @@
             {{ newTeam ? 'Opret nyt hold' : 'Log på eksisterende hold' }}
           </h2>
         </div>
+        <div v-if="auth.loginError" class="text-red-500 text-center text-sm mt-2">
+          {{ auth.loginErrorMessage }}
+        </div>
         <form
           v-if="!newTeam"
           class="mt-8 space-y-6"
@@ -118,9 +121,6 @@
             {{ newTeam ? 'Annuller oprettelse' : 'Opret nyt hold' }}
           </button>
         </div>
-      </div>
-      <div v-if="auth.loginError" class="text-red-500 text-sm mt-2">
-        {{ auth.loginErrorMessage }}
       </div>
     </div>
   </div>

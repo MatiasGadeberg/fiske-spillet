@@ -47,6 +47,31 @@ export class SailingBoat {
         this.arrivalTime = Date.now() + this.travelTimeInMs;
     }
 
+    public static async sendBoat(props: {
+        destinationAreaNumber: number; 
+        boatSpeed: number; 
+        boatId: string;
+        startTime: number;
+        store: FirebaseWrapper;
+    }) {
+        const baseAreaDistance = 120;
+        const baseSpeed = 10;
+        const travelTimeInSeconds =  props.destinationAreaNumber * (baseAreaDistance - baseSpeed * (props.boatSpeed - 1));
+        const travelTimeInMs = travelTimeInSeconds * 1000;
+        const catchTime = props.startTime + Math.round(travelTimeInMs/2);
+        const endTime = props.startTime + travelTimeInMs;
+
+        await props.store.updateBoatData(props.boatId, {
+            inUse: true,
+            startTime: props.startTime,
+            endTime,
+            catchTime,
+            status: 'outbound',
+            cargo: [],
+            destination: props.destinationAreaNumber,
+        })
+    }
+
     public async sail(){
         let timeToDestination: number = this.arrivalTime - Date.now()
         let catchEvent = false
@@ -65,7 +90,7 @@ export class SailingBoat {
 
         await this.store.updateBoatData(this.boatId, {
             inUse: this.inUse,
-            timeToDestinationInMs: timeToDestination,
+            startTime: timeToDestination,
             status: this.status,
             cargo: this.cargo,
             destination: this.destination
@@ -75,8 +100,7 @@ export class SailingBoat {
     }
 
     public catchFish(inputFish: {name: string; amountAvailable: number}[]) {
-        this.cargo = this.catch(inputFish, this.cargoSize)
-        return this.cargo
+        return this.catch(inputFish, this.cargoSize)
     }
 
     private catch(inputFish: {name: string; amountAvailable: number}[], cargoSize: number): {name: string, amount: number}[] {

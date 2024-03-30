@@ -25,6 +25,6 @@ setInterval(() => {
     }
     if (gameState === "active") {
         processor.updateState()
+        firebase.setFishMarket(processor.getFishMarketInfo())
     }
-    firebase.setFishMarket(processor.getFishMarketInfo())
 }, 1000);

@@ -15,6 +15,7 @@ import {
     updateDoc,
     addDoc,
     where,
+    getDocs,
 } from "firebase/firestore";
 import type { BoatAndAreaInfo, BoatBuyEvent, BoatInfo, BoatSailEvent, Boats, EventData, FishMarket, FishSellEvent, GameInfo, LoginEvent, LogoutEvent, NumberOfTeams, TeamInfo } from "../types/GameTypes";
 
@@ -76,7 +77,7 @@ export class FirebaseWrapper {
         });
         this.snapshots.push(snap);
     }
-    
+
     public async setNumberOfTeams(numberOfTeams: NumberOfTeams) {
         await setDoc(doc(this.firestore, "game", "numberOfTeams"), numberOfTeams);
     }
@@ -104,18 +105,39 @@ export class FirebaseWrapper {
         return document.data() as TeamInfo;
     }
 
+    public async getTeamsData() {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "teams")));
+        return querySnapshot.docs.map((doc) => doc.data());
+    }
+
+    public async getTeamBoatsData(teamId: string) {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("teamId", "==", teamId)));
+        return querySnapshot;
+    }
+
     public async sendEvent(eventData: EventData) {
         await addDoc(collection(this.firestore, "events"), eventData);
     }
 
-    public async createBoat(data: { type: Boats; teamId: string; speed: number, name: string}) {
+    public async createBoat(data: {
+        type: Boats;
+        teamId: string;
+        speed: number;
+        cargoSize: number;
+        name: string;
+        availableFish: string[];
+    }) {
         const boatData: Omit<BoatInfo, 'boatId'> = {
             teamId: data.teamId,
             type: data.type,
             speed: data.speed,
             name: data.name,
             inUse: false,
-            timeToDestinationInMs: 0,
+            cargoSize: data.cargoSize,
+            availableFish: data.availableFish,
+            startTime: null,
+            endTime: null,
+            catchTime: null,
             destination: null,
             status: 'docked',
             cargo: []
@@ -134,13 +156,13 @@ export class FirebaseWrapper {
         const q = query(eventsRef, where('type', '==', eventType));
         const unsubscribe = onSnapshot(q, snapshot => {
             const events = snapshot.docChanges().reduce<T[]>((eventArr, change) => {
-               if (change.type === "added") {
-                   eventArr.push(change.doc.data() as T);
-               }
-               return eventArr;
-           }, []);
+                if (change.type === "added") {
+                    eventArr.push(change.doc.data() as T);
+                }
+                return eventArr;
+            }, []);
 
-           callback(events);
+            callback(events);
         });
         this.snapshots.push(unsubscribe);
     }
@@ -193,15 +215,34 @@ export class FirebaseWrapper {
     public subscribeToTeamsBoatData(teamId: string, callback: (snapshot: QuerySnapshot) => void) {
         this.subscribeToCollection("boats", callback, where("teamId", "==", teamId))
     }
-    
+
     public subscribeToAreaBoatData(areaNumber: number, callback: (snapshot: QuerySnapshot) => void) {
         this.subscribeToCollection("boats", callback, where("destination", "==", areaNumber))
     }
 
-    public subscribeToAllBoatData(callback: (snapshot: QuerySnapshot) => void) {
-        this.subscribeToCollection("boats", callback)
+    public async queryCatchBoats(callback: (boats: BoatInfo[]) => void) {
+        const boatsRef = collection(this.firestore, 'boats')
+        const q = query(boatsRef, where("catchTime", "<=", Date.now()), where("status", "==", "outbound"));
+        const snapshot = await getDocs(q);
+        const boats = this.getBoatsFromSnapshot(snapshot)
+        callback(boats)
     }
 
+    public async queryArrivedBoats(callback: (boats: BoatInfo[]) => void) {
+        const boatsRef = collection(this.firestore, 'boats')
+        const q = query(boatsRef, where("endTime", "<=", Date.now()), where("status", "==", "inbound"));
+        const snapshot = await getDocs(q);
+        const boats = this.getBoatsFromSnapshot(snapshot)
+        callback(boats)
+    }
+
+    private getBoatsFromSnapshot(snapshot: QuerySnapshot) {
+        return snapshot.docs.map(doc => {
+            const data = doc.data() as BoatInfo;
+            data.boatId = doc.id
+            return data
+        })
+    }
 
     public dropConnections(): void {
         this.snapshots.forEach(snapshot => {

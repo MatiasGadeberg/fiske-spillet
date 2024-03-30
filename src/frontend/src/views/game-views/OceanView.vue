@@ -4,7 +4,6 @@
       <div class="flex-1 w-20 flex flex-col items-center overflow-auto overflow-auto bg-emerald-500 text-slate-200 ">
         <h1 class="p-2 text-2xl">Havnen</h1>
         <h2>I ejer {{ team.boatInventory.length }} både</h2>
-        <h2>Alle hold ejer tilsammen {{ game.totalBoats }} både</h2>
         <div class="w-full flex flex-col items-center">
             <InventoryBoat v-for="boat in team.boatInventory.filter((boat) => !boat.inUse)" 
                 class="h-16"
@@ -25,9 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import { useGameStore } from '@/stores/game';
 import InventoryBoat from '../../components/InventoryBoat.vue'
 import OceanSlice from '../../components/OceanSlice.vue'
+import { useGameStore } from '@/stores/game';
 import { useTeamStore } from '@/stores/team';
 
 const team = useTeamStore();

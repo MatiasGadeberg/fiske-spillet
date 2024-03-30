@@ -93,6 +93,8 @@ export type FishMarketEntry = {
     currentPrice: number;
     growth: "positive" | "negative" | "neutral";
     supply: number;
+    minPrice: number;
+    maxPrice: number;
 };
 
 export type ScoreInfo = {
@@ -143,7 +145,11 @@ export type BoatInfo = {
     name: string;
     inUse: boolean;
     speed: number;
-    timeToDestinationInMs: number;
+    cargoSize: number;
+    availableFish: string[];
+    startTime: number | null;
+    endTime: number | null;
+    catchTime: number | null;
     destination: number | null;
     status: 'inbound' | 'outbound' | 'docked';
     cargo: {

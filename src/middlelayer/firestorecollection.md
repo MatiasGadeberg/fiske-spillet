@@ -12,9 +12,31 @@
     - [x] Fish processor prod
     - [x] Boat processor dev
     - [x] Boat processor prod
-- [ ] Update CDK deployment with processors
-- [ ] await Promise.all() on event proccesing
-- [ ] Case in-sensitive passwords
+- [x] Update CDK deployment with processors
+- [x] await Promise.all() on event proccesing
+- [x] Case in-sensitive passwords
+- [x] Case in-sensitive logins
+- [x] Update Sailing Boat Logic
+    - [x] Add to boat type: status, starttime, catchtime and endtime
+    - [x] When processing Boat buy event add status = docked, start, catch and endtime = null
+    - [x] When processing Boat sail event update boat document with:
+        - [x] Boat destination
+        - [x] Start time
+        - [x] Catch time
+        - [x] End time
+        - [x] Status = outbound
+    - [x] Refactor boat processor logic to poll instead of pull so each second it queries:
+        - [x] All boats with state = outbound and catchtime < Date.now() = boat has catched
+            - [x] Catch fish = update cargo and fish area
+            - [x] Status = inbound
+        - [x] All boats with state = inbound and endtime < Date.now() = Boat has arrived
+            - [x] Store fish = update team data with fish
+            - [x] clear destination, starttime, catchtime, endtime, status = docked
+    - [x] Refactor Inventory boat:
+        - [x] Calcualte time left
+        - [x] Use staus outbound/inbound to flip image
+    - [x] Refactor team store boat logic
+        - [x] Query snapshots for boats in each area and for docked boats
 
 # Outstanding features - must fix
 - [x] Pre-game welcome screen
@@ -48,8 +70,8 @@
 - [x] Visualization of where a boat is currently heading
 - [x] Current rank displayed during gameplay
 - [x] Setup items in database
+- [x] Max / Min visualization on fish card
 - [ ] Price drop / raise dependant on difference between supply and demand
-- [ ] Max / Min visualization on fish card
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

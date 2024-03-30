@@ -1,7 +1,6 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper"
-import { SailingBoat } from "./SailingBoat.js";
 import { FishArea } from "./FishArea.js";
-import type { BoatMarket, BoatSailEvent, BoatBuyEvent } from "../../../shared/types/GameTypes.js";
+import type { BoatMarket, BoatSailEvent, BoatBuyEvent, BoatInfo, TeamInfo } from "../../../shared/types/GameTypes.js";
 import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type BoatEventProcessorProps = {
@@ -11,9 +10,9 @@ export type BoatEventProcessorProps = {
 
 export class BoatEventProcessor {
     private store: FirebaseWrapper;
-    private sailingBoats: SailingBoat[];
     private boatMarketInfo: BoatMarket[];
     private fishAreas: FishArea[];
+    private baseCargoSize = 50;
 
     private boatNameAdjectives: string[] = [
         'Skummende',
@@ -21,7 +20,6 @@ export class BoatEventProcessor {
         'Drivende',
         'Blæsende',
         'Strømmende',
-        'Skumsprøjtende',
         'Våde',
         'Tidevands',
         'Skvulpende',
@@ -30,7 +28,8 @@ export class BoatEventProcessor {
         'Fyldte',
         'Mørke',
         'Lystige',
-        'Lynhurtig'
+        'Lynhurtig',
+        'Tusmørke'
     ]
 
     private boatNameNouns: string[] = [
@@ -53,7 +52,6 @@ export class BoatEventProcessor {
 
     constructor(props: BoatEventProcessorProps) {
         this.store = props.store
-        this.sailingBoats = [];
         this.fishAreas = props.areaInput.map((area) => {
             return new FishArea({
                 areaNumber: area.areaNumber,
@@ -106,8 +104,83 @@ export class BoatEventProcessor {
     }
 
     public updateState() {
-        this.sailBoats()
         this.updateFishAreas()
+        this.store.queryArrivedBoats((boats: BoatInfo[]) => this.processArrivedBoats(boats))
+        this.store.queryCatchBoats((boats: BoatInfo[]) => this.processCatchBoats(boats))
+    }
+
+    private async processArrivedBoats(boats: BoatInfo[]) {
+        await Promise.all(
+            boats.map( async boat => {
+                const teamData = await this.store.getTeamData(boat.teamId);
+                boat.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
+                await Promise.all([
+                    this.store.updateTeamData(boat.teamId, teamData),
+                    this.store.updateBoatData(boat.boatId, {
+                        status: 'docked',
+                        cargo: [],
+                        startTime: null,
+                        endTime: null,
+                        catchTime: null,
+                        destination: null,
+                        inUse: false
+                    })
+                ])
+            })
+        )
+    }
+    
+    private async processCatchBoats(boats: BoatInfo[]) {
+        await Promise.all(
+            boats.map( async boat => {
+                const cargo = this.handleCatchEvent(boat);
+                await this.store.updateBoatData(boat.boatId, {
+                    status: 'inbound',
+                    cargo
+                })
+            })
+        )
+    }
+
+    private handleCatchEvent(boat: BoatInfo) {
+        const area = this.fishAreas.find((area) => area.areaNumber === boat.destination)
+        if (area) {
+            const fishRatios = area.getFishRatios(boat.availableFish)
+            const cargo = this.catch(fishRatios, boat.cargoSize)
+            area.removeStock(cargo)
+            return cargo
+        } else {
+            console.warn(`No fish area number matching boat destination number. BoatId: ${boat.boatId} destination: ${boat.destination}`)
+        }
+    }
+
+    private catch(inputFish: {name: string; amountAvailable: number}[], cargoSize: number): {name: string, amount: number}[] {
+        const catchAmount = Math.floor(cargoSize/inputFish.length)
+        if (catchAmount === 0) return []
+        const caught = inputFish.map((fish) => {
+            return {
+                name: fish.name,
+                amount: Math.min(catchAmount, Math.floor(fish.amountAvailable))
+            }
+        })
+        const totalCaught = caught.reduce((acc, fish) => acc += fish.amount, 0)
+        if (totalCaught === cargoSize)
+            return caught
+        else {
+            const remaining = inputFish.filter((fish) => fish.amountAvailable > catchAmount)
+            if (remaining.length > 0) {
+                const reducedAmount = remaining.map((fish) => {
+                    return {
+                        name: fish.name,
+                        amountAvailable: fish.amountAvailable - catchAmount
+                    }
+                })
+                const reducedCargo = cargoSize - totalCaught
+                return [...caught, ...this.catch(reducedAmount, reducedCargo)]
+            } else {
+                return caught
+            }
+        }
     }
 
     public getBoatAndAreaInfo() {
@@ -123,75 +196,71 @@ export class BoatEventProcessor {
 
 
     private async handleBoatBuyEvents(events: BoatBuyEvent[]) {
-        events.forEach(async (event) => {
-            const teamData = await this.store.getTeamData(event.teamId);
-            if (!teamData.boats) {
-                teamData['boats'] = [];
-            }
-            if (teamData.points >= event.price * event.amount) {
-                teamData.points -= event.price * event.amount
-                for (let i = 0; i < event.amount; i++) {
-                    const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boatType) 
-                    const adjective = this.boatNameAdjectives[Math.floor(Math.random()*this.boatNameAdjectives.length)] ?? this.boatNameAdjectives[14];
-                    const noun = this.boatNameNouns[Math.floor(Math.random()*this.boatNameNouns.length)] ?? this.boatNameNouns[14]
-                    const name =  `${teamData.boats.length + 1}: ${adjective} ${noun}`
-                    const boat = await this.store.createBoat({ 
-                        type: event.boatType,
-                        speed: typeBoat ? typeBoat.speed : 1, 
-                        teamId: event.teamId,
-                        name
-                    })
-                    teamData.boats.push(boat.id);
+        await Promise.all(
+            events.map(async (event) => {
+                const teamData = await this.store.getTeamData(event.teamId);
+                if (!teamData.boats) {
+                    teamData['boats'] = [];
                 }
-                await this.store.updateTeamData(event.teamId, teamData);
-            }
+                if (teamData.points >= event.price * event.amount) {
+                    teamData.points -= event.price * event.amount
+                    for (let i = 0; i < event.amount; i++) {
+                        const typeBoat = this.boatMarketInfo.find(boat => boat.type === event.boatType) 
+                        if (typeBoat) {
+                            const boat = await this.createBoat(event, typeBoat, teamData)
+                            teamData.boats.push(boat.id);
+                        }
+                    }
+                    await this.store.updateTeamData(event.teamId, teamData);
+                }
+            })
+        )
+    }
+
+    private async createBoat(event: BoatBuyEvent, typeBoat: BoatMarket, teamData: TeamInfo) {
+        const adjective = this.boatNameAdjectives[Math.floor(Math.random()*this.boatNameAdjectives.length)] 
+            ?? this.boatNameAdjectives[14];
+        const noun = this.boatNameNouns[Math.floor(Math.random()*this.boatNameNouns.length)] 
+            ?? this.boatNameNouns[14]
+        const name =  `${teamData.boats.length + 1}: ${adjective} ${noun}`
+        const cargoSize = this.baseCargoSize * typeBoat.cargo;
+        return await this.store.createBoat({ 
+            type: event.boatType,
+            teamId: event.teamId,
+            name,
+            speed: typeBoat.speed,
+            cargoSize,
+            availableFish: typeBoat.availableFish
         })
+        
     }
 
     private async handleBoatSailEvents(events: BoatSailEvent[]) {
-        events.forEach(async (event) => {
+        await Promise.all(
+            events.map(async (event) => {
             const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
             if (marketBoat) {
-                const boat = new SailingBoat({
-                    boatId: event.boatId,
-                    teamId: event.teamId,
-                    destinationAreaNumber: event.fishAreaNumber,
-                    startTime: event.startTime,
-                    store: this.store,
-                    boatSpeed: marketBoat.speed,
-                    cargoLevel: marketBoat.cargo,
-                    availableFish: marketBoat.availableFish
-                })
-                await boat.sail()
-                this.sailingBoats.push(boat)
-            } else {
-                console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
-            }
-        })
-    }
+                const baseAreaDistance = 120;
+                const baseSpeed = 10
+                const travelTimeInSeconds =  event.fishAreaNumber * (baseAreaDistance - baseSpeed * (marketBoat.speed - 1));
+                const travelTimeInMs = travelTimeInSeconds * 1000;
+                const catchTime = event.startTime + Math.round(travelTimeInMs/2);
+                const endTime = event.startTime + travelTimeInMs;
 
-    public async sailBoats() {
-        await Promise.all(
-            this.sailingBoats.map(async boat => {
-                const catchEvent = await boat.sail()
-                if (catchEvent) {
-                    this.handleCatchEvent(boat)
+                await this.store.updateBoatData(event.boatId, {
+                    inUse: true,
+                    startTime: event.startTime,
+                    endTime,
+                    catchTime,
+                    status: 'outbound',
+                    cargo: [],
+                    destination: event.fishAreaNumber,
+                })
+                } else {
+                    console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
                 }
             })
-        );
-
-        this.sailingBoats = this.sailingBoats.filter((boat) => boat.inUse)
-    }
-
-    private handleCatchEvent(boat: SailingBoat) {
-        const area = this.fishAreas.find((area) => area.areaNumber === boat.destination)
-        if (area) {
-            const fishRatios = area.getFishRatios(boat.availableFish)
-            const cargo = boat.catchFish(fishRatios)
-            area.removeStock(cargo)
-        } else {
-            console.warn(`No fish area number matching boat destination number. BoatId: ${boat.boatId} destination: ${boat.destination}`)
-        }
+        )
     }
 
 }
