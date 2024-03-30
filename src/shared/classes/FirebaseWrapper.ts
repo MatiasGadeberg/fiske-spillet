@@ -26,12 +26,12 @@ export class FirebaseWrapper {
 
     constructor() {
         const firebaseConfig = {
-            apiKey: "AIzaSyBm8KO8rDc0dxGqrIlvSVozOfgbnU6Rze8",
-            authDomain: "vm-fiskespillet.firebaseapp.com",
-            projectId: "vm-fiskespillet",
-            storageBucket: "vm-fiskespillet.appspot.com",
-            messagingSenderId: "402889246876",
-            appId: "1:402889246876:web:9e13d7ae6f2c33b8380559",
+            apiKey: "AIzaSyDM8R3cb7mNBRlQnodpkHAlsY8MDcCNkTY",
+            authDomain: "fiskespil-test.firebaseapp.com",
+            projectId: "fiskespil-test",
+            storageBucket: "fiskespil-test.appspot.com",
+            messagingSenderId: "877471088519",
+            appId: "1:877471088519:web:b7ea5786f9e79bf81d1d22"
         };
 
         this.app = initializeApp(firebaseConfig);
