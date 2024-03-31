@@ -112,6 +112,29 @@ export class FirebaseWrapper {
         await updateDoc(teamRef, teamData);
     }
 
+    public async updateTeamsData(teamsData: {teamId: string, eventId?: string; teamData: Partial<TeamInfo>}[]) {
+        let batch = writeBatch(this.firestore);
+        let count = 0;
+        while (teamsData.length) {
+            let team = teamsData.shift();
+            if (team) {
+                const teamRef = doc(this.firestore, "teams", team.teamId);
+                batch.update(teamRef, team.teamData);
+                count++;
+                if (team.eventId) {
+                    const eventRef = doc(this.firestore, "events", team.eventId);
+                    batch.update(eventRef, { isProcessed: true });
+                    count++;
+                }
+            }
+            if (count >= 500 || !teamsData.length) {
+                await batch.commit();
+                batch = writeBatch(this.firestore);
+                count = 0;
+            }
+        }
+    }
+
     public async getTeamData(teamId: string) {
         const document = await getDoc(doc(this.firestore, "teams", teamId));
         return document.data() as TeamInfo;

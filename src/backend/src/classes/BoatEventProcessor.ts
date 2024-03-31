@@ -110,24 +110,44 @@ export class BoatEventProcessor {
     }
 
     private async processArrivedBoats(boats: BoatInfo[]) {
-        await Promise.all(
-            boats.map( async boat => {
-                const teamData = await this.store.getTeamData(boat.teamId);
-                boat.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
-                await Promise.all([
-                    this.store.updateTeamData(boat.teamId, teamData),
-                    this.store.updateBoatData(boat.boatId, {
-                        status: 'docked',
-                        cargo: [],
-                        startTime: null,
-                        endTime: null,
-                        catchTime: null,
-                        destination: null,
-                        inUse: false
-                    })
-                ])
+        const boatsData = boats.map((boat) => {
+            const status: BoatStatus = 'docked'
+            return {
+                boatId: boat.boatId,
+                boatData: {
+                    status,
+                    cargo: [],
+                    startTime: null,
+                    endTime: null,
+                    catchTime: null,
+                    destination: null,
+                    inUse: false
+                }
+            }
+        })
+        const sortedBoats: { [teamId: string]: BoatInfo[] } = {};
+        boats.forEach((boat) => {
+            if (sortedBoats[boat.teamId]) {
+                sortedBoats[boat.teamId].push(boat)
+            } else {
+                sortedBoats[boat.teamId] = [boat]
+            }
+        });
+        const teamsData = await Promise.all(
+            Object.values(sortedBoats).map(async (teamBoats) => {
+                const teamId = teamBoats[0].teamId;
+                const teamData = await this.store.getTeamData(teamId);
+                teamBoats.forEach((boat) => {
+                    boat.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
+                });
+                return {
+                    teamId,
+                    teamData,
+                }
             })
-        )
+        );
+        this.store.updateBoatsData(boatsData);
+        this.store.updateTeamsData(teamsData);
     }
     
     private async processCatchBoats(boats: BoatInfo[]) {
