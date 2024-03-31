@@ -1,5 +1,5 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper.js";
-import type { GameInfo, GameState, LogoutEvent, LoginEvent } from "../../../shared/types/GameTypes.js";
+import type { GameInfo, GameState, EventData } from "../../../shared/types/GameTypes.js";
 
 export type FishGameProps = {
     store: FirebaseWrapper;
@@ -29,7 +29,7 @@ export class FishGame {
         })
     }
 
-    private handleLoginEvents(events: LoginEvent[]) {
+    private handleLoginEvents(events: EventData<'login'>[]) {
         events.forEach((event) => {
             if (Object.keys(this.teams).includes(event.teamId)) {
                 this.teams[event.teamId]++
@@ -38,10 +38,11 @@ export class FishGame {
                     this.updateNumberOfTeams(Object.keys(this.teams).length)
             }
             this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
+            this.store.setEventProcessed(event.eventId)
         })
     }
 
-    private handleLogoutEvents(events: LogoutEvent[]) {
+    private handleLogoutEvents(events: EventData<'logout'>[]) {
         events.forEach((event) => {
             if (Object.keys(this.teams).includes(event.teamId)) {
                 if (this.teams[event.teamId] === 1) {
@@ -54,6 +55,7 @@ export class FishGame {
                     this.store.updateTeamData(event.teamId, {activeLogins: this.teams[event.teamId]})
                 }
             }
+            this.store.setEventProcessed(event.eventId)
         })
     }
 

@@ -19,4 +19,4 @@ VOLUME [ "/app/frontend/node_modules" ]
 
 WORKDIR /app/frontend
 
-CMD [ "npm", "run", "dev" , "--", "--host"]
+CMD [ "npm", "run", "dev",  "--", "--host"]

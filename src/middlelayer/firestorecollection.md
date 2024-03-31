@@ -38,6 +38,8 @@
     - [x] Refactor team store boat logic
         - [x] Query snapshots for boats in each area and for docked boats
 
+
+
 # Outstanding features - must fix
 - [x] Pre-game welcome screen
 - [x] Updating team to include senior/væbner category and teamName, login, password
@@ -70,8 +72,8 @@
 - [x] Visualization of where a boat is currently heading
 - [x] Current rank displayed during gameplay
 - [x] Setup items in database
-- [x] Max / Min visualization on fish card
 - [ ] Price drop / raise dependant on difference between supply and demand
+- [ ] Max / Min visualization on fish card
 
 # Reccomended features - If time allows
 - [ ] Visualize historic market prices

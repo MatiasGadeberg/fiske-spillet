@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { FirebaseWrapper } from '../../../shared/classes/FirebaseWrapper'
 import type { DocumentSnapshot } from 'firebase/firestore'
-import type { BoatInfo, Boats, FishSellEvent, ScoreInfo, TeamInfo } from '../../../shared/types/GameTypes'
+import type { BoatInfo, Boats, ScoreInfo, TeamInfo, EventData } from '../../../shared/types/GameTypes'
 import { QuerySnapshot } from 'firebase/firestore/lite'
 
 export const useFirestoreStore = defineStore('firestore', () => {
@@ -16,14 +16,14 @@ export const useFirestoreStore = defineStore('firestore', () => {
   }
 
   const login = async (teamId: string) => {
-      await firestore.sendEvent({
+      await firestore.sendEvent<'login'>({
           type: "login",
           teamId,
       })
   }
 
   const logout = async (teamId: string) => {
-      await firestore.sendEvent({
+      await firestore.sendEvent<'logout'>({
           type: "logout",
           teamId,
       })
@@ -81,15 +81,14 @@ export const useFirestoreStore = defineStore('firestore', () => {
     fishAmountToSell: number
   ) => {
     // firestore sendevent
-    const fish: FishSellEvent['fish'] = {}
+    const fish: EventData<'sell'>['fish'] = {}
     fish[fishName] = {
       fishAmount: fishAmountToSell,
       fishPrice: sellingPrice
     }
 
-    await firestore.sendEvent({
+    await firestore.sendEvent<'sell'>({
       type: 'sell',
-      eventTarget: 'fish',
       teamId,
       fish
     })
@@ -102,9 +101,8 @@ export const useFirestoreStore = defineStore('firestore', () => {
     price: number
   ) => {
 
-    await firestore.sendEvent({
+    await firestore.sendEvent<'buy'>({
       type: 'buy',
-      eventTarget: 'boat',
       teamId,
       boatType: type,
       amount,
@@ -120,9 +118,8 @@ export const useFirestoreStore = defineStore('firestore', () => {
     teamId: string
   ) => {
 
-    await firestore.sendEvent({
+    await firestore.sendEvent<'sail'>({
       type: 'sail',
-      eventTarget: 'boat',
       teamId,
       boatId,
       boatType,

@@ -22,9 +22,7 @@ export function createFish(props: FishConstructorProps) {
         startingSupply: props.startingSupply,
         decayFunction: createDecayFunction(demandFunction),
         priceCalculator,
-        startingPrice: props.maxPrice/2,
-        minPrice: props.minPrice,
-        maxPrice: props.maxPrice
+        startingPrice: props.maxPrice/2
     })
 }
 

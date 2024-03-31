@@ -18,19 +18,27 @@ export type NumberOfTeams = {
     teams: number
 }
 
-export type GameState = "not-started" | "active" | "ended";
+export type EventType = 'sell' | 'buy' | 'sail' | 'login' | 'logout';
 
-export type EventData = 
-    | FishSellEvent 
-    | BoatBuyEvent
-    | BoatSailEvent
-    | LoginEvent
-    | LogoutEvent
-
-export type FishSellEvent = {
-    type: "sell";
-    eventTarget: "fish";
+type BaseEvent = {
     teamId: string;
+    eventId: string;
+    isProcessed: boolean;
+}
+
+type EventPayload<T extends EventType> = 
+    T extends 'sell' ? FishSellEventPayload :
+    T extends 'buy' ? BoatBuyEventPayload :
+    T extends 'sail' ? BoatSailEventPayload :
+    T extends 'login' ? LoginEventPayload :
+    T extends 'logout' ? LogoutEventPayload :
+    {};
+
+export type EventData<T extends EventType> = BaseEvent & {
+    type: T
+} & EventPayload<T>;
+
+type FishSellEventPayload = {
     fish: {
         [fishName: string]: {
             fishAmount: number;
@@ -39,34 +47,22 @@ export type FishSellEvent = {
     };
 }
 
-export type BoatBuyEvent = {
-    type: "buy"
-    eventTarget: "boat"
-    teamId: string;
+type BoatBuyEventPayload = {
     amount: number;
     price: number;
     boatType: Boats;
 }
 
-export type BoatSailEvent = {
-    type: "sail";
-    eventTarget: "boat";
-    teamId: string;
+type BoatSailEventPayload = {
     boatId: string;
     boatType: Boats;
     fishAreaNumber: number;
     startTime: number;
 }
 
-export type LoginEvent = {
-    type: "login"
-    teamId: string;
-}
+type LoginEventPayload = {}
 
-export type LogoutEvent = {
-    type: "logout"
-    teamId: string;
-}
+type LogoutEventPayload = {}
     
 type FishAreaInfo = {
     areaNumber: number;
@@ -93,8 +89,6 @@ export type FishMarketEntry = {
     currentPrice: number;
     growth: "positive" | "negative" | "neutral";
     supply: number;
-    minPrice: number;
-    maxPrice: number;
 };
 
 export type ScoreInfo = {
@@ -130,7 +124,7 @@ export type TeamInfo = {
     points: number;
     login: string;
     password: string;
-    category: 'væbner' | 'senior';
+    category: 'vaebner' | 'senior';
     boats: BoatInventoryInfo[];
     fish: FishInventory;
 };
