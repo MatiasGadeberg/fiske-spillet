@@ -1,6 +1,6 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper"
 import { FishArea } from "./FishArea.js";
-import type { BoatMarket, BoatInfo, TeamInfo, EventData, BoatStatus } from "../../../shared/types/GameTypes.js";
+import type { BoatMarket, BoatInfo, TeamInfo, EventData, BoatStatus} from "../../../shared/types/GameTypes.js";
 import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type BoatEventProcessorProps = {
@@ -110,36 +110,59 @@ export class BoatEventProcessor {
     }
 
     private async processArrivedBoats(boats: BoatInfo[]) {
-        await Promise.all(
-            boats.map( async boat => {
-                const teamData = await this.store.getTeamData(boat.teamId);
-                boat.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
-                await Promise.all([
-                    this.store.updateTeamData(boat.teamId, teamData),
-                    this.store.updateBoatData(boat.boatId, {
-                        status: 'docked',
-                        cargo: [],
-                        startTime: null,
-                        endTime: null,
-                        catchTime: null,
-                        destination: null,
-                        inUse: false
-                    })
-                ])
+        const boatsData = boats.map((boat) => {
+            const status: BoatStatus = 'docked'
+            return {
+                boatId: boat.boatId,
+                boatData: {
+                    status,
+                    cargo: [],
+                    startTime: null,
+                    endTime: null,
+                    catchTime: null,
+                    destination: null,
+                    inUse: false
+                }
+            }
+        })
+        const sortedBoats: { [teamId: string]: BoatInfo[] } = {};
+        boats.forEach((boat) => {
+            if (sortedBoats[boat.teamId]) {
+                sortedBoats[boat.teamId].push(boat)
+            } else {
+                sortedBoats[boat.teamId] = [boat]
+            }
+        });
+        const teamsData = await Promise.all(
+            Object.values(sortedBoats).map(async (teamBoats) => {
+                const teamId = teamBoats[0].teamId;
+                const teamData = await this.store.getTeamData(teamId);
+                teamBoats.forEach((boat) => {
+                    boat.cargo.forEach((fish) => teamData.fish[fish.name].amount += fish.amount)
+                });
+                return {
+                    teamId,
+                    teamData,
+                }
             })
-        )
+        );
+        this.store.updateBoatsData(boatsData);
+        this.store.updateTeamsData(teamsData);
     }
     
     private async processCatchBoats(boats: BoatInfo[]) {
-        await Promise.all(
-            boats.map( async boat => {
-                const cargo = this.handleCatchEvent(boat);
-                await this.store.updateBoatData(boat.boatId, {
-                    status: 'inbound',
+        const boatsData = boats.map((boat) => {
+            const cargo = this.handleCatchEvent(boat);
+            const status: BoatStatus = 'inbound';
+            return {
+                boatId: boat.boatId,
+                boatData: {
+                    status,
                     cargo
-                })
-            })
-        )
+                }
+            }
+        })
+        this.store.updateBoatsData(boatsData);
     }
 
     private handleCatchEvent(boat: BoatInfo) {
@@ -236,32 +259,33 @@ export class BoatEventProcessor {
         
     }
 
-    private async handleBoatSailEvents(events: BoatSailEvent[]) {
-        await Promise.all(
-            events.map(async (event) => {
+    private async handleBoatSailEvents(events: EventData<'sail'>[]) {
+        const boatsData = events.map(event => {
             const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
-            if (marketBoat) {
-                const baseAreaDistance = 120;
-                const baseSpeed = 10
-                const travelTimeInSeconds =  event.fishAreaNumber * (baseAreaDistance - baseSpeed * (marketBoat.speed - 1));
-                const travelTimeInMs = travelTimeInSeconds * 1000;
-                const catchTime = event.startTime + Math.round(travelTimeInMs/2);
-                const endTime = event.startTime + travelTimeInMs;
+            const baseAreaDistance = 120;
+            const baseSpeed = 10
+            const travelTimeInSeconds =  event.fishAreaNumber * (baseAreaDistance - baseSpeed * (marketBoat!.speed - 1));
+            const travelTimeInMs = travelTimeInSeconds * 1000;
+            const catchTime = event.startTime + Math.round(travelTimeInMs/2);
+            const endTime = event.startTime + travelTimeInMs;
+            const status: BoatStatus = 'outbound'
 
-                await this.store.updateBoatData(event.boatId, {
+
+            return {
+                boatId: event.boatId, 
+                eventId: event.eventId,
+                boatData: {
                     inUse: true,
                     startTime: event.startTime,
                     endTime,
                     catchTime,
-                    status: 'outbound',
+                    status,
                     cargo: [],
                     destination: event.fishAreaNumber,
-                })
-                } else {
-                    console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
                 }
-            })
-        )
+            }
+        })
+        this.store.updateBoatsData(boatsData);
     }
 
 }

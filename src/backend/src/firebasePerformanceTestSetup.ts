@@ -43,8 +43,6 @@ async function createTeams(count: number) {
         })
     }
     store.setNumberOfTeams({ teams: count })
-
-    return teamIds;
 }
 
 function getArgs() {

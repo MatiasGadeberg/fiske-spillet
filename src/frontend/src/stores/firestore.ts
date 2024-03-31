@@ -76,21 +76,18 @@ export const useFirestoreStore = defineStore('firestore', () => {
 
   const sellFish = async (
     teamId: string,
-    fishName: string,
-    sellingPrice: number,
-    fishAmountToSell: number
+    fish: string,
+    price: number,
+    amount: number
   ) => {
     // firestore sendevent
-    const fish: EventData<'sell'>['fish'] = {}
-    fish[fishName] = {
-      fishAmount: fishAmountToSell,
-      fishPrice: sellingPrice
-    }
 
     await firestore.sendEvent<'sell'>({
       type: 'sell',
       teamId,
-      fish
+      fish,
+      price,
+      amount
     })
   }
 
