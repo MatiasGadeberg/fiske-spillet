@@ -32,6 +32,17 @@ const work = async () => {
     await Promise.all(
         teamIds.map(async (teamId) => {
             const teamData = await store.getTeamData(teamId);
+            Object.keys(teamData.fish).filter(key => teamData.fish[key].amount > 0).forEach((fishName) => {
+                store.sendEvent<'sell'>({
+                    type: 'sell',
+                    teamId: teamId,
+                    fish: fishName,
+                    amount: teamData.fish[fishName].amount,
+                    price: 60
+                })
+                if (enableLogging) console.log(`${teamId} - sellFish - ${fishName} ${teamData.fish[fishName].amount}`)
+            })
+            // if (teamData.boats.length >= 20) return; // SET A HARD CAP ON NUMBER OF BOATS
             const boatPrice = 20000 * (1 + Math.floor(teamData.boats.length / 5) * 0.2);
             if (teamData.points >= boatPrice) {
                 store.sendEvent<'buy'>({
@@ -43,16 +54,6 @@ const work = async () => {
                 });
                 if (enableLogging) console.log(`${teamId} - buyBoat`)
             }
-            Object.keys(teamData.fish).filter(key => teamData.fish[key].amount > 0).forEach((fishName) => {
-                store.sendEvent<'sell'>({
-                    type: 'sell',
-                    teamId: teamId,
-                    fish: fishName,
-                    amount: teamData.fish[fishName].amount,
-                    price: 60
-                })
-                if (enableLogging) console.log(`${teamId} - sellFish - ${fishName} ${teamData.fish[fishName].amount}`)
-            })
         })
     )
 };
