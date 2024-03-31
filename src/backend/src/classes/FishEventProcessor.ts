@@ -1,5 +1,5 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper.js";
-import type { FishSellEvent } from "../../../shared/types/GameTypes.js";
+import type { EventData } from "../../../shared/types/GameTypes.js";
 import { FishConstructorProps, createFish } from "./FishFactory.js";
 import { Fish } from "./Fish.js";
 
@@ -40,7 +40,7 @@ export class FishEventProcessor{
         }
     }
 
-    private async handleFishSellEvents(events: FishSellEvent[]) {
+    private async handleFishSellEvents(events: EventData<'sell'>[]) {
         await Promise.all(
             events.map(async (event) => {
                 const teamData = await this.store.getTeamData(event.teamId);
@@ -54,6 +54,7 @@ export class FishEventProcessor{
                     this.addFishSupply(fishToSell, fishSellAmount);
                     await this.store.updateTeamData(event.teamId, teamData);
                 }
+                await this.store.setEventProcessed(event.eventId);
             })
         )
     }

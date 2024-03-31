@@ -16,8 +16,20 @@ import {
     addDoc,
     where,
     getDocs,
+    writeBatch,
+    WriteBatch,
 } from "firebase/firestore";
-import type { BoatAndAreaInfo, BoatBuyEvent, BoatInfo, BoatSailEvent, Boats, EventData, FishMarket, FishSellEvent, GameInfo, LoginEvent, LogoutEvent, NumberOfTeams, TeamInfo } from "../types/GameTypes";
+import type { 
+    BoatAndAreaInfo, 
+    BoatInfo, 
+    Boats,
+    EventData,
+    EventType,
+    FishMarket,
+    GameInfo,
+    NumberOfTeams,
+    TeamInfo 
+} from "../types/GameTypes";
 
 export class FirebaseWrapper {
     private app: FirebaseApp;
@@ -115,8 +127,28 @@ export class FirebaseWrapper {
         return querySnapshot;
     }
 
-    public async sendEvent(eventData: EventData) {
-        await addDoc(collection(this.firestore, "events"), eventData);
+    public async sendEvent<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
+        await addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
+    }
+
+    public async setEventsProcessed(eventIds: string[]) {
+        let batch = writeBatch(this.firestore)
+        let count = 0;
+        while (eventIds.length) {
+
+            const eventId = eventIds.shift();
+            if (eventId) batch.update(doc(this.firestore, "events", eventId), {isProcessed: true});
+
+            if (count++ >= 500 || !eventIds.length) {
+                await batch.commit();
+                batch = writeBatch(this.firestore);
+                count = 0;
+            }
+        }
+    }
+    
+    public async setEventProcessed(eventId: string) {
+        await updateDoc(doc(this.firestore, "events",eventId), {isProcessed: true});
     }
 
     public async createBoat(data: {
@@ -146,18 +178,39 @@ export class FirebaseWrapper {
         return await addDoc(collection(this.firestore, "boats"), boatData)
     }
 
+    public async updateBoatsData(boatsData: {boatId: string; boatData: Partial<BoatInfo>}[]) {
+        let batch = writeBatch(this.firestore);
+        let count = 0;
+        while (boatsData.length) {
+            let boat = boatsData.shift();
+            if (boat) {
+                const boatRef = doc(this.firestore, "boats", boat.boatId);
+                batch.update(boatRef, boat.boatData);
+            }
+            if (count++ >= 500 || !boatsData.length) {
+                await batch.commit();
+                batch = writeBatch(this.firestore);
+                count = 0;
+            }
+        }
+    }
+
     public async updateBoatData(boatId: string, boatData: Partial<BoatInfo>) {
         const boatRef = doc(this.firestore, "boats", boatId);
         await updateDoc(boatRef, boatData);
     }
 
-    public subscribeToEvents<T extends EventData>(callback: (events: T[]) => void, eventType: string = '') {
+    public subscribeToEvents<T extends EventType>(callback: (events: EventData<T>[]) => void, eventType: string = '') {
         const eventsRef = collection(this.firestore, "events");
-        const q = query(eventsRef, where('type', '==', eventType));
+        const q = query(eventsRef, where('type', '==', eventType), where('isProcessed', '==', false));
         const unsubscribe = onSnapshot(q, snapshot => {
-            const events = snapshot.docChanges().reduce<T[]>((eventArr, change) => {
+            const events = snapshot.docChanges().reduce<EventData<T>[]>((eventArr, change) => {
                 if (change.type === "added") {
-                    eventArr.push(change.doc.data() as T);
+                    const data: EventData<T> = {
+                        ...change.doc.data() as EventData<T>,
+                        eventId: change.doc.id
+                    }
+                    eventArr.push(data);
                 }
                 return eventArr;
             }, []);
@@ -167,24 +220,24 @@ export class FirebaseWrapper {
         this.snapshots.push(unsubscribe);
     }
 
-    public subscribeToFishSellEvents(callback: (events: FishSellEvent[]) => void) {
-        this.subscribeToEvents<FishSellEvent>(callback, 'sell')
+    public subscribeToFishSellEvents(callback: (events: EventData<'sell'>[]) => void) {
+        this.subscribeToEvents<'sell'>(callback, 'sell')
     }
 
-    public subscribeToBoatBuyEvents(callback: (events: BoatBuyEvent[]) => void) {
-        this.subscribeToEvents<BoatBuyEvent>(callback, 'buy')
+    public subscribeToBoatBuyEvents(callback: (events: EventData<'buy'>[]) => void) {
+        this.subscribeToEvents<'buy'>(callback, 'buy')
     }
 
-    public subscribeToBoatSailEvents(callback: (events: BoatSailEvent[]) => void) {
-        this.subscribeToEvents<BoatSailEvent>(callback, 'sail')
+    public subscribeToBoatSailEvents(callback: (events: EventData<'sail'>[]) => void) {
+        this.subscribeToEvents<'sail'>(callback, 'sail')
     }
 
-    public subscribeToLoginEvents(callback: (events: LoginEvent[]) => void) {
-        this.subscribeToEvents<LoginEvent>(callback, 'login')
+    public subscribeToLoginEvents(callback: (events: EventData<'login'>[]) => void) {
+        this.subscribeToEvents<'login'>(callback, 'login')
     }
 
-    public subscribeToLogoutEvents(callback: (events: LogoutEvent[]) => void) {
-        this.subscribeToEvents<LogoutEvent>(callback, 'logout')
+    public subscribeToLogoutEvents(callback: (events: EventData<'logout'>[]) => void) {
+        this.subscribeToEvents<'logout'>(callback, 'logout')
     }
 
     public subscribe(collection: string, document: string, callback: (doc: DocumentSnapshot) => void) {

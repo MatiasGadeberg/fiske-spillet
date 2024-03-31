@@ -1,6 +1,6 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper"
 import { FishArea } from "./FishArea.js";
-import type { BoatMarket, BoatSailEvent, BoatBuyEvent, BoatInfo, TeamInfo } from "../../../shared/types/GameTypes.js";
+import type { BoatMarket, BoatInfo, TeamInfo, EventData, BoatStatus } from "../../../shared/types/GameTypes.js";
 import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type BoatEventProcessorProps = {
@@ -195,7 +195,7 @@ export class BoatEventProcessor {
     }
 
 
-    private async handleBoatBuyEvents(events: BoatBuyEvent[]) {
+    private async handleBoatBuyEvents(events: EventData<'buy'>[]) {
         await Promise.all(
             events.map(async (event) => {
                 const teamData = await this.store.getTeamData(event.teamId);
@@ -213,11 +213,12 @@ export class BoatEventProcessor {
                     }
                     await this.store.updateTeamData(event.teamId, teamData);
                 }
+                await this.store.setEventProcessed(event.eventId);
             })
         )
     }
 
-    private async createBoat(event: BoatBuyEvent, typeBoat: BoatMarket, teamData: TeamInfo) {
+    private async createBoat(event: EventData<'buy'>, typeBoat: BoatMarket, teamData: TeamInfo) {
         const adjective = this.boatNameAdjectives[Math.floor(Math.random()*this.boatNameAdjectives.length)] 
             ?? this.boatNameAdjectives[14];
         const noun = this.boatNameNouns[Math.floor(Math.random()*this.boatNameNouns.length)] 
