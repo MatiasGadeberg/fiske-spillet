@@ -1,5 +1,5 @@
 <template>
-      <div class="text-slate-200 text-2xl flex-1 overflow-auto justify-center hover:scale-105"
+      <div class="text-slate-200 text-2xl flex-1 overflow-auto justify-center hover:scale-105 pb-8"
         :class="{ 
             'bg-sky-300': props.area.color === 300,
             'bg-sky-500': props.area.color === 500,
@@ -8,7 +8,7 @@
            @click="sendBoat()"
       >
         <div class="flex items-center justify-center flex-col text-base m-4">
-            <h1 class="p-2 ">Område {{ area.areaNumber }}</h1>
+            <h1 class="p-2 text-2xl">Område {{ area.areaNumber }}</h1>
         </div>
 
         <div class="grow">
