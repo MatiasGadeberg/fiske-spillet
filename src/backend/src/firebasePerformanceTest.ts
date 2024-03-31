@@ -9,19 +9,24 @@ const enableLogging = false;
 
 const work = async () => {
     await store.getDockedBoatsData().then(snapshot => {
+        const teamBoats = new Map();
+        teamIds.forEach((id) => teamBoats.set(id, 0));
         if (enableLogging) console.log(`getDockedBoatsData`)
         snapshot.forEach(doc => {
             const boatId = doc.id
             const boat = doc.data() as BoatInfo;
-            store.sendEvent<'sail'>({
-                type: 'sail',
-                teamId: boat.teamId,
-                boatId: boatId,
-                boatType: boat.type,
-                fishAreaNumber: [1, 2, 3][Math.floor(Math.random() * 3)], // This is to assign a random area with 1 being most likely, then 2 and then 3
-                startTime: Date.now()
-            })
-            if (enableLogging) console.log(`${boat.teamId} - sail ${boatId}`)
+            if (teamBoats.get(boat.teamId) < 2) {
+                store.sendEvent<'sail'>({
+                    type: 'sail',
+                    teamId: boat.teamId,
+                    boatId: boatId,
+                    boatType: boat.type,
+                    fishAreaNumber: [1, 2, 3][Math.floor(Math.random() * 3)], // This is to assign a random area with 1 being most likely, then 2 and then 3
+                    startTime: Date.now()
+                })
+                teamBoats.set(boat.teamId, teamBoats.get(boat.teamId) + 1);
+                if (enableLogging) console.log(`${boat.teamId} - sail ${boatId}`)
+            }
         })
     })
     await Promise.all(
