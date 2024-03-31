@@ -41,12 +41,9 @@ export type EventData<T extends EventType> = BaseEvent & {
 } & EventPayload<T>;
 
 type FishSellEventPayload = {
-    fish: {
-        [fishName: string]: {
-            fishAmount: number;
-            fishPrice: number;
-        };
-    };
+    amount: number;
+    price: number;
+    fish: string;
 }
 
 type BoatBuyEventPayload = {

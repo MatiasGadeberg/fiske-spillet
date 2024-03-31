@@ -1,5 +1,5 @@
 import { FirebaseWrapper } from '../../shared/classes/FirebaseWrapper'
-import { BoatInfo, EventData } from '../../shared/types/GameTypes';
+import { BoatInfo } from '../../shared/types/GameTypes';
 
 const store = new FirebaseWrapper()
 
@@ -9,20 +9,19 @@ const enableLogging = false;
 
 const work = async () => {
     await store.getDockedBoatsData().then(snapshot => {
-        console.log(`getDockedBoatsData`)
+        if (enableLogging) console.log(`getDockedBoatsData`)
         snapshot.forEach(doc => {
             const boatId = doc.id
             const boat = doc.data() as BoatInfo;
-            store.sendEvent({
+            store.sendEvent<'sail'>({
                 type: 'sail',
-                eventTarget: 'boat',
                 teamId: boat.teamId,
                 boatId: boatId,
                 boatType: boat.type,
-                fishAreaNumber: [1, 1, 1, 1, 1, 1, 2, 2, 2, 3][Math.floor(Math.random() * 10)], // This is to assign a random area with 1 being most likely, then 2 and then 3
+                fishAreaNumber: [1, 2, 3][Math.floor(Math.random() * 3)], // This is to assign a random area with 1 being most likely, then 2 and then 3
                 startTime: Date.now()
             })
-            console.log(`${boat.teamId} - sail ${boatId}`)
+            if (enableLogging) console.log(`${boat.teamId} - sail ${boatId}`)
         })
     })
     await Promise.all(
@@ -40,38 +39,17 @@ const work = async () => {
                 if (enableLogging) console.log(`${teamId} - buyBoat`)
             }
             Object.keys(teamData.fish).filter(key => teamData.fish[key].amount > 0).forEach((fishName) => {
-                const fish: EventData<'sell'>['fish'] = {}
-                fish[fishName] = {
-                    fishAmount: teamData.fish[fishName].amount,
-                    fishPrice: 60
-                }
                 store.sendEvent<'sell'>({
                     type: 'sell',
                     teamId: teamId,
-                    fish: fish
+                    fish: fishName,
+                    amount: teamData.fish[fishName].amount,
+                    price: 60
                 })
-                if (enableLogging) console.log(`${teamId} - sellFish - ${fishName} ${fish[fishName]['fishAmount']}`)
-            })
-            await store.getTeamBoatsData(teamId).then(snapshot => {
-                if (enableLogging) console.log(`${teamId} getTeamBoatsData`)
-                snapshot.forEach(doc => {
-                    const boatId = doc.id
-                    const boat = doc.data() as BoatInfo;
-                    if (boat.status == 'docked') {
-                        store.sendEvent<'sail'>({
-                            type: 'sail',
-                            teamId: teamId,
-                            boatId: boatId,
-                            boatType: boat.type,
-                            fishAreaNumber: [1, 1, 1, 2, 2, 3][Math.floor(Math.random() * 6)], // This is to assign a random area with 1 being most likely, then 2 and then 3
-                            startTime: Date.now()
-                        })
-                        if (enableLogging) console.log(`${teamId} - sail ${boatId}`)
-                    }
-                })
+                if (enableLogging) console.log(`${teamId} - sellFish - ${fishName} ${teamData.fish[fishName].amount}`)
             })
         })
     )
 };
 
-setInterval(work, 4000);
+setInterval(work, 1000);
