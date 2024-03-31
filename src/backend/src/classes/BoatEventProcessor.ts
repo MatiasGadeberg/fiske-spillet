@@ -1,6 +1,6 @@
 import { FirebaseWrapper } from "../../../shared/classes/FirebaseWrapper"
 import { FishArea } from "./FishArea.js";
-import type { BoatMarket, BoatInfo, TeamInfo, EventData, BoatStatus } from "../../../shared/types/GameTypes.js";
+import type { BoatMarket, BoatInfo, TeamInfo, EventData, BoatStatus} from "../../../shared/types/GameTypes.js";
 import type { FishAreaConstructorProps } from "./fishAreaInput.js";
 
 export type BoatEventProcessorProps = {
@@ -236,32 +236,33 @@ export class BoatEventProcessor {
         
     }
 
-    private async handleBoatSailEvents(events: BoatSailEvent[]) {
-        await Promise.all(
-            events.map(async (event) => {
+    private async handleBoatSailEvents(events: EventData<'sail'>[]) {
+        const boatsData = events.map(event => {
             const marketBoat = this.boatMarketInfo.find((boat) => boat.type === event.boatType)
-            if (marketBoat) {
-                const baseAreaDistance = 120;
-                const baseSpeed = 10
-                const travelTimeInSeconds =  event.fishAreaNumber * (baseAreaDistance - baseSpeed * (marketBoat.speed - 1));
-                const travelTimeInMs = travelTimeInSeconds * 1000;
-                const catchTime = event.startTime + Math.round(travelTimeInMs/2);
-                const endTime = event.startTime + travelTimeInMs;
+            const baseAreaDistance = 120;
+            const baseSpeed = 10
+            const travelTimeInSeconds =  event.fishAreaNumber * (baseAreaDistance - baseSpeed * (marketBoat!.speed - 1));
+            const travelTimeInMs = travelTimeInSeconds * 1000;
+            const catchTime = event.startTime + Math.round(travelTimeInMs/2);
+            const endTime = event.startTime + travelTimeInMs;
+            const status: BoatStatus = 'outbound'
 
-                await this.store.updateBoatData(event.boatId, {
+
+            return {
+                boatId: event.boatId, 
+                eventId: event.eventId,
+                boatData: {
                     inUse: true,
                     startTime: event.startTime,
                     endTime,
                     catchTime,
-                    status: 'outbound',
+                    status,
                     cargo: [],
                     destination: event.fishAreaNumber,
-                })
-                } else {
-                    console.warn(`handleBoatSailEvent: No boat found in market with boat type ${event.boatType}`)
                 }
-            })
-        )
+            }
+        })
+        this.store.updateBoatsData(boatsData);
     }
 
 }

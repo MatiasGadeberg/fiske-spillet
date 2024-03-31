@@ -126,7 +126,7 @@ export class FirebaseWrapper {
         const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("teamId", "==", teamId)));
         return querySnapshot;
     }
-  
+
     public async sendEvent<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
         await addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
     }
@@ -149,15 +149,6 @@ export class FirebaseWrapper {
     
     public async setEventProcessed(eventId: string) {
         await updateDoc(doc(this.firestore, "events",eventId), {isProcessed: true});
-    }
-  
-    public async getDockedBoatsData() {
-        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("status", "==", 'docked')));
-        return querySnapshot;
-    }
-
-    public async sendEvent(eventData: EventData) {
-        await addDoc(collection(this.firestore, "events"), eventData);
     }
 
     public async createBoat(data: {
@@ -187,7 +178,17 @@ export class FirebaseWrapper {
         return await addDoc(collection(this.firestore, "boats"), boatData)
     }
 
-    public async updateBoatsData(boatsData: {boatId: string; boatData: Partial<BoatInfo>}[]) {
+     public async getDockedBoatsData() {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("status", "==", 'docked')));
+        return querySnapshot;
+    }
+    
+    public async updateBoatData(boatId: string, boatData: Partial<BoatInfo>) {
+        const boatRef = doc(this.firestore, "boats", boatId);
+        await updateDoc(boatRef, boatData);
+    }
+
+    public async updateBoatsData(boatsData: {boatId: string; eventId?: string; boatData: Partial<BoatInfo>}[]) {
         let batch = writeBatch(this.firestore);
         let count = 0;
         while (boatsData.length) {
@@ -195,18 +196,20 @@ export class FirebaseWrapper {
             if (boat) {
                 const boatRef = doc(this.firestore, "boats", boat.boatId);
                 batch.update(boatRef, boat.boatData);
+                count++;
+                if (boat.eventId) {
+                    const eventRef = doc(this.firestore, "events", boat.eventId);
+                    batch.update(eventRef, { isProcessed: true });
+                    count++;
+                }
             }
-            if (count++ >= 500 || !boatsData.length) {
+            if (count >= 500 || !boatsData.length) {
                 await batch.commit();
                 batch = writeBatch(this.firestore);
                 count = 0;
             }
         }
-    }
 
-    public async updateBoatData(boatId: string, boatData: Partial<BoatInfo>) {
-        const boatRef = doc(this.firestore, "boats", boatId);
-        await updateDoc(boatRef, boatData);
     }
 
     public subscribeToEvents<T extends EventType>(callback: (events: EventData<T>[]) => void, eventType: string = '') {

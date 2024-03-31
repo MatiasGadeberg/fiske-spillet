@@ -1,3 +1,5 @@
+export type GameState = "not-started" | "active" | "ended";
+
 export type GameInfo = {
     currentNumberOfTeams: number;
     gameState: GameState;
@@ -145,12 +147,14 @@ export type BoatInfo = {
     endTime: number | null;
     catchTime: number | null;
     destination: number | null;
-    status: 'inbound' | 'outbound' | 'docked';
+    status: BoatStatus;
     cargo: {
         name: string,
         amount: number
     }[];
 };
+
+export type BoatStatus = 'inbound' | 'outbound' | 'docked'; 
 
 type FishInventoryInfo = FishBaseInfo & {
     amount: number;
