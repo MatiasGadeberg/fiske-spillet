@@ -5,6 +5,7 @@
 >
       <div class="flex flex-col justify-center items-center basis-1/4 text-slate-500 font-bold"> 
         <h1 class="text-lg">Logget på som: {{ team.teamName }}</h1>
+        <p>Sessioner i brug: {{ team.activeLogins }} ud af  4</p>
         <button @click="auth.logout">Log ud</button>
       </div>
       <div class="flex flex-col items-center justify-center basis-1/2"> 

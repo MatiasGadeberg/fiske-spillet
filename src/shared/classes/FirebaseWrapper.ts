@@ -126,7 +126,7 @@ export class FirebaseWrapper {
         const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("teamId", "==", teamId)));
         return querySnapshot;
     }
-
+  
     public async sendEvent<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
         await addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
     }
@@ -149,6 +149,15 @@ export class FirebaseWrapper {
     
     public async setEventProcessed(eventId: string) {
         await updateDoc(doc(this.firestore, "events",eventId), {isProcessed: true});
+    }
+  
+    public async getDockedBoatsData() {
+        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("status", "==", 'docked')));
+        return querySnapshot;
+    }
+
+    public async sendEvent(eventData: EventData) {
+        await addDoc(collection(this.firestore, "events"), eventData);
     }
 
     public async createBoat(data: {

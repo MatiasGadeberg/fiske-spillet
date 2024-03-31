@@ -29,7 +29,12 @@ export const useAuthStore = defineStore('auth', () => {
       loginErrorMessage.value = `Holdet med login ${login} eksisterer ikke`
     } else {
       if (cleanedPassword === teamData.password) {
-        setLogin(login)
+        if (teamData.activeLogins >= 4) {
+          loginError.value = true
+          loginErrorMessage.value = 'I har for mange sessioner i gang - I kan maks have 4 sessioner på én gang'
+        } else {
+          setLogin(login)
+        }
       } else {
         loginError.value = true
         loginErrorMessage.value = 'Forkert kodeord'
@@ -54,37 +59,37 @@ export const useAuthStore = defineStore('auth', () => {
       loginErrorMessage.value = `Holdet med login ${cleanedLogin} eksisterer allerede`
     } else {
       const fishInventory: FishInventory = {
-          'tun': {
-              amount: 0
-          },
-          'rødspætte': {
-              amount: 0
-          },
-          'hornfisk': {
-              amount: 0
-          },
-          'markrel': {
-              amount: 0
-          },
-          'torsk': {
-              amount: 0
-          },
-          'hummer': {
-              amount: 0
-          },
+        'tun': {
+          amount: 0
+        },
+        'rødspætte': {
+          amount: 0
+        },
+        'hornfisk': {
+          amount: 0
+        },
+        'markrel': {
+          amount: 0
+        },
+        'torsk': {
+          amount: 0
+        },
+        'hummer': {
+          amount: 0
+        },
       }
       const boatInventory: BoatMarket[] = []
       await store.createTeam(cleanedLogin, {
-          teamName: login,
-          activeLogins: 0,
-          password: cleanedPassword,
-          login: cleanedLogin,
-          category: 'senior',
-          points: 20000,
-          fish: fishInventory,
-          boats: boatInventory
+        teamName: login,
+        activeLogins: 0,
+        password: cleanedPassword,
+        login: cleanedLogin,
+        category: 'senior',
+        points: 20000,
+        fish: fishInventory,
+        boats: boatInventory
       })
-    
+
       setLogin(cleanedLogin)
     }
   }
@@ -97,14 +102,14 @@ export const useAuthStore = defineStore('auth', () => {
     team.subscribeToTeamData(cleanedLogin)
     team.subscribeToTeamBoatData()
     if (!refresh) {
-        store.login(cleanedLogin);
-        if (game.gameState === 'active') {
-            router.push('/game/fish')
-        } else if ( game.gameState === 'not-started') {
-            router.push('/pre-game')
-        } else {
-            router.push('/post-game')
-        }
+      store.login(cleanedLogin);
+      if (game.gameState === 'active') {
+        router.push('/game/fish')
+      } else if (game.gameState === 'not-started') {
+        router.push('/pre-game')
+      } else {
+        router.push('/post-game')
+      }
     }
   }
 

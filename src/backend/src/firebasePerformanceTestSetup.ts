@@ -42,6 +42,9 @@ async function createTeams(count: number) {
             boats: boatInventory
         })
     }
+    store.setNumberOfTeams({ teams: count })
+
+    return teamIds;
 }
 
 function getArgs() {
