@@ -131,15 +131,18 @@ export class BoatEventProcessor {
     }
     
     private async processCatchBoats(boats: BoatInfo[]) {
-        await Promise.all(
-            boats.map( async boat => {
-                const cargo = this.handleCatchEvent(boat);
-                await this.store.updateBoatData(boat.boatId, {
-                    status: 'inbound',
+        const boatsData = boats.map((boat) => {
+            const cargo = this.handleCatchEvent(boat);
+            const status: BoatStatus = 'inbound';
+            return {
+                boatId: boat.boatId,
+                boatData: {
+                    status,
                     cargo
-                })
-            })
-        )
+                }
+            }
+        })
+        this.store.updateBoatsData(boatsData);
     }
 
     private handleCatchEvent(boat: BoatInfo) {
