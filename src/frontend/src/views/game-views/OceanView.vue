@@ -16,7 +16,7 @@
       </div>
       <OceanSlice v-for="fishArea in game.fishAreas"
             :key="fishArea.areaNumber"
-            :boats="team.boatInventory.filter((boat) => boat.destination === fishArea.areaNumber)"
+            :boats="getAreaBoats(fishArea.areaNumber)"
             :area="fishArea"
       />
     </div>
@@ -42,5 +42,11 @@ const updateSelected = (e: any, inUse: boolean) => {
             }
         team.updateSelectedBoat(sourceId)
     }
+}
+
+const getAreaBoats = (areaNumber: number) => {
+    return team.boatInventory
+        .filter((boat) => boat.destination === areaNumber)
+        .sort((a, b) => a.endTime! - b.endTime!)
 }
 </script>
