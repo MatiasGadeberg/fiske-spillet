@@ -39,7 +39,7 @@ const game = useGameStore()
                     For at begrænse mængden af både i havet og
                     beskytte fiskebestanden har fiskerimyndighederne lagt
                     afgifter på køb af både. Det betyder at for hver femte båd I
-                    køber så stiger priserne på alle både med {{ game.boatPriceIncreaseFactor * 100}}%. Så tænk jeg
+                    køber så stiger priserne på alle både med {{ game.boatPriceIncrease.toLocaleString('da-DK') }} VM$. Så tænk jeg
                     godt om over hvilke både I vil tilføje til jeres flåde, for
                     I kan ikke sælge dem igen!
                 </p>

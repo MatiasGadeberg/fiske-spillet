@@ -82,7 +82,7 @@ const expensive = ref(false)
 const disabled = ref(false)
 
 const boatPrice = computed(() => {
-    return props.boat.price * (1 + Math.floor(team.boatInventory.length / 5) * game.boatPriceIncreaseFactor)
+    return props.boat.price + (Math.floor(team.boatInventory.length / 5) * game.boatPriceIncrease)
 })
 
 const decrement = () => {

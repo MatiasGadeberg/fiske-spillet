@@ -17,7 +17,7 @@ export const useGameStore = defineStore('game', () => {
   const store = useFirestoreStore()
   const vScores = ref<ScoreInfo[]>([])
   const sScores = ref<ScoreInfo[]>([])
-  const boatPriceIncreaseFactor = 0.2;
+  const boatPriceIncrease= 10000;
 
   const updateGameData = (gameInfo: GameInfo): void => {
       if (gameState.value !== gameInfo.gameState) {
@@ -90,6 +90,6 @@ export const useGameStore = defineStore('game', () => {
     boatMarket,
     vScores,
     sScores,
-    boatPriceIncreaseFactor
+    boatPriceIncrease
   }
 })
