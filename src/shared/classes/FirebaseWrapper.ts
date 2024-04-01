@@ -17,7 +17,6 @@ import {
     where,
     getDocs,
     writeBatch,
-    WriteBatch,
 } from "firebase/firestore";
 import type { 
     BoatAndAreaInfo, 
@@ -35,6 +34,8 @@ export class FirebaseWrapper {
     private app: FirebaseApp;
     private firestore: Firestore;
     private snapshots: Unsubscribe[];
+    private batch: writeBatch;
+    private batchCount = 0;
 
     constructor() {
         const firebaseConfig = {
@@ -49,6 +50,8 @@ export class FirebaseWrapper {
         this.app = initializeApp(firebaseConfig);
         this.firestore = getFirestore(this.app);
         this.snapshots = [];
+        this.batch = writeBatch(this.firestore);
+
     }
 
     public async setGame(gameData: GameInfo) {
@@ -162,7 +165,22 @@ export class FirebaseWrapper {
     }
 
     public async sendEvent<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
-        await addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
+        return addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
+    }
+
+    public async sendBatchedEvent<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
+
+        const docRef = doc(collection(this.firestore, "events"))
+        this.batch.set(docRef, {...eventData, isProcessed: false})
+        if (this.batchCount++ >= 50) {
+            this.batch.commit()
+            this.batchCount = 0;
+            this.batch = writeBatch(this.firestore);
+        }
+    }
+
+    public async sendEvents<T extends EventType>(eventData: Omit<EventData<T>, 'isProcessed' | 'eventId'>) {
+        return addDoc(collection(this.firestore, "events"), {...eventData, isProcessed: false});
     }
 
     public async setEventsProcessed(eventIds: string[]) {
@@ -212,11 +230,14 @@ export class FirebaseWrapper {
         return await addDoc(collection(this.firestore, "boats"), boatData)
     }
 
-     public async getDockedBoatsData() {
-        const querySnapshot = await getDocs(query(collection(this.firestore, "boats"), where("status", "==", 'docked')));
+    public async getDockedBoatsData() {
+        const querySnapshot = await getDocs(query(
+            collection(this.firestore, "boats"), 
+            where("status", "==", 'docked'),
+        ));
         return querySnapshot;
     }
-    
+
     public async updateBoatData(boatId: string, boatData: Partial<BoatInfo>) {
         const boatRef = doc(this.firestore, "boats", boatId);
         await updateDoc(boatRef, boatData);

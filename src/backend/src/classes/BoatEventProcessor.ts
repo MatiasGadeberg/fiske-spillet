@@ -270,7 +270,6 @@ export class BoatEventProcessor {
             const endTime = event.startTime + travelTimeInMs;
             const status: BoatStatus = 'outbound'
 
-
             return {
                 boatId: event.boatId, 
                 eventId: event.eventId,
