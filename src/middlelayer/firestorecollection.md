@@ -1,8 +1,8 @@
 # To fix for wednesday
-- [ ] Data dump between heats
 - [ ] Load all teams into db
 - [ ] Decide how many points to start with
 - [ ] Decide how to give points in the end
+- [x] Data dump between heats
 - [x] Pregame screen - update so just link to stream
 - [x] Clear team data between heats
 - [x] Game time set to 25 min
