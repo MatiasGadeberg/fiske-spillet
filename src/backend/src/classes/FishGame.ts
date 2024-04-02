@@ -10,12 +10,12 @@ export class FishGame {
     private endTime: number;
     private teams: { [teamId: string]: number}
     private store: FirebaseWrapper;
-    private gameLenghtInHours: number;
+    private gameLenghtInMinutes: number;
 
     constructor(props: FishGameProps) {
-        this.gameLenghtInHours = 1;
+        this.gameLenghtInMinutes = 25;
         this.startTime = Date.now() + 1 * 60 * 60 * 1000;
-        this.endTime = this.startTime + this.gameLenghtInHours * 60 * 60 * 1000;
+        this.endTime = this.startTime + this.gameLenghtInMinutes * 60 * 1000;
         this.teams = {};
         this.store = props.store;
     }
@@ -25,7 +25,7 @@ export class FishGame {
         this.store.subscribeToLogoutEvents(events => this.handleLogoutEvents(events));
         this.store.subscribeToGameStart((gameStart: string) => {
             this.startTime = Date.parse(gameStart)
-            this.endTime = this.startTime + this.gameLenghtInHours * 60 * 60 * 1000;
+            this.endTime = this.startTime + this.gameLenghtInMinutes * 60 * 1000;
         })
     }
 

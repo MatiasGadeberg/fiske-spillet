@@ -1,3 +1,18 @@
+# To fix for wednesday
+- [ ] Data dump between heats
+- [x] Clear team data between heats
+- [x] Game time set to 25 min
+- [ ] Load all teams into db
+- [ ] Remove create team button
+- [ ] Pregame screen - update so just link to stream
+- [x] Clean up database
+- [ ] Decide how many points to start with
+- [ ] Decide how to give points in the end
+
+Lars Todo:
+- Skriver til VMU
+- Skriver til hold
+
 # Critical bugs - must fix
 - [x] Ocean slice colors not working properly
 - [x] Store login state in cookies
