@@ -1,6 +1,15 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type {  GameInfo,  FishMarketEntry,  BoatMarket,  FishAreaInfo, ScoreInfo, FishMarket, BoatAndAreaInfo } from '../../../shared/types/GameTypes.js'
+import type { 
+    GameInfo,
+    FishMarketEntry,
+    BoatMarket,
+    FishAreaInfo,
+    ScoreInfo,
+    FishMarket,
+    BoatAndAreaInfo,
+    FeatureFlags 
+} from '../../../shared/types/GameTypes.js'
 import { useFirestoreStore } from './firestore.js'
 import router from '@/router'
 
@@ -17,7 +26,8 @@ export const useGameStore = defineStore('game', () => {
   const store = useFirestoreStore()
   const vScores = ref<ScoreInfo[]>([])
   const sScores = ref<ScoreInfo[]>([])
-  const boatPriceIncrease= 10000;
+  const featureFlags = ref<FeatureFlags>({allowCreateTeams: false})
+  const boatPriceIncrease = 10000;
 
   const updateGameData = (gameInfo: GameInfo): void => {
       if (gameState.value !== gameInfo.gameState) {
@@ -42,6 +52,12 @@ export const useGameStore = defineStore('game', () => {
   const subscribeToGameData = (): void => {
       store.firestore.subscribeToGameData((data: GameInfo) => {
           updateGameData(data)
+      })
+  }
+
+  const subscribeToFeatureFlags = (): void => {
+      store.firestore.subscribeToFeatureFlags((features: FeatureFlags) => {
+          featureFlags.value = features; 
       })
   }
 
@@ -78,6 +94,7 @@ export const useGameStore = defineStore('game', () => {
     subscribeToGameData,
     subscribeToFishMarket,
     subscribeToAreaInfo,
+    subscribeToFeatureFlags,
     currentNumberOfTeams,
     timeToEndInMs,
     timeToStartInMs,
@@ -90,6 +107,7 @@ export const useGameStore = defineStore('game', () => {
     boatMarket,
     vScores,
     sScores,
+    featureFlags,
     boatPriceIncrease
   }
 })

@@ -2,10 +2,18 @@
   <div class="my-2">
     <div class="min-h-screen flex items-center justify-center bg-slate-200">
       <div class="max-w-md w-full space-y-8">
-        <div>
-          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <div v-if="game.featureFlags.allowCreateTeams">
+          <h2 v-if="game.featureFlags.allowCreateTeams" class="mt-6 text-center text-3xl font-extrabold text-gray-900">
             {{ newTeam ? 'Opret nyt hold' : 'Log på eksisterende hold' }}
           </h2>
+        </div>
+        <div v-else class="flex items-center flex-col">
+          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Velkommen til Fiskespillet
+          </h2>
+          <h3>
+            Log på med jeres login og adgangskode fra mesterskabet.dk
+          </h3>
         </div>
         <div v-if="auth.loginError" class="text-red-500 text-center text-sm mt-2">
           {{ auth.loginErrorMessage }}
@@ -26,7 +34,7 @@
                 type="text"
                 required
                 class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Holdnavn"
+                placeholder="Patruljelogin"
               />
             </div>
             <div>
@@ -38,7 +46,7 @@
                 type="password"
                 required
                 class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Kodeord"
+                placeholder="Adgangskode"
               />
             </div>
           </div>
@@ -52,7 +60,7 @@
             </button>
           </div>
         </form>
-        <div v-if="newTeam">
+        <div v-if="newTeam" >
           <!-- Create New Team Section -->
           <form
             class="mt-8 space-y-6"
@@ -108,18 +116,20 @@
             </div>
           </form>
         </div>
-        <div v-if="!newTeam" class="flex items-center justify-between">
-          <hr class="w-1/5 border-gray-300" />
-          <span class="text-gray-400 text-xs">Eller</span>
-          <hr class="w-1/5 border-gray-300" />
-        </div>
-        <div>
-          <button
-            @click="newTeam = !newTeam"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            {{ newTeam ? 'Annuller oprettelse' : 'Opret nyt hold' }}
-          </button>
+        <div v-if="game.featureFlags.allowCreateTeams">
+            <div v-if="!newTeam" class="flex items-center justify-between">
+              <hr class="w-1/5 border-gray-300" />
+              <span class="text-gray-400 text-xs">Eller</span>
+              <hr class="w-1/5 border-gray-300" />
+            </div>
+            <div class="mt-6">
+              <button
+                @click="newTeam = !newTeam"
+                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                {{ newTeam ? 'Annuller oprettelse' : 'Opret nyt hold' }}
+              </button>
+            </div>
         </div>
       </div>
     </div>
@@ -128,9 +138,11 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
+import { useGameStore } from '@/stores/game';
 import { ref } from 'vue'
 
-const auth = useAuthStore()
+const auth = useAuthStore();
+const game = useGameStore();
 const teamName = ref('')
 const repeatPassword = ref('')
 const password = ref('')

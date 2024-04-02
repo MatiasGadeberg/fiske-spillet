@@ -7,6 +7,10 @@ export type GameInfo = {
     timeToStartInMs: number;
 };
 
+export type FeatureFlags = {
+    allowCreateTeams: boolean
+}
+
 export type FishMarket = {
     market: FishMarketEntry[];
 }

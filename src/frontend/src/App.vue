@@ -10,7 +10,8 @@ const auth = useAuthStore()
 game.subscribeToGameData()
 game.subscribeToFishMarket()
 game.subscribeToAreaInfo()
-game.subscribeToScores()
+game.subscribeToScores();
+game.subscribeToFeatureFlags();
 
 
 const loggedIn = sessionStorage.getItem("loggedIn")

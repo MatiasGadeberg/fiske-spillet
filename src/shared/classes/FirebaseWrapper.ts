@@ -24,6 +24,7 @@ import type {
     Boats,
     EventData,
     EventType,
+    FeatureFlags,
     FishMarket,
     GameInfo,
     NumberOfTeams,
@@ -316,6 +317,15 @@ export class FirebaseWrapper {
         const snap = onSnapshot(doc(this.firestore, 'setupItems', 'startTime'), (doc: DocumentSnapshot) => {
             if (doc.exists()) {
                 callback(doc.data().start)
+            }
+        });
+        this.snapshots.push(snap);
+    }
+
+    public subscribeToFeatureFlags(callback: (featureFlags: FeatureFlags) => void) {
+        const snap = onSnapshot(doc(this.firestore, 'setupItems', 'featureFlags'), (doc: DocumentSnapshot) => {
+            if (doc.exists()) {
+                callback(doc.data() as FeatureFlags)
             }
         });
         this.snapshots.push(snap);
