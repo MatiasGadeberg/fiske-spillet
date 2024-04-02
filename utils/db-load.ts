@@ -12,25 +12,27 @@ const store = new FirebaseWrapper()
 patruljer.forEach((patrulje) => createTeam(patrulje))
 
 async function createTeam(patrulje: any) {
+    const startingFish = 0;
+    const startingPoints = 20000;
     if (patrulje[3]) {
         const fishInventory: any = {
             'tun': {
-                amount: 0
+                amount: startingFish
             },
             'rødspætte': {
-                amount: 0
+                amount: startingFish
             },
             'hornfisk': {
-                amount: 0
+                amount: startingFish
             },
             'markrel': {
-                amount: 0
+                amount: startingFish
             },
             'torsk': {
-                amount: 0
+                amount: startingFish
             },
             'hummer': {
-                amount: 0
+                amount: startingFish
             },
         }
         const boatInventory: any[] = []
@@ -41,7 +43,7 @@ async function createTeam(patrulje: any) {
             password: patrulje[4].toLowerCase(),
             login: patrulje[3].toLowerCase(),
             category: patrulje[2],
-            points: 20000,
+            points: startingPoints,
             fish: fishInventory,
             boats: boatInventory
         })
