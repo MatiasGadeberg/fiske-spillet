@@ -1,6 +1,16 @@
+# Todo between rounds
+- [x] Dump database
+- [x] Set starttime to 19:10
+- [x] Set game-state = not-started
+- [ ] Stop boat processor, fish processor and game server
+- [x] Clear events
+- [x] Clear boats
+- [x] Update points in load script to 40k
+- [x] Load database
+
 # To fix for wednesday
-- [ ] Load all teams into db
-- [ ] Decide how many points to start with
+- [x] Load all teams into db
+- [x] Decide how many points to start with
 - [ ] Decide how to give points in the end
 - [x] Data dump between heats
 - [x] Pregame screen - update so just link to stream

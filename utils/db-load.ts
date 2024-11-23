@@ -5,7 +5,7 @@ let patruljer = fs
   .readFileSync("patruljeliste.csv", { encoding: "utf-8" })
   .split("\n")
   .map((line) => line.replace("\r", ""))
-  .map((line) => line.split(";"))
+  .map((line) => line.split(","))
 
 const store = new FirebaseWrapper()
 
@@ -13,7 +13,7 @@ patruljer.forEach((patrulje) => createTeam(patrulje))
 
 async function createTeam(patrulje: any) {
     const startingFish = 0;
-    const startingPoints = 20000;
+    const startingPoints = 40000;
     if (patrulje[3]) {
         const fishInventory: any = {
             'tun': {

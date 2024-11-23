@@ -8,8 +8,8 @@ dumpDb();
 
 async function dumpDb() {
     const teams: TeamInfo[] = await store.getTeamsData();
-    const csvData = ['id, patruljenavn, patruljetype, point', ...teams.map((team) => {
-        return `${team.dbId}, ${team.teamName}, ${team.category}, ${team.points}`
+    const csvData = ['id, patruljenavn, patruljetype, point, boats', ...teams.sort((a,b) => b.points - a.points).map((team) => {
+        return `${team.dbId}, ${team.teamName}, ${team.category}, ${team.points}, ${team.boats.length}`
     })].join('\n')
 
     fs.writeFile('db-dump.csv', '\uFEFF' + csvData, 'utf8', (err) => {

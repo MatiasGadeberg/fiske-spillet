@@ -13,7 +13,7 @@ export class FishGame {
     private gameLenghtInMinutes: number;
 
     constructor(props: FishGameProps) {
-        this.gameLenghtInMinutes = 25;
+        this.gameLenghtInMinutes = 15;
         this.startTime = Date.now() + 1 * 60 * 60 * 1000;
         this.endTime = this.startTime + this.gameLenghtInMinutes * 60 * 1000;
         this.teams = {};

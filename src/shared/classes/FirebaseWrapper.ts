@@ -35,7 +35,7 @@ export class FirebaseWrapper {
     private app: FirebaseApp;
     private firestore: Firestore;
     private snapshots: Unsubscribe[];
-    private batch: writeBatch;
+    private batch;
     private batchCount = 0;
 
     constructor() {
@@ -109,6 +109,10 @@ export class FirebaseWrapper {
 
     public async setTeam(teamId: string, teamData: TeamInfo) {
         await setDoc(doc(this.firestore, "teams", teamId), teamData);
+    }
+
+    public async test(teamId: string, teamData: { activeLogins: number }) {
+        await updateDoc(doc(this.firestore, "teams", teamId), teamData);
     }
 
     public async updateTeamData(teamId: string, teamData: Partial<TeamInfo>) {
